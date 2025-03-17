@@ -141,3 +141,13 @@
     gap: 20px;
     margin-top: 20px;
 }
+
+body {
+  margin: 0;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+}
+
+.textoBoasVindas, .card, .titulo, .tituloSecao, .botaoInteresse, .linha {
+  caret-color: transparent;
+}

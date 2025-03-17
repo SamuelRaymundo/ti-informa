@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Inicial.module.css';
 import sampleImage from '../../Layout/Foto.jpg';
-import logo from '../../Layout/logo.png';
+import Menu from '../../Menu/Menu';
 
 const Inicial = () => {
   const [formData, setFormData] = useState({
@@ -11,7 +11,7 @@ const Inicial = () => {
   });
 
   const [showPassword, setShowPassword] = useState(false);
-  const acesso = useNavigate();
+  const navegarPara = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,7 +29,7 @@ const Inicial = () => {
       return;
     }
     alert('Login realizado com sucesso!');
-    acesso('/home');
+    navegarPara('/home');
   };
 
   const menu = () => {
@@ -38,16 +38,7 @@ const Inicial = () => {
 
   return (
     <div>
-      <div className={styles.header}>
-        <button className={styles.menuButton} onClick={menu}>
-          <span className={styles.dot}>&#8226;</span>
-          <span className={styles.dot}>&#8226;</span>
-          <span className={styles.dot}>&#8226;</span>
-        </button>
-        <span className={styles.headerTitle}>T.I Informa</span>
-        <img src={logo} alt="Logo" className={styles.logo} />
-      </div>
-
+     <Menu />
       <div className={styles.container}>
         <div className={styles.imageSection}>
           <img src={sampleImage} className={styles.image} />
@@ -103,7 +94,7 @@ const Inicial = () => {
           <div className={styles.register}>
             <span className={styles.registerText}>
               Não tem uma conta?{' '}
-              <button onClick={() => acesso('/register')} className={styles.registerLink}>
+              <button onClick={() => navegarPara('/register')} className={styles.registerLink}>
                 Cadastre-se
               </button>
             </span>

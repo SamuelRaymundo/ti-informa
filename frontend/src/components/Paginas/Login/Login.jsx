@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Login.module.css';
-import logo from '../../Layout/logo.png';
+import Menu from '../../Menu/Menu';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -10,7 +10,7 @@ const Login = () => {
   });
 
   const [showPassword, setShowPassword] = useState(false);
-  const acesso = useNavigate();
+  const navegarPara = useNavigate();
 
   const Mudanca = (e) => {
     const { name, value } = e.target;
@@ -24,7 +24,7 @@ const Login = () => {
   const Envio = (e) => {
     e.preventDefault();
     alert('Login realizado com sucesso!');
-    acesso('/home');
+    navegarPara('/home');
   };
 
   const menu = () => {
@@ -33,16 +33,7 @@ const Login = () => {
 
   return (
     <div>
-      <div className={styles.header}>
-        <button className={styles.menuButton} onClick={menu}>
-          <span className={styles.dot}>&#8226;</span>
-          <span className={styles.dot}>&#8226;</span>
-          <span className={styles.dot}>&#8226;</span>
-        </button>
-        <span className={styles.headerTitle}>T.I Informa</span>
-        <img src={logo} alt="Logo" className={styles.logo} />
-      </div>
-
+     <Menu />
       <div className={styles.container} style={{ justifyContent: 'center' }}>
         <div className={styles.formSection}>
           <div className={styles.card}>
@@ -84,7 +75,7 @@ const Login = () => {
           <div className={styles.register}>
             <span className={styles.registerText}>
               Não tem uma conta?{' '}
-              <button onClick={() => acesso('/register')} className={styles.registerLink}>
+              <button onClick={() => navegarPara('/register')} className={styles.registerLink}>
                 Cadastre-se
               </button>
             </span>
