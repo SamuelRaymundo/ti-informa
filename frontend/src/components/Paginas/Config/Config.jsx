@@ -1,11 +1,72 @@
-import React from 'react';
-import Layout from "../../Layout/Layout";
+import React, { useState } from 'react';
+import styles from './Config.module.css';
+import Menu from '../../Menu/Menu';
+import { HiChevronDown, HiCog } from 'react-icons/hi';
 
 const Config = () => {
-  return (
-    <Layout pageTitle="Config">
+  const [activeSections, setActiveSections] = useState([]);
 
-    </Layout>
+  const toggleSection = (section) => {
+    setActiveSections((prevActiveSections) =>
+      prevActiveSections.includes(section)
+        ? prevActiveSections.filter((s) => s !== section)
+        : [...prevActiveSections, section]
+    );
+  };
+
+  const handleSubSectionClick = (subSection) => {
+    alert(`Você clicou em: ${subSection}`);
+  };
+
+  const sections = [
+    {
+      id: 'conta',
+      title: 'Configurações da Conta',
+      subSections: ['Alterar nome e e-mail', 'Mudar senha', 'Configuração de foto de perfil'],
+    },
+    {
+      id: 'notificacoes',
+      title: 'Preferências de Notificações',
+      subSections: ['Gerenciar notificações por e-mail', 'Gerenciar notificações por SMS'],
+    },
+    {
+      id: 'tema',
+      title: 'Tema e Acessibilidade',
+      subSections: ['Escolher tema', 'Configurações de acessibilidade'],
+    },
+    {
+      id: 'cursos',
+      title: 'Preferências de Cursos',
+      subSections: ['Gerenciar categorias de interesse', 'Configurações de recomendações'],
+    },
+    {
+      id: 'seguranca',
+      title: 'Segurança e Privacidade',
+      subSections: ['Configurações de privacidade', 'Autenticação de dois fatores'],
+    },
+  ];
+
+  return (
+    <div>
+      <Menu />
+      <div className={styles.container}>
+        <h1 className={styles.title}>Configurações</h1>
+        {sections.map((section) => (
+          <div key={section.id} className={styles.section}>
+            <h2 onClick={() => toggleSection(section.id)}>{section.title}<HiChevronDown /></h2>
+            {activeSections.includes(section.id) && (
+              <div className={styles.subSection}>
+                {section.subSections.map((subSection, index) => (
+                  <p key={index} onClick={() => handleSubSectionClick(subSection)}>
+                    {subSection}
+                  </p>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 

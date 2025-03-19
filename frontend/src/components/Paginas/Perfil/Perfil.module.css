@@ -1,4 +1,169 @@
-main {
-    text-align: center;
-    padding: 50px 20px;
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 60%;
+    margin: 117px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    min-height: 800px;
+    position: relative;
+}
+
+.profileCard {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+    position: relative;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.profileImage {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profileInfo {
+    flex: 1;
+    margin-left: 20px;
+}
+
+.userName {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.userEmail {
+    font-size: 16px;
+    color: #666;
+    margin: 5px 0;
+}
+
+.userDescription {
+    width: 65%;
+    height: 95px;
+    margin-top: 10px;
+    padding: 10px;
+    font-size: 14px;
+    resize: none;
+    overflow: hidden;
+}
+
+.creatorText {
+    font-size: 14px;
+    color: #666;
+    margin-top: 10px;
+}
+
+.signature {
+    font-size: 14px;
+    color: #666;
+    margin-top: 5px;
+}
+
+.settingsIcon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.editButton {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.editButton:hover {
+    background-color: #0056b3;
+}
+
+.navigationLinks {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.section {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.section p {
+    font-size: 18px;
+    color: #007bff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.section p:hover {
+    text-decoration: underline;
+}
+
+.subSectionContainer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.open .subSectionContainer {
+    max-height: 150px;
+}
+
+.subSection {
+    padding-left: 15px;
+}
+
+.subSection p {
+    font-size: 18px;
+    color: #666666;
+    margin: 5px 0;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.subSection p:hover {
+    text-decoration: underline;
+}
+
+.logoutButton {
+    margin-top: auto;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transform: translateX(475px);
+}
+
+.logoutButton:hover {
+    background-color: #c82333;
+}
+
+.userName, .userEmail, .creatorText, .signature, .section, .profileCard {
+    caret-color: transparent;
 }
