@@ -1,0 +1,122 @@
+/* Container principal para o conteúdo */
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 160px);
+  padding: 20px;
+  margin-top: 80px;
+  margin-bottom: 80px;
+  overflow: hidden;
+}
+
+/* Seção do formulário */
+.formSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Cartão de recuperação de senha */
+.card {
+  background-color: #f5f5f5;
+  padding: 105px 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 485px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* Título do formulário */
+.title {
+  font-size: 38px;
+  position: relative;
+  top: -45px;
+}
+
+/* Texto de instruções (ajustado para ficar mais próximo ao título) */
+.instructionText {
+  font-size: 15px;
+  color: #666;
+  margin-top: -30px; /* Ajusta a distância entre o título e o texto de instruções */
+  margin-bottom: 30px; /* Adiciona um pequeno espaço entre o texto de instruções e o campo de entrada */
+}
+
+/* Campo de input */
+.input {
+  width: 100%;
+  padding: 13.5px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  position: relative;
+  top: 11px;
+  caret-color: auto;
+}
+
+/* Botão de envio */
+.button {
+  width: 100%;
+  padding: 13.5px;
+  background-color: #1f577c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  position: relative;
+  top: 25px;
+}
+
+.button:hover {
+  background-color: #5a6d80;
+}
+
+/* Seção para o link de login */
+.register {
+  background-color: #f5f5f5;
+  padding: 21px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 485px;
+  text-align: center;
+}
+
+/* Texto para o link de login */
+.registerText {
+  color: #666;
+}
+
+/* Link para login */
+.registerLink {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 1rem;
+  outline: none;
+}
+
+.registerLink:focus {
+  outline: none;
+}
+
+.registerLink:hover {
+  text-decoration: underline;
+}
+
+/* Barra inferior */
+.bar {
+  background-color: #8ca8c2;
+  height: 80px;
+  width: 100%;
+  position: fixed;
+  left: 0;
+  z-index: 1000;
+}
+
+.bar.bottom {
+  bottom: 0;
+}

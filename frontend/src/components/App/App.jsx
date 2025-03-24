@@ -9,6 +9,7 @@ import Config from "../Paginas/Config/Config";
 import Perfil from "../Paginas/Perfil/Perfil";
 import Assinatura from "../Paginas/Assinatura/Assinatura"
 import Interesses from "../Paginas/Interesses/Interesses"
+import EsqueceuSenha from '../Paginas/EsqueceuSenha/EsqueceuSenha';
 
 function App() {
   return (
@@ -22,6 +23,8 @@ function App() {
         <Route path="/config" element={<Config />} />
         <Route path="/perfil" element={<Perfil />} />
         <Route path="/assinatura" element={<Assinatura />} />
+        <Route path="/EsqueceuSenha" element={<EsqueceuSenha />} />
+        
       </Routes>
     </Router>
   );

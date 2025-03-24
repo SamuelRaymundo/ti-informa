@@ -86,9 +86,11 @@ const Inicial = () => {
               <div className={styles.line}></div>
             </div>
 
-            <a href="#" className={styles.forgotPassword}>
+            <button onClick={() => navegarPara('/EsqueceuSenha')} className={styles.forgotPassword}>
               Esqueceu a senha?
-            </a>
+            </button>
+
+
           </div>
 
           <div className={styles.register}>
