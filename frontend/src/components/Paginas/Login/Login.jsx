@@ -38,6 +38,12 @@ const Login = () => {
         <div className={styles.formSection}>
           <div className={styles.card}>
             <h2 className={styles.title}>Entrar</h2>
+            <button className={styles.googleButton}>Login com Google</button>
+            <div className={styles.separator}>
+              <div className={styles.line}></div>
+              <span className={styles.orText}>OU</span>
+              <div className={styles.line}></div>
+            </div>
             <form onSubmit={Envio}>
               <input
                 type="email"

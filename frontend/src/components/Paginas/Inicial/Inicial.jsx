@@ -47,6 +47,12 @@ const Inicial = () => {
         <div className={styles.formSection}>
           <div className={styles.card}>
             <h2 className={styles.title}>T.I Informa</h2>
+            <button className={styles.googleButton}>Login com Google</button>
+            <div className={styles.separator}>
+              <div className={styles.line}></div>
+              <span className={styles.orText}>OU</span>
+              <div className={styles.line}></div>
+            </div>
             <form onSubmit={handleSubmit}>
               <input
                 type="email"
@@ -80,15 +86,11 @@ const Inicial = () => {
               </button>
             </form>
 
-            <div className={styles.separator}>
-              <div className={styles.line}></div>
-              <span className={styles.orText}>OU</span>
-              <div className={styles.line}></div>
-            </div>
-
-            <a href="#" className={styles.forgotPassword}>
+            <button onClick={() => navegarPara('/EsqueceuSenha')} className={styles.forgotPassword}>
               Esqueceu a senha?
-            </a>
+            </button>
+
+
           </div>
 
           <div className={styles.register}>
