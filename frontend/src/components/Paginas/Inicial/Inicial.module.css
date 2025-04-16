@@ -93,7 +93,7 @@
 .image {
   width: 100%;
   max-width: 1050px;
-  height: 480px;
+  height: 600px;
   border-radius: 8px;
   object-fit: cover;
   transform: translateX(-120px);
