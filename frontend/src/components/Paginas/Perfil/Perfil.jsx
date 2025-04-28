@@ -1,42 +1,100 @@
 import React, { useState } from 'react';
 import styles from './perfil.module.css';
-import { HiChevronDown, HiCog } from 'react-icons/hi';
+import { HiChevronDown, HiCog, HiPlus } from 'react-icons/hi';
 import Menu from '../../Menu/Menu';
 
 const Perfil = () => {
-  const [descricao, setDescricao] = useState('');
+  const [descricaoUsuario, setDescricaoUsuario] = useState('');
+  const [arquivoVideo, setArquivoVideo] = useState(null);
+  const [videosUsuario, setVideosUsuario] = useState([]);
 
-  const handleEditClick = () => {
-
+  const aoClicarEditar = () => {
+    console.log('Editar perfil clicado');
   };
 
-  const handleLogout = () => {};
+  const aoClicarSair = () => {
+    console.log('Sair da conta clicado');
+  };
 
-  const sections = [
+  const aoSelecionarVideo = (event) => {
+    const file = event.target.files[0];
+    setArquivoVideo(file);
+  };
+
+  const aoEnviarVideo = async () => {
+    if (arquivoVideo) {
+      const formData = new FormData();
+      formData.append('video', arquivoVideo);
+      try {
+        console.log('Arquivo enviado:', arquivoVideo.name);
+        setVideosUsuario([...videosUsuario, { name: arquivoVideo.name, type: arquivoVideo.type }]);
+        setArquivoVideo(null);
+      } catch (error) {
+        console.error('Erro ao enviar o arquivo:', error);
+      }
+    } else {
+      alert('Por favor, selecione um arquivo de vídeo.');
+    }
+  };
+
+  const secoes = [
     {
       id: 'videos',
-      title: 'Seus vídeos',
-      subSections: ['Vídeo 1', 'Vídeo 2', 'Vídeo 3'],
+      titulo: 'Seus vídeos',
+      conteudo: (
+        <div>
+          <div className={styles.containerAdicionarVideo}>
+            <input
+              type="file"
+              className={styles.inputAdicionarVideo}
+              accept="video/mp4, audio/mpeg"
+              onChange={aoSelecionarVideo}
+            />
+            <button className={styles.botaoAdicionarVideo} onClick={aoEnviarVideo} disabled={!arquivoVideo}>
+              <HiPlus /> Enviar arquivo
+            </button>
+          </div>
+          <div className={styles.listaVideos}>
+            {videosUsuario.map((video, index) => (
+              <div key={index} className={styles.itemVideo}>
+                {video.type.startsWith('video/') && (
+                  <video controls className={styles.videoPlayer}>
+                    <source src={`/uploads/${video.name}`} type={video.type} />
+                    Seu navegador não suporta vídeos HTML5.
+                  </video>
+                )}
+                {video.type.startsWith('audio/') && (
+                  <audio controls className={styles.audioPlayer}>
+                    <source src={`/uploads/${video.name}`} type={video.type} />
+                    Seu navegador não suporta áudio HTML5.
+                  </audio>
+                )}
+                <p className={styles.nomeArquivo}>{video.name}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      ),
     },
     {
       id: 'playlists',
-      title: 'Suas playlists',
-      subSections: ['Playlist 1', 'Playlist 2', 'Playlist 3'],
+      titulo: 'Suas playlists',
+      subSecoes: ['Playlist 1', 'Playlist 2', 'Playlist 3'],
     },
     {
       id: 'interesses',
-      title: 'Interesses',
-      subSections: ['Interesse 1', 'Interesse 2', 'Interesse 3'],
+      titulo: 'Interesses',
+      subSecoes: ['Interesse 1', 'Interesse 2', 'Interesse 3'],
     },
   ];
 
-  const [activeSections, setActiveSections] = useState([]);
+  const [secoesAtivas, setSecoesAtivas] = useState(['videos']);
 
-  const toggleSection = (sectionId) => {
-    setActiveSections((prevActiveSections) =>
-      prevActiveSections.includes(sectionId)
-        ? prevActiveSections.filter((id) => id !== sectionId)
-        : [...prevActiveSections, sectionId]
+  const alternarSecao = (idSecao) => {
+    setSecoesAtivas((prevSecoesAtivas) =>
+      prevSecoesAtivas.includes(idSecao)
+        ? prevSecoesAtivas.filter((id) => id !== idSecao)
+        : [...prevSecoesAtivas, idSecao]
     );
   };
 
@@ -44,58 +102,62 @@ const Perfil = () => {
     <div>
       <Menu />
       <div className={styles.container}>
-        <div className={styles.profileCard}>
+        <div className={styles.cartaoPerfil}>
           <img
             src="https://st4.depositphotos.com/29453910/37778/v/450/depositphotos_377785374-stock-illustration-hand-drawn-modern-man-avatar.jpg"
             alt="Foto de Perfil"
-            className={styles.profileImage}
+            className={styles.imagemPerfil}
           />
-          <div className={styles.profileInfo}>
-            <h2 className={styles.userName}>Nome de Usuário</h2>
-            <p className={styles.userEmail}>email@usuario.com</p>
+          <div className={styles.infoPerfil}>
+            <h2 className={styles.nomeUsuario}>Nome de Usuário</h2>
+            <p className={styles.emailUsuario}>email@usuario.com</p>
             <textarea
-              className={styles.userDescription}
+              className={styles.descricaoUsuario}
               placeholder="Descrição do usuário."
-              value={descricao}
-              onChange={(e) => setDescricao(e.target.value)}
+              value={descricaoUsuario}
+              onChange={(e) => setDescricaoUsuario(e.target.value)}
             />
-            <p className={styles.creatorText}>Criador</p>
-            <p className={styles.signature}>Assinatura</p>
+            <p className={styles.textoCriador}>Criador</p>
+            <p className={styles.assinatura}>Assinatura</p>
           </div>
           <HiCog
-            className={styles.settingsIcon}
+            className={styles.iconeConfiguracoes}
             onClick={() => (window.location.href = '/config')}
           />
-          <button className={styles.editButton} onClick={handleEditClick}>
+          <button className={styles.botaoEditar} onClick={aoClicarEditar}>
             Editar
           </button>
         </div>
 
-        <div className={styles.navigationLinks}>
-          {sections.map((section) => (
+        <div className={styles.linksNavegacao}>
+          {secoes.map((secao) => (
             <div
-              key={section.id}
-              className={`${styles.section} ${
-                activeSections.includes(section.id) ? styles.open : ''
+              key={secao.id}
+              className={`${styles.secao} ${
+                secoesAtivas.includes(secao.id) ? styles.aberta : ''
               }`}
             >
-              <p onClick={() => toggleSection(section.id)}>
-                {section.title} <HiChevronDown />
+              <p onClick={() => alternarSecao(secao.id)}>
+                {secao.titulo} <HiChevronDown />
               </p>
               <div
-                className={`${styles.subSectionContainer} ${
-                  activeSections.includes(section.id) ? styles.open : ''
+                className={`${styles.conteudoSecao} ${
+                  secoesAtivas.includes(secao.id) ? styles.aberta : ''
                 }`}
               >
-                {section.subSections.map((subSection, index) => (
-                  <p key={index}>{subSection}</p>
-                ))}
+                {secao.conteudo ? secao.conteudo : (
+                  <div className={styles.containerSubSecoes}>
+                    {secao.subSecoes && secao.subSecoes.map((subSecao, index) => (
+                      <p key={index}>{subSecao}</p>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           ))}
         </div>
 
-        <button className={styles.logoutButton} onClick={handleLogout}>
+        <button className={styles.botaoSair} onClick={aoClicarSair}>
           Sair da conta
         </button>
       </div>
