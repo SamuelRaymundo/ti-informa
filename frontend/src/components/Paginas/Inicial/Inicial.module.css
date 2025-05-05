@@ -194,16 +194,24 @@
 }
 
 .forgotPassword {
-  color: #8CA8C2;
-  text-decoration: none;
+  background: none;
+  border: none;
+  color: #007bff; 
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 1rem; 
+  outline: none; 
   margin-top: 10px;
-  font-size: 17px;
   position: relative;
   top: 50px;
 }
 
+.forgotPassword:focus {
+  outline: none;
+}
+
 .forgotPassword:hover {
-  text-decoration: underline;
+  text-decoration: underline; /* Mantém o sublinhado no hover */
 }
 
 /* Cadastre-se em baixo do login*/

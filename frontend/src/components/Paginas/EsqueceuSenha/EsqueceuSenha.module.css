@@ -1,4 +1,3 @@
-/* Container principal para o conteúdo */
 .container {
   display: flex;
   align-items: center;
@@ -10,17 +9,15 @@
   overflow: hidden;
 }
 
-/* Seção do formulário */
 .formSection {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* Cartão de recuperação de senha */
 .card {
   background-color: #f5f5f5;
-  padding: 105px 30px;
+  padding: 30px;
   border-radius: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 485px;
@@ -28,34 +25,33 @@
   margin-bottom: 30px;
 }
 
-/* Título do formulário */
 .title {
   font-size: 38px;
-  position: relative;
-  top: -45px;
+  margin-bottom: 20px;
 }
 
-/* Texto de instruções (ajustado para ficar mais próximo ao título) */
 .instructionText {
-  font-size: 15px;
+  font-size: 16px;
   color: #666;
-  margin-top: -30px; /* Ajusta a distância entre o título e o texto de instruções */
-  margin-bottom: 30px; /* Adiciona um pequeno espaço entre o texto de instruções e o campo de entrada */
+  margin-bottom: 20px;
 }
 
-/* Campo de input */
+.perguntaSeguranca {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #333;
+}
+
 .input {
   width: 100%;
   padding: 13.5px;
   margin-bottom: 15px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  position: relative;
-  top: 11px;
   caret-color: auto;
 }
 
-/* Botão de envio */
 .button {
   width: 100%;
   padding: 13.5px;
@@ -65,15 +61,19 @@
   border-radius: 4px;
   cursor: pointer;
   margin-top: 10px;
-  position: relative;
-  top: 25px;
 }
 
 .button:hover {
   background-color: #5a6d80;
 }
 
-/* Seção para o link de login */
+.erroResposta {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
 .register {
   background-color: #f5f5f5;
   padding: 21px;
@@ -81,14 +81,13 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 485px;
   text-align: center;
+  margin-top: 20px;
 }
 
-/* Texto para o link de login */
 .registerText {
   color: #666;
 }
 
-/* Link para login */
 .registerLink {
   background: none;
   border: none;
@@ -107,7 +106,6 @@
   text-decoration: underline;
 }
 
-/* Barra inferior */
 .bar {
   background-color: #8ca8c2;
   height: 80px;

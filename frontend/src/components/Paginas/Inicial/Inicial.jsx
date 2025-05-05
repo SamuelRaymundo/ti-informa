@@ -32,9 +32,6 @@ const Inicial = () => {
     navegarPara('/home');
   };
 
-  const menu = () => {
-    alert('Menu clicado!');
-  };
 
   return (
     <div>
