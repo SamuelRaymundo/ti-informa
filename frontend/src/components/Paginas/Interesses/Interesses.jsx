@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Interesses.module.css';
 import Menu from '../../Menu/Menu';
@@ -6,6 +6,13 @@ import Menu from '../../Menu/Menu';
 const Interesses = () => {
   const navegarPara = useNavigate();
   const [interessesSelecionados, setInteressesSelecionados] = useState([]);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navegarPara('/login');
+    }
+  }, [navegarPara]);
 
   const selecionarInteresse = (interesse) => {
     if (interessesSelecionados.includes(interesse)) {
@@ -15,13 +22,34 @@ const Interesses = () => {
     }
   };
 
-  const irParaHome = () => {
-    console.log('Interesses selecionados:', interessesSelecionados);
-    // Aqui você pode fazer algo com os interesses selecionados, como salvar no estado global ou enviar para uma API
-    navegarPara('/home');
-  };
-
   const estaSelecionado = (interesse) => interessesSelecionados.includes(interesse);
+
+  const irParaHome = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navegarPara('/login');
+      return;
+    }
+    try {
+      const response = await fetch('http://localhost:8080/auth/usuario/interesses', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          interesses: interessesSelecionados.join(','),
+        }),
+      });
+      if (response.ok) {
+        navegarPara('/home');
+      } else {
+        alert('Erro ao salvar interesses');
+      }
+    } catch {
+      alert('Erro de conexão');
+    }
+  };
 
   return (
     <div>
@@ -33,7 +61,6 @@ const Interesses = () => {
             <p className={styles.textoBoasVindas}>
               Bem-vindo! Escolha seus interesses para recomendarmos os melhores cursos para você
             </p>
-
             <div className={styles.secao}>
               <h3 className={styles.tituloSecao}>Linguagens de Programação</h3>
               <div className={styles.linha}></div>
@@ -58,7 +85,6 @@ const Interesses = () => {
                 </button>
               </div>
             </div>
-
             <div className={styles.secao}>
               <h3 className={styles.tituloSecao}>Desenvolvimento Web</h3>
               <div className={styles.linha}></div>
@@ -89,7 +115,6 @@ const Interesses = () => {
                 </button>
               </div>
             </div>
-
             <div className={styles.secao}>
               <h3 className={styles.tituloSecao}>Banco de Dados</h3>
               <div className={styles.linha}></div>
@@ -114,14 +139,12 @@ const Interesses = () => {
                 </button>
               </div>
             </div>
-
             <button className={styles.botaoPronto} onClick={irParaHome}>
               Pronto
             </button>
           </div>
         </div>
       </div>
-
       <div className={`${styles.barra} ${styles.inferior}`}></div>
     </div>
   );

@@ -6,40 +6,51 @@ import Menu from '../../Menu/Menu';
 const EsqueceuSenha = () => {
   const [email, setEmail] = useState('');
   const [etapa, setEtapa] = useState(1);
-  const [respostaSeguranca, setRespostaSeguranca] = useState('');
   const [perguntaSeguranca, setPerguntaSeguranca] = useState('');
-  const [erroResposta, setErroResposta] = useState('');
+  const [respostaSeguranca, setRespostaSeguranca] = useState('');
+  const [erro, setErro] = useState('');
   const navegarPara = useNavigate();
 
-  const perguntasOpcoes = [
-    'Qual foi a sua primeira viagem inesquecível?',
-    'Qual foi o seu brinquedo preferido na infância?',
-    'Qual foi o seu primeiro filme no cinema?',
-    'Qual foi o nome do seu primeiro animal de estimação?',
-  ];
-
-  const buscarPerguntaSeguranca = async (emailInserido) => {
-    console.log('Buscando pergunta de segurança para o e-mail:', emailInserido);
-    if (emailInserido === 'teste@teste.com') {
-      const randomIndex = Math.floor(Math.random() * perguntasOpcoes.length);
-      setPerguntaSeguranca(perguntasOpcoes[randomIndex]);
-      setEtapa(2);
+  const buscarPerguntaSeguranca = async (e) => {
+    e.preventDefault();
+    setErro('');
+    try {
+      const resp = await fetch(
+        `http://localhost:8080/auth/recuperar-senha/pergunta?email=${encodeURIComponent(email)}`
+      );
+      if (resp.ok) {
+        const pergunta = await resp.text();
+        setPerguntaSeguranca(pergunta);
+        setEtapa(2);
+      } else {
+        setErro('E-mail não encontrado.');
+      }
+    } catch {
+      setErro('Erro ao buscar pergunta de segurança.');
     }
   };
 
-  const handleSubmitEmail = (e) => {
+  const verificarResposta = async (e) => {
     e.preventDefault();
-    buscarPerguntaSeguranca(email);
-  };
-
-  const verificarResposta = (e) => {
-    e.preventDefault();
-    const respostaCorretaSimulada = 'alguma resposta';
-    if (respostaSeguranca.trim().toLowerCase() === respostaCorretaSimulada.toLowerCase()) {
-      alert('Resposta correta! Você será redirecionado para a página inicial.');
-      navegarPara('/'); // Redirecionamento para a home
-    } else {
-      setErroResposta('Resposta incorreta. Tente novamente.');
+    setErro('');
+    try {
+      const resp = await fetch(
+        'http://localhost:8080/auth/recuperar-senha/verificar-resposta',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, resposta: respostaSeguranca }),
+        }
+      );
+      if (resp.ok) {
+        alert('Resposta correta! Redirecionando para redefinir senha.');
+        // Tela de redefinir senha
+        navegarPara('/redefinir-senha', { state: { email } });
+      } else {
+        setErro('Resposta incorreta. Tente novamente.');
+      }
+    } catch {
+      setErro('Erro ao verificar resposta.');
     }
   };
 
@@ -50,11 +61,12 @@ const EsqueceuSenha = () => {
         <div className={styles.formSection}>
           <div className={styles.card}>
             <h2 className={styles.title}>Recuperar Senha</h2>
-
             {etapa === 1 && (
               <>
-                <p className={styles.instructionText}>Digite seu e-mail para verificar sua conta.</p>
-                <form onSubmit={handleSubmitEmail}>
+                <p className={styles.instructionText}>
+                  Digite seu e-mail ver se existe.
+                </p>
+                <form onSubmit={buscarPerguntaSeguranca}>
                   <input
                     type="email"
                     name="email"
@@ -68,12 +80,14 @@ const EsqueceuSenha = () => {
                     Verificar E-mail
                   </button>
                 </form>
+                {erro && <p className={styles.erroResposta}>{erro}</p>}
               </>
             )}
-
             {etapa === 2 && (
               <>
-                <p className={styles.instructionText}>Responda à pergunta de segurança:</p>
+                <p className={styles.instructionText}>
+                  Responda à pergunta de segurança:
+                </p>
                 <p className={styles.perguntaSeguranca}>{perguntaSeguranca}</p>
                 <form onSubmit={verificarResposta}>
                   <input
@@ -85,18 +99,21 @@ const EsqueceuSenha = () => {
                     className={styles.input}
                     required
                   />
-                  {erroResposta && <p className={styles.erroResposta}>{erroResposta}</p>}
                   <button type="submit" className={styles.button}>
                     Verificar Resposta
                   </button>
                 </form>
+                {erro && <p className={styles.erroResposta}>{erro}</p>}
               </>
             )}
           </div>
           <div className={styles.register}>
             <span className={styles.registerText}>
               Lembrou sua senha?{' '}
-              <button onClick={() => navegarPara('/login')} className={styles.registerLink}>
+              <button
+                onClick={() => navegarPara('/login')}
+                className={styles.registerLink}
+              >
                 Fazer Login
               </button>
             </span>
