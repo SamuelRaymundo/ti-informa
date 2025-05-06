@@ -1,4 +1,4 @@
-/* Barra superior e inferior */
+/* Barra superior */
 .bar {
   background-color: #8CA8C2;
   height: 80px;
@@ -82,7 +82,7 @@
 }
 
 .imageSection {
-  margin-right: 20px; 
+  margin-right: 20px;
 }
 
 .formSection {
@@ -118,6 +118,12 @@
   position: relative;
   top: 11px;
   caret-color: auto;
+}
+
+.errorMessage {
+  color: red;
+  margin-bottom: 10px;
+  font-size: 1rem;
 }
 
 .passwordContainer {
@@ -219,10 +225,33 @@
   outline: none;
 }
 
-
 .registerLink:hover {
   text-decoration: underline;
 }
+
+.securityQuestionsLabel {
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin-bottom: 18px;
+  display: block;
+  text-align: center;
+  width: 100%;
+}
+
+.securityQuestionsList {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  width: 100%;
+}
+
+.securityQuestionItem {
+  font-size: 1.1rem;
+  width: 100%;
+  text-align: justify;
+}
+
 
 body {
   margin: 0;
@@ -230,6 +259,10 @@ body {
   font-family: Arial, sans-serif;
 }
 
-.container, .imageSection, .formSection, .card, .register {
+.container,
+.imageSection,
+.formSection,
+.card,
+.register {
   caret-color: transparent;
 }

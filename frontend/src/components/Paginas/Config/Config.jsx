@@ -25,11 +25,6 @@ const Config = () => {
       subSections: ['Alterar nome e e-mail', 'Mudar senha', 'Configuração de foto de perfil'],
     },
     {
-      id: 'notificacoes',
-      title: 'Preferências de Notificações',
-      subSections: ['Gerenciar notificações por e-mail', 'Gerenciar notificações por SMS'],
-    },
-    {
       id: 'tema',
       title: 'Tema e Acessibilidade',
       subSections: ['Escolher tema', 'Configurações de acessibilidade'],
@@ -38,11 +33,6 @@ const Config = () => {
       id: 'cursos',
       title: 'Preferências de Cursos',
       subSections: ['Gerenciar categorias de interesse', 'Configurações de recomendações'],
-    },
-    {
-      id: 'seguranca',
-      title: 'Segurança e Privacidade',
-      subSections: ['Configurações de privacidade', 'Autenticação de dois fatores'],
     },
   ];
 

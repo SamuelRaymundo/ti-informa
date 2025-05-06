@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Menu.module.css';
 import logo from './logo.png';
 import { FaBars, FaTimes } from 'react-icons/fa';
-import { HiAcademicCap } from "react-icons/hi";
-import { HiLogin } from "react-icons/hi";
-import { HiKey } from "react-icons/hi";
-import { HiCreditCard } from "react-icons/hi";
-import { HiAdjustments } from "react-icons/hi";
-import { HiUser } from "react-icons/hi";
+import { HiAcademicCap, HiLogin, HiKey, HiCreditCard, HiAdjustments, HiUser, HiOutlineAcademicCap } from "react-icons/hi";
 
 const Menu = () => {
   const [menuAberto, setMenuAberto] = useState(false);
+  const [isLogged, setIsLogged] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    setIsLogged(!!token);
+  }, []);
 
   const toggleMenu = () => {
     setMenuAberto(!menuAberto);
@@ -36,9 +37,13 @@ const Menu = () => {
         <ul>
           <li onClick={() => navegarPara('/home')}><HiAcademicCap /> Home</li>
           <li onClick={() => navegarPara('/login')}><HiLogin /> Login</li>
-          <li onClick={() => navegarPara('/register')}><HiKey /> Registrar</li>
+          {!isLogged && (
+            <li onClick={() => navegarPara('/register')}><HiKey /> Cadastrar</li>
+          )}
           <li onClick={() => navegarPara('/assinatura')}><HiCreditCard /> Assinaturas</li>
           <li onClick={() => navegarPara('/perfil')}><HiUser /> Perfil</li>
+          {isLogged && (<li onClick={() => navegarPara('/interesses')}><HiOutlineAcademicCap /> Interesses</li>
+          )}
           <li onClick={() => navegarPara('/config')}><HiAdjustments /> Configuração</li>
         </ul>
       </div>

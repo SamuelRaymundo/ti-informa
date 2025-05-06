@@ -8,7 +8,6 @@ const api = axios.create({
   withCredentials: true
 });
 
-// Request interceptor
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
@@ -19,7 +18,6 @@ api.interceptors.request.use((config) => {
   return Promise.reject(error);
 });
 
-// Response interceptor
 api.interceptors.response.use(
   response => response,
   error => {
@@ -30,5 +28,4 @@ api.interceptors.response.use(
   }
 );
 
-// Add this line to explicitly export as default
 export default api;

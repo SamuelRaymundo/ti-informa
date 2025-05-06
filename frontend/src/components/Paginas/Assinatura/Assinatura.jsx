@@ -6,19 +6,19 @@ const Assinatura = () => {
   const planos = [
     {
       titulo: 'Inscrição',
-      vantagens: ['Vantagem 1', 'Vantagem 2', 'Vantagem 3'],
+      descricao: ['Vantagem 1', 'Vantagem 2', 'Vantagem 3'],
       tipo: 'Mensal',
       preco: 'R$ 4,00',
     },
     {
       titulo: 'Inscrição Plus',
-      vantagens: ['Vantagem 1', 'Vantagem 2', 'Vantagem 3'],
+      descricao: ['Vantagem 1', 'Vantagem 2', 'Vantagem 3'],
       tipo: 'Mensal',
       preco: 'R$ 10,00',
     },
     {
       titulo: 'Doação',
-      vantagens: ['Pode pagar qualquer valor que desejar acima de R$ 5,00'],
+      descricao: ['Ao doar para o T.I Informa, você se torna parte fundamental da nossa missão de construir um ecossistema de aprendizado e troca de informações cada vez mais rico e engajador.'],
       tipo: 'Mínimo',
       preco: 'R$ 5,00',
     },
@@ -46,9 +46,9 @@ const Assinatura = () => {
             >
               <h2 className={styles.titulo}>{plano.titulo}</h2>
               <div className={styles.listaVantagens}>
-                <h3>Vantagens</h3>
+                <h3>Descrição</h3>
                 <ul>
-                  {plano.vantagens.map((vantagem, idx) => (
+                  {plano.descricao.map((vantagem, idx) => (
                     <li key={idx}>{vantagem}</li>
                   ))}
                 </ul>
