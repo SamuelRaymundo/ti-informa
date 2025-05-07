@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './perfil.module.css';
 import { HiChevronDown, HiCog, HiPlus } from 'react-icons/hi';
 import Menu from '../../Menu/Menu';
@@ -7,6 +8,7 @@ const Perfil = () => {
   const [descricaoUsuario, setDescricaoUsuario] = useState('');
   const [arquivoVideo, setArquivoVideo] = useState(null);
   const [videosUsuario, setVideosUsuario] = useState([]);
+  const navigate = useNavigate(); 
 
   const aoClicarEditar = () => {
     console.log('Editar perfil clicado');
@@ -117,16 +119,20 @@ const Perfil = () => {
               value={descricaoUsuario}
               onChange={(e) => setDescricaoUsuario(e.target.value)}
             />
-            <p className={styles.textoCriador}>Criador</p>
             <p className={styles.assinatura}>Assinatura</p>
           </div>
           <HiCog
             className={styles.iconeConfiguracoes}
             onClick={() => (window.location.href = '/config')}
           />
-          <button className={styles.botaoEditar} onClick={aoClicarEditar}>
-            Editar
-          </button>
+          <div className={styles.botoesContainer}>
+            <button className={styles.botaoEditar} onClick={aoClicarEditar}>
+              Editar
+            </button>
+            <button className={styles.botaoRegister} onClick={() => navigate('/RegisterCriador')}> 
+              Registrar para ser criador
+            </button>
+          </div>
         </div>
 
         <div className={styles.linksNavegacao}>

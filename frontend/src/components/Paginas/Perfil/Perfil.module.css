@@ -1,248 +1,265 @@
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    overflow-y: auto;
-  }
-  
-  .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 60%;
-    margin: 117px auto;
-    padding: 20px;
-    background-color: #ffffff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    position: relative;
-  }
-  
-  .cartaoPerfil {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    padding: 20px;
-    position: relative;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .imagemPerfil {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-  
-  .infoPerfil {
-    flex: 1;
-    margin-left: 20px;
-  }
-  
-  .nomeUsuario {
-    font-size: 24px;
-    font-weight: bold;
-    margin: 0;
-    caret-color: transparent;
-  }
-  
-  .emailUsuario {
-    font-size: 16px;
-    color: #666;
-    margin: 5px 0;
-    caret-color: transparent;
-  }
-  
-  .descricaoUsuario {
-    width: 65%;
-    height: 95px;
-    margin-top: 10px;
-    padding: 10px;
-    font-size: 14px;
-    resize: none;
-    overflow: hidden;
-  }
-  
-  .textoCriador {
-    font-size: 14px;
-    color: #666;
-    margin-top: 10px;
-    caret-color: transparent;
-  }
-  
-  .assinatura {
-    font-size: 14px;
-    color: #666;
-    margin-top: 5px;
-    caret-color: transparent;
-  }
-  
-  .iconeConfiguracoes {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 24px;
-    cursor: pointer;
-  }
-  
-  .botaoEditar {
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .botaoEditar:hover {
-    background-color: #0056b3;
-  }
-  
-  .linksNavegacao {
-    width: 100%;
-    margin-top: 20px;
-  }
-  
-  .secao {
-    width: 100%;
-    margin-bottom: 10px;
-    caret-color: transparent;
-  }
-  
-  .secao p {
-    font-size: 18px;
-    color: #007bff;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-  }
-  
-  .secao p:hover {
-    text-decoration: underline;
-  }
-  
-  .containerSubSecoes {
-    max-height: 150px;
-    transition: max-height 0.3s ease-out;
-  }
-  
-  .aberta .containerSubSecoes {
-    max-height: 500px;
-  }
-  
-  .subSecao {
-    padding-left: 15px;
-  }
-  
-  .subSecao p {
-    font-size: 18px;
-    color: #666666;
-    margin: 5px 0;
-    cursor: pointer;
-    text-decoration: none;
-  }
-  
-  .subSecao p:hover {
-    text-decoration: underline;
-  }
-  
-  .botaoSair {
-    margin-top: auto;
-    padding: 10px 20px;
-    font-size: 16px;
-    background-color: #dc3545;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transform: translateX(475px);
-  }
-  
-  .botaoSair:hover {
-    background-color: #c82333;
-  }
-  
-  .containerAdicionarVideo {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-  }
-  
-  .inputAdicionarVideo {
-    flex-grow: 1;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  .botaoAdicionarVideo {
-    padding: 8px 15px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  
-  .botaoAdicionarVideo:hover {
-    background-color: #0056b3;
-  }
-  
-  .listaVideos {
-    margin-top: 10px;
-    padding: 10px;
-    border: 1px solid #eee;
-    border-radius: 4px;
-    background-color: #f9f9f9;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .itemVideo {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .videoPlayer {
-    width: 100%;
-    max-width: 400px;
-    height: auto;
-    border-radius: 4px;
-  }
-  
-  .audioPlayer {
-    width: 100%;
-    max-width: 400px;
-    border-radius: 4px;
-  }
-  
-  .nomeArquivo {
-    font-size: 14px;
-    color: #555;
-    margin-top: 5px;
-  }
-  
-  .conteudoSecao {
-    padding: 15px;
-    border-top: 1px solid #eee;
-    display: none;
-  }
-  
-  .aberta .conteudoSecao {
-    display: block;
-  }
-  
-  .conteudoSecao.fechada {
-    display: none;
-  }
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  overflow-y: auto;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 60%;
+  margin: 117px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  position: relative;
+}
+
+.cartaoPerfil {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 20px;
+  position: relative;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.imagemPerfil {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.infoPerfil {
+  flex: 1;
+  margin-left: 20px;
+}
+
+.nomeUsuario {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+  caret-color: transparent;
+}
+
+.emailUsuario {
+  font-size: 16px;
+  color: #666;
+  margin: 5px 0;
+  caret-color: transparent;
+}
+
+.descricaoUsuario {
+  width: 65%;
+  height: 95px;
+  margin-top: 10px;
+  padding: 10px;
+  font-size: 14px;
+  resize: none;
+  overflow: hidden;
+}
+
+.textoCriador {
+  font-size: 14px;
+  color: #666;
+  margin-top: 10px;
+  caret-color: transparent;
+}
+
+.assinatura {
+  font-size: 14px;
+  color: #666;
+  margin-top: 5px;
+  caret-color: transparent;
+}
+
+.iconeConfiguracoes {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.botaoEditar {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.botaoEditar:hover {
+  background-color: #0056b3;
+}
+
+.botaoRegister {
+  position: absolute;
+  bottom: 10px;
+  right: 100px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.botaoRegister:hover {
+  background-color: #0056b3;
+}
+
+.linksNavegacao {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.secao {
+  width: 100%;
+  margin-bottom: 10px;
+  caret-color: transparent;
+}
+
+.secao p {
+  font-size: 18px;
+  color: #007bff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.secao p:hover {
+  text-decoration: underline;
+}
+
+.containerSubSecoes {
+  max-height: 150px;
+  transition: max-height 0.3s ease-out;
+}
+
+.aberta .containerSubSecoes {
+  max-height: 500px;
+}
+
+.subSecao {
+  padding-left: 15px;
+}
+
+.subSecao p {
+  font-size: 18px;
+  color: #666666;
+  margin: 5px 0;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.subSecao p:hover {
+  text-decoration: underline;
+}
+
+.botaoSair {
+  margin-top: auto;
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transform: translateX(475px);
+}
+
+.botaoSair:hover {
+  background-color: #c82333;
+}
+
+.containerAdicionarVideo {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.inputAdicionarVideo {
+  flex-grow: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.botaoAdicionarVideo {
+  padding: 8px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.botaoAdicionarVideo:hover {
+  background-color: #0056b3;
+}
+
+.listaVideos {
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.itemVideo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.videoPlayer {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  border-radius: 4px;
+}
+
+.audioPlayer {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 4px;
+}
+
+.nomeArquivo {
+  font-size: 14px;
+  color: #555;
+  margin-top: 5px;
+}
+
+.conteudoSecao {
+  padding: 15px;
+  border-top: 1px solid #eee;
+  display: none;
+}
+
+.aberta .conteudoSecao {
+  display: block;
+}
+
+.conteudoSecao.fechada {
+  display: none;
+}

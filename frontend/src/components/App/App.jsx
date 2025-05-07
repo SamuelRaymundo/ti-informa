@@ -10,6 +10,7 @@ import Perfil from "../Paginas/Perfil/Perfil";
 import Assinatura from "../Paginas/Assinatura/Assinatura"
 import Interesses from "../Paginas/Interesses/Interesses"
 import EsqueceuSenha from '../Paginas/EsqueceuSenha/EsqueceuSenha';
+import RegisterCriador from '../Paginas/RegisterCriador/RegisterCriador';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/perfil" element={<Perfil />} />
         <Route path="/assinatura" element={<Assinatura />} />
         <Route path="/EsqueceuSenha" element={<EsqueceuSenha />} />
+        <Route path="/RegisterCriador" element={<RegisterCriador />} />
         
       </Routes>
     </Router>
