@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './RegisterCriador.module.css';
-import Menu from '../../Menu/Menu';
+import Layout from '../../Layout/Layout';
 
 const RegisterCriador = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +14,13 @@ const RegisterCriador = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const navegarPara = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navegarPara('/login');
+    }
+  }, [navegarPara]);
 
   const Mudanca = (e) => {
     const { name, value } = e.target;
@@ -31,7 +38,7 @@ const RegisterCriador = () => {
 
   return (
     <div>
-      <Menu />
+      <Layout />
       <div className={styles.container} style={{ justifyContent: 'center' }}>
         <div className={styles.formSection}>
           <div className={styles.card}>

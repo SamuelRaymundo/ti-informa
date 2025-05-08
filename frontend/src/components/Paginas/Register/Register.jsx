@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Register.module.css';
-import Menu from '../../Menu/Menu';
+import Layout from '../../Layout/Layout';
 import axios from '../../../api/axios-config';
 
 const Perguntas = [
@@ -105,7 +105,7 @@ const Register = () => {
 
   return (
     <div>
-      <Menu />
+      <Layout />
       <div className={styles.container}>
         <div className={styles.formSection}>
           <div className={styles.card}>

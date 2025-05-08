@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import styles from './Login.module.css';
-import Menu from '../../Menu/Menu';
+import Layout from '../../Layout/Layout';
 import axios from '../../../api/axios-config';
 
 const Login = () => {
@@ -61,7 +61,7 @@ const Login = () => {
   if (usuarioLogado) {
     return (
       <div>
-        <Menu />
+        <Layout />
         <div className={styles.container}>
           <div className={styles.formSection}>
             <div className={styles.card}>
@@ -81,7 +81,7 @@ const Login = () => {
 
   return (
     <div>
-      <Menu />
+      <Layout />
       <div className={styles.container}>
         <div className={styles.formSection}>
           <div className={styles.card}>

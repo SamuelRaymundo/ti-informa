@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './EsqueceuSenha.module.css';
-import Menu from '../../Menu/Menu';
+import Layout from '../../Layout/Layout';
 
 const EsqueceuSenha = () => {
   const [email, setEmail] = useState('');
@@ -44,7 +44,6 @@ const EsqueceuSenha = () => {
       );
       if (resp.ok) {
         alert('Resposta correta! Redirecionando para redefinir senha.');
-        // Tela de redefinir senha
         navegarPara('/redefinir-senha', { state: { email } });
       } else {
         setErro('Resposta incorreta. Tente novamente.');
@@ -56,7 +55,7 @@ const EsqueceuSenha = () => {
 
   return (
     <div>
-      <Menu />
+      <Layout />
       <div className={styles.container} style={{ justifyContent: 'center' }}>
         <div className={styles.formSection}>
           <div className={styles.card}>

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Inicial.module.css';
-import sampleImage from '../../Layout/Foto.jpg';
-import Menu from '../../Menu/Menu';
+import sampleImage from './Foto.jpg';
+import Layout from '../../Layout/Layout';
 
 const Inicial = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -47,7 +47,7 @@ const Inicial = () => {
   if (usuarioLogado) {
     return (
       <div>
-        <Menu />
+        <Layout />
         <div className={styles.container}>
           <div className={styles.imageSection}>
             <img src={sampleImage} className={styles.image} alt="Usuário" />
@@ -70,7 +70,7 @@ const Inicial = () => {
 
   return (
     <div>
-      <Menu />
+      <Layout />
       <div className={styles.container}>
         <div className={styles.imageSection}>
           <img src={sampleImage} className={styles.image} alt="Login" />

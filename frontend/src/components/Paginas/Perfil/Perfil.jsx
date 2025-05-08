@@ -1,14 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './perfil.module.css';
 import { HiChevronDown, HiCog, HiPlus } from 'react-icons/hi';
-import Menu from '../../Menu/Menu';
+import Layout from '../../Layout/Layout';
 
 const Perfil = () => {
   const [descricaoUsuario, setDescricaoUsuario] = useState('');
   const [arquivoVideo, setArquivoVideo] = useState(null);
   const [videosUsuario, setVideosUsuario] = useState([]);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+    }
+  }, [navigate]);
 
   const aoClicarEditar = () => {
     console.log('Editar perfil clicado');
@@ -16,6 +23,8 @@ const Perfil = () => {
 
   const aoClicarSair = () => {
     console.log('Sair da conta clicado');
+    localStorage.removeItem('token');
+    navigate('/login');
   };
 
   const aoSelecionarVideo = (event) => {
@@ -102,7 +111,7 @@ const Perfil = () => {
 
   return (
     <div>
-      <Menu />
+      <Layout />
       <div className={styles.container}>
         <div className={styles.cartaoPerfil}>
           <img
@@ -123,13 +132,13 @@ const Perfil = () => {
           </div>
           <HiCog
             className={styles.iconeConfiguracoes}
-            onClick={() => (window.location.href = '/config')}
+            onClick={() => navigate('/config')}
           />
           <div className={styles.botoesContainer}>
             <button className={styles.botaoEditar} onClick={aoClicarEditar}>
               Editar
             </button>
-            <button className={styles.botaoRegister} onClick={() => navigate('/RegisterCriador')}> 
+            <button className={styles.botaoRegister} onClick={() => navigate('/RegisterCriador')}>
               Registrar para ser criador
             </button>
           </div>

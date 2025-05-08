@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Interesses.module.css';
-import Menu from '../../Menu/Menu';
+import Layout from '../../Layout/Layout';
 
 const Interesses = () => {
   const navegarPara = useNavigate();
@@ -53,7 +53,7 @@ const Interesses = () => {
 
   return (
     <div>
-      <Menu />
+      <Layout />
       <div className={styles.container}>
         <div className={styles.secaoFormulario}>
           <div className={styles.cartao}>

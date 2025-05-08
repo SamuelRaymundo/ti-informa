@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './Assinatura.module.css';
-import Menu from '../../Menu/Menu';
+import Layout from '../../Layout/Layout';
+import { useNavigate } from 'react-router-dom';
 
 const Assinatura = () => {
   const planos = [
@@ -24,13 +25,22 @@ const Assinatura = () => {
     },
   ];
 
+  const navegarPara = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navegarPara('/login');
+    }
+  }, [navegarPara]);
+
   const handleCardClick = (titulo) => {
     alert(`Você selecionou: ${titulo}`);
   };
 
   return (
     <div>
-      <Menu />
+      <Layout />
       <div className={styles.container}>
         <div className={styles.cardsContainer}>
           {planos.map((plano, index) => (

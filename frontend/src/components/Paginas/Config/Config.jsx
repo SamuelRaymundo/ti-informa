@@ -1,10 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './Config.module.css';
-import Menu from '../../Menu/Menu';
+import Layout from '../../Layout/Layout';
 import { HiChevronDown, HiCog } from 'react-icons/hi';
+import { useNavigate } from 'react-router-dom';
 
 const Config = () => {
   const [activeSections, setActiveSections] = useState([]);
+  const navegarPara = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navegarPara('/login');
+    }
+  }, [navegarPara]);
 
   const toggleSection = (section) => {
     setActiveSections((prevActiveSections) =>
@@ -38,7 +47,7 @@ const Config = () => {
 
   return (
     <div>
-      <Menu />
+      <Layout />
       <div className={styles.container}>
         <h1 className={styles.title}>Configurações</h1>
         {sections.map((section) => (
