@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Menu.module.css';
-import logo from './logo.png';
+import logo from './Logo.png';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { HiAcademicCap } from "react-icons/hi";
 import { HiLogin } from "react-icons/hi";

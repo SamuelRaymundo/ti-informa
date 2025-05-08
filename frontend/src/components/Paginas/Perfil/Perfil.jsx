@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from './perfil.module.css';
+import styles from './Perfil.module.css';
 import { HiChevronDown, HiCog } from 'react-icons/hi';
 import Menu from '../../Menu/Menu';
 

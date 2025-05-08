@@ -9,7 +9,8 @@ services:
       MYSQL_ROOT_PASSWORD: 1234
       MYSQL_DATABASE: ti_informa
     ports:
-      - "3306:3306"
+      - "3307:3306" # porta 3307 no host → 3306 no container
+
     volumes:
       - db_data:/var/lib/mysql
 

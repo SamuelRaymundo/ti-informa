@@ -1,23 +1,21 @@
-# Imagem base para o frontend (Vite + React)
 FROM node:18-alpine
 
-# Diretório de trabalho
 WORKDIR /app
 
-# Copiar os arquivos de configuração e dependências do frontend
-COPY package*.json ./
+# Copia somente os arquivos essenciais para instalar dependências
+COPY package.json package-lock.json ./
 
-# Instalar as dependências
-RUN npm install
+# Instala dependências com cache limpo e força a versão correta do esbuild
+RUN npm ci && npm install esbuild@0.18.20 --force
 
-# Copiar todo o código-fonte
+# Copia o restante da aplicação
 COPY . .
 
-# Rodar o build da aplicação
+# Executa o build
 RUN npm run build
 
-# Expor a porta para o servidor (ajuste se necessário)
+# Expor a porta padrão do Vite
 EXPOSE 3000
 
-# Iniciar o servidor do Vite
+# Comando padrão de dev (ou substitua por server estático com nginx se for produção)
 CMD ["npm", "run", "dev"]
