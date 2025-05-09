@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from './perfil.module.css';
+import styles from './Perfil.module.css';
 import { HiChevronDown, HiCog, HiPlus } from 'react-icons/hi';
 import Layout from '../../Layout/Layout';
 
