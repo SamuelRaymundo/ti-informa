@@ -1,10 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './Home.module.css';
-import Menu from '../../Menu/Menu';
+import Layout from '../../Layout/Layout';
 import { FaStar, FaComment } from 'react-icons/fa';
 import { HiOutlineSearch } from 'react-icons/hi';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+    }
+  }, [navigate]);
+
   const renderizarEstrelas = () => {
     return (
       <div className={styles.estrelas}>
@@ -33,7 +43,7 @@ const Home = () => {
 
   return (
     <div className={styles.paginaHome}>
-      <Menu />
+      <Layout />
       <div className={styles.barraPesquisaFiltros}>
         <div className={styles.barraPesquisaContainer}>
           <input
