@@ -19,8 +19,8 @@
 /* Layout principal */
 .container {
   display: flex;
-  align-items: center; /* Centraliza verticalmente */
-  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; 
+  justify-content: center; 
   min-height: calc(100vh - 160px);
   padding: 20px;
   margin-top: 80px;

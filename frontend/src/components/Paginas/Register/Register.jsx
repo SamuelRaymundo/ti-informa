@@ -90,6 +90,9 @@ const Register = () => {
         pergunta_resposta
       });
       if (response.status === 200) {
+        // Simulação de armazenamento dos dados do usuário após o registro
+        localStorage.setItem('nomeCompleto', formData.nome);
+        localStorage.setItem('email', formData.email);
         navigate('/login', { state: { registrationSuccess: true } });
       }
     } catch (err) {
