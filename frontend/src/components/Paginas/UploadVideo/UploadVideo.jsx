@@ -1,4 +1,3 @@
-// UploadVideo.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../../Layout/Layout';
@@ -11,13 +10,12 @@ const UploadVideo = () => {
     const [descricao, setDescricao] = useState('');
     const [categoria, setCategoria] = useState('');
     const [palavrasChave, setPalavrasChave] = useState('');
+    const [isEnviando, setIsEnviando] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        if (!token) {
-            navigate('/login');
-        }
+        if (!token) navigate('/login');
     }, [navigate]);
 
     const aoSelecionarArquivo = (event) => {
@@ -26,35 +24,35 @@ const UploadVideo = () => {
 
     const aoEnviarVideo = async () => {
         if (!videoFile) {
-            alert('Por favor, selecione um arquivo de vídeo.');
+            alert('Selecione um arquivo de vídeo');
             return;
         }
+
+        setIsEnviando(true);
         const formData = new FormData();
         formData.append('file', videoFile);
         formData.append('titulo', titulo);
         formData.append('descricao', descricao);
         formData.append('categoria', categoria || '');
-        if (palavrasChave) {
-            palavrasChave.split(',').map(s => s.trim()).forEach((palavra) => {
-                formData.append('palavraChave', palavra);
-            });
-        } else {
-            formData.append('palavraChave', '');
-        }
-        const token = localStorage.getItem('token');
+
+        const palavras = palavrasChave.split(',').map(s => s.trim()).filter(s => s);
+        palavras.forEach(palavra => formData.append('palavraChave', palavra));
+
         try {
-            const response = await axios.post('/auth/upload', formData, {
+            const token = localStorage.getItem('token');
+            await axios.post('/auth/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${token}`,
-                },
+                    'Authorization': `Bearer ${token}`
+                }
             });
-            console.log('Resposta do upload:', response.data);
             alert('Vídeo enviado com sucesso!');
             navigate('/perfil');
         } catch (error) {
-            console.error('Erro ao enviar o vídeo:', error);
-            alert('Erro ao enviar o vídeo.');
+            console.error('Erro no upload:', error);
+            alert(error.response?.data?.message || 'Erro ao enviar vídeo');
+        } finally {
+            setIsEnviando(false);
         }
     };
 
@@ -66,28 +64,67 @@ const UploadVideo = () => {
                     <h1>Enviar Novo Vídeo</h1>
                     <div className={styles.formGroup}>
                         <label htmlFor="videoFile">Selecionar Arquivo:</label>
-                        <input type="file" id="videoFile" accept="video/mp4, audio/mpeg" onChange={aoSelecionarArquivo} />
+                        <input 
+                            type="file" 
+                            id="videoFile" 
+                            accept="video/mp4, video/quicktime, audio/mpeg"
+                            onChange={aoSelecionarArquivo}
+                        />
                     </div>
+
                     {videoFile && (
                         <>
                             <div className={styles.formGroup}>
                                 <label htmlFor="titulo">Título:</label>
-                                <input type="text" id="titulo" value={titulo} onChange={(e) => setTitulo(e.target.value)} placeholder="Digite o título do vídeo" />
+                                <input
+                                    type="text"
+                                    id="titulo"
+                                    value={titulo}
+                                    onChange={(e) => setTitulo(e.target.value)}
+                                    placeholder="Título do vídeo"
+                                    required
+                                />
                             </div>
+
                             <div className={styles.formGroup}>
                                 <label htmlFor="descricao">Descrição:</label>
-                                <textarea id="descricao" value={descricao} onChange={(e) => setDescricao(e.target.value)} placeholder="Digite a descrição do vídeo" />
+                                <textarea
+                                    id="descricao"
+                                    value={descricao}
+                                    onChange={(e) => setDescricao(e.target.value)}
+                                    placeholder="Descrição do conteúdo"
+                                    required
+                                />
                             </div>
+
                             <div className={styles.formGroup}>
                                 <label htmlFor="categoria">Categoria (opcional):</label>
-                                <input type="text" id="categoria" value={categoria} onChange={(e) => setCategoria(e.target.value)} placeholder="Digite a categoria do vídeo" />
+                                <input
+                                    type="text"
+                                    id="categoria"
+                                    value={categoria}
+                                    onChange={(e) => setCategoria(e.target.value)}
+                                    placeholder="Ex: Educação, Tecnologia"
+                                />
                             </div>
+
                             <div className={styles.formGroup}>
-                                <label htmlFor="palavrasChave">Palavras-chave (opcional, separadas por vírgula):</label>
-                                <input type="text" id="palavrasChave" value={palavrasChave} onChange={(e) => setPalavrasChave(e.target.value)} placeholder="Ex: educação, tutorial, tecnologia" />
+                                <label htmlFor="palavrasChave">Palavras-chave (opcional):</label>
+                                <input
+                                    type="text"
+                                    id="palavrasChave"
+                                    value={palavrasChave}
+                                    onChange={(e) => setPalavrasChave(e.target.value)}
+                                    placeholder="Separadas por vírgula"
+                                />
                             </div>
-                            <button className={styles.enviarBotao} onClick={aoEnviarVideo}>
-                                Enviar Vídeo
+
+                            <button 
+                                className={styles.enviarBotao} 
+                                onClick={aoEnviarVideo}
+                                disabled={isEnviando}
+                            >
+                                {isEnviando ? 'Enviando...' : 'Enviar Vídeo'}
                             </button>
                         </>
                     )}

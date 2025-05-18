@@ -78,19 +78,20 @@ const Register = () => {
         return;
       }
     }
-    const pergunta_resposta = selectedQuestions.map((q) => ({
-      pergunta: q,
-      resposta: answers[q]
-    }));
+
+    const pergunta_resposta = {};
+    selectedQuestions.forEach(q => {
+      pergunta_resposta[q] = answers[q];
+    });
+
     try {
       const response = await axios.post('/auth/register/usuario', {
         nome: formData.nome,
         email: formData.email,
         senha: formData.senha,
-        pergunta_resposta
+        pergunta_resposta: JSON.stringify(pergunta_resposta) 
       });
       if (response.status === 200) {
-        // Simulação de armazenamento dos dados do usuário após o registro
         localStorage.setItem('nomeCompleto', formData.nome);
         localStorage.setItem('email', formData.email);
         navigate('/login', { state: { registrationSuccess: true } });
