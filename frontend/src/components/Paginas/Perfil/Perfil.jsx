@@ -337,7 +337,6 @@ const Perfil = () => {
             )}
             <p className={styles.assinatura}>Assinatura</p>
           </div>
-          <HiCog className={styles.iconeConfiguracoes} onClick={() => navigate('/config')} />
           <div className={styles.botoesContainer}>
             <button className={styles.botaoEditar} onClick={aoClicarEditar}>
               Editar
