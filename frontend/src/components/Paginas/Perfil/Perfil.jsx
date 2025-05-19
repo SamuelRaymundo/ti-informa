@@ -73,7 +73,7 @@ const Perfil = () => {
   const [playlists, setPlaylists] = useState([]);
   const [loadingPlaylists, setLoadingPlaylists] = useState(true);
   const [novaPlaylistNome, setNovaPlaylistNome] = useState('');
-  const [secoesAtivas, setSecoesAtivas] = useState([]); // Inicializa com array vazio
+  const [secoesAtivas, setSecoesAtivas] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -88,9 +88,9 @@ const Perfil = () => {
         setIsCriador(response.data.isCriador || false);
 
         if (response.data.isCriador) {
-          setSecoesAtivas(['videos', 'playlists']); // Define seções ativas para criadores
+          setSecoesAtivas(['videos', 'playlists']);
           try {
-            const videosResponse = await axios.get('/auth/meus-videos', { headers });
+            const videosResponse = await axios.get('/file/meus-videos', { headers });
             setVideosUsuario(Array.isArray(videosResponse.data) ? videosResponse.data : []);
           } catch (error) {
             setVideosUsuario([]);
@@ -99,7 +99,7 @@ const Perfil = () => {
             }
           }
         } else {
-          setSecoesAtivas(['playlists']); // Define seções ativas para usuários não criadores
+          setSecoesAtivas(['playlists']);
           setVideosUsuario([]);
         }
       } catch (error) {
@@ -234,21 +234,49 @@ const Perfil = () => {
           </button>
         </div>
         <div className={styles.listaVideos}>
-          {Array.isArray(videosOrdenados) && videosOrdenados.map((video, index) => (
-            <div key={index} className={styles.itemVideo}>
-              <h3 className={styles.nomeArquivo}>{video.titulo}</h3>
-              <p className={styles.descricaoVideo}>{video.descricao}</p>
-              <video controls className={styles.videoPlayer} width="320" height="180">
-                <source src={`https://tcc-fiec-ti-informa.s3.us-east-2.amazonaws.com/${video.key}`} type="video/mp4" />
+        {Array.isArray(videosOrdenados) && videosOrdenados.map((video, index) => (
+          <div key={index} className={styles.itemVideo}>
+            <h3 className={styles.nomeArquivo}>{video.titulo}</h3>
+            <p className={styles.descricaoVideo}>{video.descricao}</p>
+            <div className={styles.videoContainer}>
+              <video
+                controls
+                className={styles.videoPlayer}
+                width="320"
+                height="180"
+                onError={(e) => {
+                  console.error("Erro detalhado:", {
+                    videoKey: video.key,
+                    fullUrl: `https://tcc-fiec-ti-informa.s3.us-east-2.amazonaws.com/${video.key}`,
+                    errorEvent: e.nativeEvent
+                  });
+                  
+                  const errorContainer = e.target.parentNode;
+                  errorContainer.innerHTML = `
+                    <div class="${styles.videoError}">
+                      <p>Erro ao carregar o vídeo</p>
+                      <p>Título: ${video.titulo}</p>
+                      <p>Key: ${video.key}</p>
+                      <a href="https://tcc-fiec-ti-informa.s3.us-east-2.amazonaws.com/${video.key}" 
+                        target="_blank" 
+                        rel="noopener noreferrer">
+                        Testar URL diretamente
+                      </a>
+                    </div>
+                  `;
+                }}
+              >
+                <source
+                  src={`https://tcc-fiec-ti-informa.s3.us-east-2.amazonaws.com/${video.key}`}
+                  type="video/mp4"
+                />
                 Seu navegador não suporta vídeos HTML5.
               </video>
-              <AddToPlaylistButton videoId={video.id_video} playlists={playlists} />
-            </div>
-          ))}
-          {Array.isArray(videosOrdenados) && videosOrdenados.length === 0 && (
-            <p>Nenhum vídeo enviado ainda.</p>
-          )}
-        </div>
+</div>
+            <AddToPlaylistButton videoId={video.id_video} playlists={playlists} />
+          </div>
+        ))}
+      </div>
       </div>
     ),
   };

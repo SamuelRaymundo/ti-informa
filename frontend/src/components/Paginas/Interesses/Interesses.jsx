@@ -30,6 +30,7 @@ const Interesses = () => {
       navegarPara('/login');
       return;
     }
+  
     try {
       const response = await fetch('http://localhost:8080/auth/usuario/interesses', {
         method: 'PUT',
@@ -38,15 +39,18 @@ const Interesses = () => {
           'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
-          interesses: interessesSelecionados.join(','),
+          interesses: interessesSelecionados.join(','), 
         }),
       });
+  
       if (response.ok) {
         navegarPara('/home');
       } else {
-        alert('Erro ao salvar interesses');
+        const errorData = await response.json();
+        alert(errorData.message || 'Erro ao salvar interesses');
       }
-    } catch {
+    } catch (error) {
+      console.error('Erro:', error);
       alert('Erro de conexão');
     }
   };

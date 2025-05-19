@@ -203,3 +203,13 @@
   font-size: 1.35rem;
   margin-bottom: 20px;
 }
+
+.successMessage {
+  color: green; 
+  margin-bottom: 10px;
+  font-size: 1rem;
+  background-color: #e6ffe6;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #b3ffb3;
+}

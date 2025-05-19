@@ -350,6 +350,8 @@ html, body {
     border-radius: 4px;
 }
 
+
+
 .playlistVideos p {
     margin-bottom: 0;
 }
@@ -370,3 +372,4 @@ html, body {
 .botaoAdicionarPlaylist:hover {
   background-color: #216788;
 }
+
