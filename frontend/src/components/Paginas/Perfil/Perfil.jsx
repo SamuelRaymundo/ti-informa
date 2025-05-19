@@ -78,6 +78,11 @@ const Perfil = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+    
     const headers = { Authorization: `Bearer ${token}` };
 
     const carregarDados = async () => {
@@ -139,19 +144,28 @@ const Perfil = () => {
     navigate('/upload-video');
   };
 
-  const criarPlaylist = () => {
+  const criarPlaylist = async () => {
     const token = localStorage.getItem('token');
-    if (!novaPlaylistNome.trim()) return;
-    axios
-      .post(
+    if (!novaPlaylistNome.trim()) {
+      alert('Por favor, insira um nome para a playlist');
+      return;
+    }
+    
+    try {
+      setLoadingPlaylists(true);
+      const res = await axios.post(
         '/auth/criar-playlist',
-        { nome: novaPlaylistNome, visibilidade: 'PRIVADO' },
+        { nome: novaPlaylistNome, visibilidade: 'PRIVADA' },
         { headers: { Authorization: `Bearer ${token}` } }
-      )
-      .then(res => {
-        setPlaylists([...playlists, res.data]);
-        setNovaPlaylistNome('');
-      });
+      );
+      setPlaylists([...playlists, res.data]);
+      setNovaPlaylistNome('');
+      alert('Playlist criada com sucesso!');
+    } catch (error) {
+      alert('Erro ao criar playlist: ' + (error.response?.data?.message || 'Tente novamente mais tarde'));
+    } finally {
+      setLoadingPlaylists(false);
+    }
   };
 
   const videosOrdenados = [...videosUsuario].sort((a, b) => {
@@ -180,12 +194,19 @@ const Perfil = () => {
               value={novaPlaylistNome}
               onChange={e => setNovaPlaylistNome(e.target.value)}
             />
-            <button className={styles.botaoNovaPlaylist} onClick={criarPlaylist}>
-              Nova Playlist
+            <button 
+              className={styles.botaoNovaPlaylist} 
+              onClick={criarPlaylist}
+              disabled={loadingPlaylists}
+            >
+              {loadingPlaylists ? 'Criando...' : 'Nova Playlist'}
             </button>
           </div>
           {loadingPlaylists ? (
-            <p>Carregando playlists...</p>
+            <div className={styles.loadingContainer}>
+              <div className={styles.loadingSpinner}></div>
+              <p>Carregando playlists...</p>
+            </div>
           ) : (
             <div className={styles.listaPlaylistsGrid}>
               {playlists.length === 0 && <p>Você não possui playlists.</p>}
@@ -193,22 +214,11 @@ const Perfil = () => {
                 <div
                   key={playlist.id_playlist || playlist.id}
                   className={styles.playlistCard}
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => navigate(`/playlist/${playlist.id_playlist || playlist.id}`)}
+                  onClick={() => navigate(`/playlist/${playlist.id_playlist || playlist.id}`, { state: { playlist }})}
                 >
                   <h4>{playlist.nome}</h4>
                   <p>Visibilidade: {playlist.visibilidade}</p>
-                  <div className={styles.playlistVideos}>
-                    {playlist.videos && playlist.videos.length > 0 ? (
-                      playlist.videos.map(video => (
-                        <span key={video.idVideo} className={styles.videoTituloPlaylist}>
-                          {video.videoTitulo}
-                        </span>
-                      ))
-                    ) : (
-                      <p>Vazia</p>
-                    )}
-                  </div>
+                  <p>{playlist.videos?.length || 0} vídeos</p>
                 </div>
               ))}
             </div>
@@ -237,7 +247,6 @@ const Perfil = () => {
         {Array.isArray(videosOrdenados) && videosOrdenados.map((video, index) => (
           <div key={index} className={styles.itemVideo}>
             <h3 className={styles.nomeArquivo}>{video.titulo}</h3>
-            <p className={styles.descricaoVideo}>{video.descricao}</p>
             <div className={styles.videoContainer}>
               <video
                 controls
@@ -272,7 +281,7 @@ const Perfil = () => {
                 />
                 Seu navegador não suporta vídeos HTML5.
               </video>
-</div>
+            </div>
             <AddToPlaylistButton videoId={video.id_video} playlists={playlists} />
           </div>
         ))}

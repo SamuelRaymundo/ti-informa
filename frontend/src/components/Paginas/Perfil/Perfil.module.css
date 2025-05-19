@@ -257,9 +257,15 @@ html, body {
 }
 
 .nomeArquivo {
-    font-size: 14px;
+    font-size: 18px;
     color: #555;
     margin-top: 5px;
+}
+
+.descricaoVideo {
+  font-size: 15px;
+  color: #555;
+  margin-top: 5px;
 }
 
 .conteudoSecao {
