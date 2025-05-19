@@ -82,7 +82,7 @@ const Perfil = () => {
       navigate('/login');
       return;
     }
-    
+
     const headers = { Authorization: `Bearer ${token}` };
 
     const carregarDados = async () => {
@@ -123,6 +123,7 @@ const Perfil = () => {
         setLoadingPlaylists(true);
         const res = await axios.get('/auth/minhas-playlists', { headers });
         setPlaylists(res.data);
+    
       } catch {
         setError('Erro ao buscar playlists do usuário.');
       } finally {
@@ -150,7 +151,7 @@ const Perfil = () => {
       alert('Por favor, insira um nome para a playlist');
       return;
     }
-    
+
     try {
       setLoadingPlaylists(true);
       const res = await axios.post(
@@ -158,7 +159,7 @@ const Perfil = () => {
         { nome: novaPlaylistNome, visibilidade: 'PRIVADA' },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setPlaylists([...playlists, res.data]);
+      setPlaylists([res.data, ...playlists]);
       setNovaPlaylistNome('');
       alert('Playlist criada com sucesso!');
     } catch (error) {
@@ -194,8 +195,8 @@ const Perfil = () => {
               value={novaPlaylistNome}
               onChange={e => setNovaPlaylistNome(e.target.value)}
             />
-            <button 
-              className={styles.botaoNovaPlaylist} 
+            <button
+              className={styles.botaoNovaPlaylist}
               onClick={criarPlaylist}
               disabled={loadingPlaylists}
             >
@@ -209,19 +210,19 @@ const Perfil = () => {
             </div>
           ) : (
             <div className={styles.listaPlaylistsGrid}>
-              {playlists.length === 0 && <p>Você não possui playlists.</p>}
-              {playlists.map(playlist => (
-                <div
-                  key={playlist.id_playlist || playlist.id}
-                  className={styles.playlistCard}
-                  onClick={() => navigate(`/playlist/${playlist.id_playlist || playlist.id}`, { state: { playlist }})}
-                >
-                  <h4>{playlist.nome}</h4>
-                  <p>Visibilidade: {playlist.visibilidade}</p>
-                  <p>{playlist.videos?.length || 0} vídeos</p>
-                </div>
-              ))}
-            </div>
+            {playlists.length === 0 && <p>Você não possui playlists.</p>}
+            {playlists.slice().reverse().map(playlist => (
+              <div
+                key={playlist.id_playlist || playlist.id}
+                className={styles.playlistCard}
+                onClick={() => navigate(`/playlist/${playlist.id_playlist || playlist.id}`, { state: { playlist }})}
+              >
+                <h4>{playlist.nome}</h4>
+                <p>Visibilidade: {playlist.visibilidade}</p>
+                <p>{playlist.videos?.length || 0} vídeos</p>
+              </div>
+            ))}
+          </div>
           )}
         </div>
       ),
@@ -259,15 +260,15 @@ const Perfil = () => {
                     fullUrl: `https://tcc-fiec-ti-informa.s3.us-east-2.amazonaws.com/${video.key}`,
                     errorEvent: e.nativeEvent
                   });
-                  
+
                   const errorContainer = e.target.parentNode;
                   errorContainer.innerHTML = `
                     <div class="${styles.videoError}">
                       <p>Erro ao carregar o vídeo</p>
                       <p>Título: ${video.titulo}</p>
                       <p>Key: ${video.key}</p>
-                      <a href="https://tcc-fiec-ti-informa.s3.us-east-2.amazonaws.com/${video.key}" 
-                        target="_blank" 
+                      <a href="https://tcc-fiec-ti-informa.s3.us-east-2.amazonaws.com/${video.key}"
+                        target="_blank"
                         rel="noopener noreferrer">
                         Testar URL diretamente
                       </a>
