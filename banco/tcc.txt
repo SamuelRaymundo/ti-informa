@@ -129,6 +129,58 @@ INSERT INTO `tcc`.`criador` (`nome`, `email`, `senha`, `cpf`, `formacao`) VALUES
 INSERT INTO `tcc`.`criador` (`nome`, `email`, `senha`, `cpf`, `formacao`) VALUES ('Romilda', 'romilda.desenvolve@gmail.com', 'romildadev', '098.876.654-90', 'desenvolvimento de software');
 INSERT INTO `tcc`.`criador` (`nome`, `email`, `senha`, `cpf`, `formacao`) VALUES ('Teodoro', 'teodoro.dados@gmail.com', 'teodorociencia', '879.654.321-00', 'ciencia de dados');
 
+UPDATE CRIADOR
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '1');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '2');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '3');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '4');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '5');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '6');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '7');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '8');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '9');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '10');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '11');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '12');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '13');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '14');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '15');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '16');
+UPDATE `tcc`.`criador` SET `funcao` = '2' WHERE (`id_criador` = '17');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '18');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '19');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '20');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '21');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '22');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '23');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '24');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '25');
+UPDATE `tcc`.`criador` SET `funcao` = '2' WHERE (`id_criador` = '26');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '27');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '28');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '29');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '30');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '31');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '32');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '33');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '34');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '35');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '36');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '37');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '38');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '39');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '40');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '41');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '42');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '43');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '44');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '45');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '46');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '47');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '48');
+UPDATE `tcc`.`criador` SET `funcao` = '2' WHERE (`id_criador` = '49');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '50');
+UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '51');
 
 PLAYLIST
 
@@ -417,7 +469,8 @@ UPDATE `tcc`.`usuario` SET `pergunta_resposta` = 'Rua Nova Esperança' WHERE (`i
 UPDATE `tcc`.`usuario` SET `pergunta_resposta` = 'Nhoque' WHERE (`id_usuario` = '41');
 UPDATE `tcc`.`usuario` SET `pergunta_resposta` = 'O Senhor dos Anéis' WHERE (`id_usuario` = '42');
 UPDATE `tcc`.`usuario` SET `pergunta_resposta` = 'Escola Modelo' WHERE (`id_usuario` = '43');
-
+UPDATE `tcc`.`usuario` SET `funcao` = '2' WHERE (`id_usuario` = '25');
+UPDATE `tcc`.`usuario` SET `funcao` = '2' WHERE (`id_usuario` = '55');
 
 USUARIO_AVALIACAO
 
