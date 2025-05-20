@@ -123,7 +123,6 @@ const Perfil = () => {
         setLoadingPlaylists(true);
         const res = await axios.get('/auth/minhas-playlists', { headers });
         setPlaylists(res.data);
-    
       } catch {
         setError('Erro ao buscar playlists do usuário.');
       } finally {
@@ -307,6 +306,10 @@ const Perfil = () => {
     return (
       <div className={styles.container}>
         <p className={styles.errorMessage}>{error}</p>
+        {/* Botão para limpar o erro */}
+        <button className={styles.botaoLimparErro} onClick={() => setError('')}>
+          Tentar novamente
+        </button>
       </div>
     );
   }

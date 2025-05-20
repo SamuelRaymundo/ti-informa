@@ -379,3 +379,22 @@ html, body {
   background-color: #216788;
 }
 
+.botaoLimparErro {
+  /* Remove as propriedades 'bottom' e 'right' para centralizar melhor */
+  position: absolute;
+  top: 50%;   /* Posiciona o topo do botão no meio verticalmente do pai */
+  left: 50%;  /* Posiciona a esquerda do botão no meio horizontalmente do pai */
+  transform: translate(-50%, -50%); /* Ajusta o botão em -50% da sua própria largura e altura, centralizando-o perfeitamente */
+
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.botaoLimparErro:hover {
+  background-color: #0056b3;
+}
