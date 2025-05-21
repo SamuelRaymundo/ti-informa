@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Layout.module.css';
-import logo from './logo.png';
+import logo from './Logo.png';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { HiAcademicCap, HiLogin, HiKey, HiCreditCard, HiAdjustments, HiUser, HiOutlineAcademicCap } from "react-icons/hi";
 

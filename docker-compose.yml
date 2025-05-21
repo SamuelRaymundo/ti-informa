@@ -6,11 +6,10 @@ services:
     container_name: mysql-db
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: 1234
-      MYSQL_DATABASE: ti_informa
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
     ports:
-      - "3307:3306" # porta 3307 no host → 3306 no container
-
+      - "3307:3306"
     volumes:
       - db_data:/var/lib/mysql
 
@@ -22,13 +21,20 @@ services:
       - "8080:8080"
     depends_on:
       - mysql
+    environment:
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_ID: ${SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_ID}
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_SECRET: ${SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_SECRET}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_REGION: ${AWS_REGION}
+      AWS_BUCKET_NAME: ${AWS_BUCKET_NAME}
 
   frontend:
     build: ./frontend
     container_name: frontend-app
     restart: always
     environment:
-      VITE_API_URL: http://backend:8080
+      VITE_API_URL: ${VITE_API_URL}
     ports:
       - "3000:3000"
     depends_on:
