@@ -3,6 +3,7 @@ package br.com.tiinforma.backend.domain.criador;
 import br.com.tiinforma.backend.domain.enums.Funcao;
 import br.com.tiinforma.backend.domain.playlist.Playlist;
 import br.com.tiinforma.backend.domain.video.Video;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import br.com.tiinforma.backend.services.interfaces.FotoAtualizavel;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,6 +24,7 @@ public class Criador implements Serializable, FotoAtualizavel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_criador")
     private Long id;
 
     private String nome;
@@ -42,10 +44,12 @@ public class Criador implements Serializable, FotoAtualizavel {
     private String fotoUrl;
 
     @OneToMany(mappedBy = "criador")
+    @JsonManagedReference
     @Builder.Default
     private List<Playlist> playlists= new ArrayList<>();
 
     @OneToMany(mappedBy = "criador")
+    @JsonManagedReference
     @Builder.Default
     private List<Video> videos= new ArrayList<>();
 

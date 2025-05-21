@@ -11,6 +11,21 @@ const Perguntas = [
   "Qual foi o nome do seu primeiro animal de estimação?"
 ];
 
+const InteressesOpcoes = [
+  {
+    tituloSecao: 'Linguagens de Programação',
+    interesses: ['Python', 'Java', 'C++'],
+  },
+  {
+    tituloSecao: 'Desenvolvimento Web',
+    interesses: ['HTML', 'CSS', 'React', 'Angular'],
+  },
+  {
+    tituloSecao: 'Banco de Dados',
+    interesses: ['SQL', 'NoSQL', 'MongoDB'],
+  },
+];
+
 const Register = () => {
   const [formData, setFormData] = useState({
     nome: '',
@@ -21,8 +36,10 @@ const Register = () => {
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showQuestions, setShowQuestions] = useState(false);
-  const [selectedQuestions, setSelectedQuestions] = useState([]);
-  const [answers, setAnswers] = useState({});
+  const [selectedQuestion, setSelectedQuestion] = useState('');
+  const [answer, setAnswer] = useState('');
+  const [showInteresses, setShowInteresses] = useState(false);
+  const [interessesSelecionados, setInteressesSelecionados] = useState([]);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -30,16 +47,12 @@ const Register = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleQuestionChange = (question) => {
-    setSelectedQuestions((prev) =>
-      prev.includes(question)
-        ? prev.filter((q) => q !== question)
-        : [...prev, question]
-    );
+  const handleQuestionChange = (e) => {
+    setSelectedQuestion(e.target.value);
   };
 
-  const handleAnswerChange = (question, value) => {
-    setAnswers((prev) => ({ ...prev, [question]: value }));
+  const handleAnswerChange = (e) => {
+    setAnswer(e.target.value);
   };
 
   const validatePassword = (password) => {
@@ -65,31 +78,52 @@ const Register = () => {
     setShowQuestions(true);
   };
 
-  const handleQuestionsSubmit = async (e) => {
+  const handleQuestionSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    if (selectedQuestions.length === 0) {
-      setError('Selecione pelo menos uma pergunta de segurança.');
+    if (!selectedQuestion) {
+      setError('Selecione uma pergunta de segurança.');
       return;
     }
-    for (let q of selectedQuestions) {
-      if (!answers[q] || answers[q].trim() === '') {
-        setError('Responda todas as perguntas selecionadas.');
-        return;
-      }
+    if (!answer || answer.trim() === '') {
+      setError('Por favor, responda à pergunta de segurança.');
+      return;
     }
-    const pergunta_resposta = selectedQuestions.map((q) => ({
-      pergunta: q,
-      resposta: answers[q]
-    }));
+    setShowInteresses(true);
+  };
+
+  const selecionarInteresse = (interesse) => {
+    if (interessesSelecionados.includes(interesse)) {
+      setInteressesSelecionados(interessesSelecionados.filter((item) => item !== interesse));
+    } else {
+      setInteressesSelecionados([...interessesSelecionados, interesse]);
+    }
+  };
+
+  const estaSelecionado = (interesse) => interessesSelecionados.includes(interesse);
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setError('');
+    if (!selectedQuestion || !answer) {
+      setError('Pergunta e resposta de segurança são obrigatórias.');
+      return;
+    }
+    const pergunta_resposta = [{
+      pergunta: selectedQuestion,
+      resposta: answer
+    }];
     try {
       const response = await axios.post('/auth/register/usuario', {
         nome: formData.nome,
         email: formData.email,
         senha: formData.senha,
-        pergunta_resposta
+        pergunta_resposta: pergunta_resposta,
+        interesses: interessesSelecionados.join(',')
       });
       if (response.status === 200) {
+        localStorage.setItem('nomeCompleto', formData.nome);
+        localStorage.setItem('email', formData.email);
         navigate('/login', { state: { registrationSuccess: true } });
       }
     } catch (err) {
@@ -174,41 +208,72 @@ const Register = () => {
                   </button>
                 </div>
                 <button type="submit" className={styles.button}>
-                  Cadastrar
+                  Próximo
+                </button>
+              </form>
+            ) : !showInteresses ? (
+              <form onSubmit={handleQuestionSubmit}>
+                <label className={styles.securityQuestionsLabel}>
+                  Pergunta de Segurança:
+                </label>
+                <div className={styles.securityQuestionsList}>
+                  <select
+                    className={styles.input}
+                    value={selectedQuestion}
+                    onChange={handleQuestionChange}
+                    required
+                  >
+                    <option value="">Selecione uma pergunta</option>
+                    {Perguntas.map((q) => (
+                      <option key={q} value={q}>{q}</option>
+                    ))}
+                  </select>
+                </div>
+                {selectedQuestion && (
+                  <div style={{ marginTop: 20 }}>
+                    <label htmlFor="answer" className={styles.securityQuestionsLabel}>Sua Resposta:</label>
+                    <input
+                      type="text"
+                      id="answer"
+                      className={styles.input}
+                      placeholder="Sua resposta"
+                      value={answer}
+                      onChange={handleAnswerChange}
+                      required
+                    />
+                  </div>
+                )}
+                <button type="submit" className={styles.button} disabled={!selectedQuestion}>
+                  Próximo
                 </button>
               </form>
             ) : (
-              <form onSubmit={handleQuestionsSubmit}>
-                <label className={styles.securityQuestionsLabel}>
-                  Perguntas de Segurança:
-                </label>
-                <div className={styles.securityQuestionsList}>
-                  {Perguntas.map((q) => (
-                    <div key={q} className={styles.securityQuestionItem}>
-                      <label>
-                        <input
-                          type="checkbox"
-                          checked={selectedQuestions.includes(q)}
-                          onChange={() => handleQuestionChange(q)}
-                        />{' '}
-                        {q}
-                      </label>
-                      {selectedQuestions.includes(q) && (
-                        <input
-                          type="text"
-                          className={styles.input}
-                          placeholder="Sua resposta"
-                          value={answers[q] || ''}
-                          onChange={(e) => handleAnswerChange(q, e.target.value)}
-                          style={{ marginTop: 8 }}
-                          required
-                        />
-                      )}
+              <form onSubmit={handleRegister}>
+                <p style={{ fontSize: '1.1rem', marginBottom: '20px' }}>
+                  Escolha seus interesses para personalizarmos sua experiência.
+                </p>
+                {InteressesOpcoes.map((secao) => (
+                  <div key={secao.tituloSecao} style={{ marginBottom: '30px', textAlign: 'left' }}>
+                    <h3 style={{ fontSize: '1.3rem', fontWeight: 'bold', marginBottom: '10px', display: 'inline-block' }}>
+                      {secao.tituloSecao}
+                    </h3>
+                    <div style={{ display: 'inline-block', width: 'calc(100% - 200px)', height: '1px', backgroundColor: '#ccc', marginLeft: '10px', verticalAlign: 'middle' }}></div>
+                    <div style={{ display: 'flex', gap: '10px', marginTop: '10px', flexWrap: 'wrap' }}>
+                      {secao.interesses.map((interesse) => (
+                        <button
+                          key={interesse}
+                          type="button"
+                          className={`${styles.interesseBotao} ${estaSelecionado(interesse) ? styles.selecionadoInteresse : ''}`}
+                          onClick={() => selecionarInteresse(interesse)}
+                        >
+                          {interesse}
+                        </button>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
                 <button type="submit" className={styles.button}>
-                  Salvar respostas
+                  Finalizar Cadastro
                 </button>
               </form>
             )}
