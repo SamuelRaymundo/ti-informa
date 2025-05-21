@@ -1,0 +1,272 @@
+-- MySQL dump 10.13  Distrib 8.0.38, for Win64 (x86_64)
+--
+-- Host: localhost    Database: tcc
+-- ------------------------------------------------------
+-- Server version	8.0.36
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `assinatura`
+--
+
+DROP TABLE IF EXISTS `assinatura`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `assinatura` (
+  `id_assinatura` int NOT NULL AUTO_INCREMENT,
+  `id_usuario` int NOT NULL,
+  `plano` enum('premium','premium_plus') NOT NULL,
+  `data_inicio` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `data_fim` timestamp NOT NULL,
+  `preço` float NOT NULL,
+  PRIMARY KEY (`id_assinatura`),
+  KEY `assinatura_ibfk_1_idx` (`id_usuario`),
+  CONSTRAINT `assinatura_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`)
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `assinatura`
+--
+
+LOCK TABLES `assinatura` WRITE;
+/*!40000 ALTER TABLE `assinatura` DISABLE KEYS */;
+INSERT INTO `assinatura` VALUES (1,1,'premium','2025-03-11 14:30:00','2025-04-11 14:30:00',8.99),(2,2,'premium','2025-03-11 16:00:00','2025-04-11 16:00:00',8.99),(3,4,'premium','2025-03-12 10:50:00','2025-04-12 10:50:00',8.99),(4,9,'premium','2025-03-13 23:00:00','2025-04-13 23:00:00',8.99),(5,12,'premium','2025-03-13 20:00:00','2025-04-13 20:00:00',8.99),(6,13,'premium','2025-03-14 12:25:00','2025-04-14 12:25:00',8.99),(7,15,'premium','2025-03-14 15:00:00','2025-04-14 15:00:00',8.99),(8,17,'premium','2025-03-14 21:30:00','2025-04-14 21:30:00',8.99),(9,20,'premium','2025-03-16 18:45:00','2025-04-16 18:45:00',8.99),(10,3,'premium','2025-03-16 19:00:00','2025-04-16 19:00:00',8.99),(11,7,'premium','2025-03-17 17:15:00','2025-04-17 17:15:00',8.99),(12,6,'premium','2025-04-01 02:00:00','2025-05-02 02:00:00',8.99),(13,8,'premium','2025-03-30 21:00:00','2025-04-30 21:00:00',8.99),(14,10,'premium','2025-04-15 22:00:00','2025-05-15 22:00:00',8.99),(15,1,'premium','2025-04-01 19:30:00','2025-05-01 19:30:00',8.99),(16,5,'premium','2025-04-02 16:00:00','2025-05-02 16:00:00',8.99),(17,11,'premium','2025-04-03 20:30:00','2025-05-03 20:30:00',8.99),(18,14,'premium','2025-04-04 14:15:00','2025-05-04 14:15:00',8.99),(19,16,'premium','2025-04-06 00:45:00','2025-05-06 00:45:00',8.99),(20,18,'premium','2025-04-07 02:10:00','2025-05-07 02:10:00',8.99),(21,19,'premium','2025-04-07 13:30:00','2025-05-07 13:30:00',8.99),(22,21,'premium','2025-04-08 18:50:00','2025-05-08 18:50:00',8.99),(23,22,'premium','2025-04-09 22:20:00','2025-05-09 22:20:00',8.99),(24,23,'premium','2025-04-10 15:40:00','2025-05-10 15:40:00',8.99);
+/*!40000 ALTER TABLE `assinatura` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `avaliacao`
+--
+
+DROP TABLE IF EXISTS `avaliacao`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `avaliacao` (
+  `id_avaliacao` int NOT NULL AUTO_INCREMENT,
+  `nota` int DEFAULT NULL,
+  `comentario` text,
+  PRIMARY KEY (`id_avaliacao`),
+  CONSTRAINT `avaliacao_chk_1` CHECK ((`nota` between 1 and 5))
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `avaliacao`
+--
+
+LOCK TABLES `avaliacao` WRITE;
+/*!40000 ALTER TABLE `avaliacao` DISABLE KEYS */;
+INSERT INTO `avaliacao` VALUES (1,5,'obrigado, eu estava com duvidas sobre cardinalidade e voce conseguiu tirar elas'),(2,5,'O segundo exercicio eu tive muita duvida na hora de fazer, mas agora conseguir entender, vlw'),(3,5,'puxa, na aula achei que era muito dificil, mas depois que vi seu video percebi o quao facil e, nota 10.'),(4,4,NULL),(5,5,'você explica bem demais, professor top, 5 estrelas!'),(6,5,'pelo seu video consegui entender, muito obrigado.'),(7,4,'obrigado, tenho prova amanhã e tava sem saber da matéria.'),(8,3,NULL),(9,5,'Você explica muito bem professor.'),(10,5,'Obrigado pelo video, meu professor não passou oracle e eu queria aprender mais sobre.'),(11,4,NULL),(12,5,'muito bom o video.'),(13,5,'nossa, mongodb é mais facil que eu imaginei, tu explica muito bem.'),(14,5,NULL),(15,4,'Parabéns, explica muito bem'),(16,5,'nossa, explição top, 5 estrelas.'),(17,5,'meu professor tinha passado uns exercicios q eu não tinha entendido, mas dps de ver seu video ficou facil fazer, vlw.'),(18,4,'quando a minha professora passou listas eu tinha achado muito dificil, mas agora vi q é bem simples.'),(19,4,NULL),(20,5,'só consigo aprender com vídeos, obrigado.'),(21,5,'queria que meu professor explicasse desse jeito, deixou tudo tão claro'),(22,4,NULL),(23,5,'Professora top, explica demais'),(24,4,NULL),(25,5,'Finalmente consegui entender consultas complexas no SQL.'),(26,5,'Explicação sobre chaves estrangeiras ficou muito clara, obrigado.'),(27,3,NULL),(28,5,'Não sabia nada de Vue.js, mas agora já consigo fazer meu primeiro projeto.'),(29,5,'Cara, nunca achei que entenderia recursividade, muito bom!'),(30,4,NULL),(31,5,'Eu estava apanhando para entender Docker, seu vídeo salvou meu projeto.'),(32,5,'Ótima explicação sobre API GraphQL, muito obrigado!'),(33,5,'Consegui fazer meu primeiro CRUD em Laravel, graças ao vídeo.'),(34,4,NULL),(35,5,'Explicação sobre versionamento Git foi excelente, obrigado!'),(36,5,'Eu precisava entender Entity Framework e seu vídeo foi perfeito.'),(37,3,NULL),(38,5,'Que explicação maravilhosa sobre testes automatizados, gostei muito!'),(39,5,'A didática é excelente, parabéns pelo conteúdo.'),(40,4,NULL),(41,5,'Muito bom! Nunca entendi bem regex, agora ficou claro.'),(42,5,'Gostei muito da explicação sobre AWS, ajudou bastante no meu trabalho.'),(43,5,'Aula sobre segurança em aplicações web foi incrível, parabéns.'),(44,3,NULL);
+/*!40000 ALTER TABLE `avaliacao` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `criador`
+--
+
+DROP TABLE IF EXISTS `criador`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `criador` (
+  `id_criador` int NOT NULL AUTO_INCREMENT,
+  `nome` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `senha` varchar(255) NOT NULL,
+  `cpf` varchar(14) NOT NULL,
+  `formacao` text NOT NULL,
+  `funcao` enum('1','2') NOT NULL,
+  `foto_url` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`id_criador`),
+  UNIQUE KEY `email` (`email`),
+  UNIQUE KEY `cpf` (`cpf`)
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `criador`
+--
+
+LOCK TABLES `criador` WRITE;
+/*!40000 ALTER TABLE `criador` DISABLE KEYS */;
+INSERT INTO `criador` VALUES (1,'Adecio','adeciobanco@gmail.com','adeciofazsql','123.456.789-01','ciencia de dados','1','https://images.wondershare.com.br/filmora/author/br-author-joaopedro.png'),(2,'Rodolfo','rodolfo.bispo@gmail.com','theresameuamor','901.234.567-89','engenharia de software','1','https://static.vecteezy.com/ti/fotos-gratis/t1/3492377-closeup-masculino-estudio-retrato-de-homem-feliz-olhando-para-a-camera-imagem-gratis-foto.jpg'),(3,'Sandra','sandra_espanha@gmail.com','holachicosquetal','123.345.678-90','desenvolvimento web','1','https://img.freepik.com/fotos-gratis/mulher-sorridente-explorando-a-natureza-com-uma-mochila_23-2148647947.jpg'),(4,'Cassio','cassioabel@gmail.com','csml10223005','234.456.789-01','ciencia da computacao','1',NULL),(5,'Elaine','elaine1978@gmail.com','elaine2874617491','345.678.901-23','desenvolvimento mobile','1','https://img.freepik.com/psd-gratuitas/sorrindo-jovem-mulher-com-as-maos-nas-costas_1154-300.jpg?semt=ais_hybrid&w=740'),(6,'Joaquim','joaquim.rocha@gmail.com','vitalicioseilauimasenha','789.012.345-67','analise e desenvolvimento de sistemas ','1',NULL),(7,'Francisco','francisco.oliveira@gmail.com','umasenhamuitolouca ','456.789.012-34','administracao de banco de dados','1',NULL),(8,'Giovana','Giovanamaria_flor@gmail.com','giovanamariaflorjj26','678.901.234-56','arquitetura de software','1',NULL),(9,'Regina','regina.santos@gmail.com','todasassenhasjesusamado','567.789.012-34','engenharia da computacao','1',NULL),(10,'Paulo','paulogustavo@gmail.com','4567324632','890.123.456-78','ciencia de dados','1',NULL),(11,'Elisangela','profelisangela@gmail.com','professoraelisangeladeti','716.206.990-87','analise e desenvolvimento de sistemas','1',NULL),(12,'Joel','joeldacomputacao@gmail.com','joelformadoemcomputacao','434.289.500-54','ciencia da computacao','1',NULL),(13,'Vladimir','vladimiroensino@gmail.com','euensinomuitobem','575.418.020-93','desenvolvimento web','1',NULL),(14,'Oscar','oscar.ramalho@gmail.com','7573819475981','729.997.470-39','engenharia de software','1',NULL),(15,'Rosimar','rosimar.gouveia@gmail.com','tenhomuitasenhas','861.653.230-73','administracao de banco de dados','1',NULL),(16,'Maria','maria.silva@gmail.com','senhacomum123','123.987.654-32','engenharia de software','1',NULL),(17,'Carlos','carlos.souza@gmail.com','supersenha789','321.654.987-54','analise de sistemas','2',NULL),(18,'Fernanda','fernanda.mendes@gmail.com','senha123456','654.987.321-00','desenvolvimento de software','1',NULL),(19,'Paula','paula.rodrigues@gmail.com','senhaadmin321','876.543.210-12','arquitetura de sistemas','1',NULL),(20,'João','joao.pereira@gmail.com','senhasecreta234','432.109.876-32','ciencia de dados','1',NULL),(21,'Tatiane','tatiane.oliveira@gmail.com','tatiane@123','765.432.109-76','engenharia de computacao','1',NULL),(22,'Marcos','marcos.santos@gmail.com','senha@marcos2025','234.567.890-56','desenvolvimento mobile','1',NULL),(23,'Roberta','roberta.silveira@gmail.com','senha2023roberta','543.210.987-65','analise de sistemas','1',NULL),(24,'Henrique','henrique.costa@gmail.com','senha123henrique','654.321.098-76','ciencia da computacao','1',NULL),(25,'Ana','ana.carvalho@gmail.com','12345ana','987.654.321-01','desenvolvimento web','1',NULL),(26,'Juliano','juliano.ferreira@gmail.com','senha_juliano','876.543.210-09','engenharia de software','2',NULL),(27,'Lívia','livia.morais@gmail.com','liviamorais@123','765.432.109-87','arquitetura de software','1',NULL),(28,'Gustavo','gustavo.alves@gmail.com','gustavo123','432.109.876-33','ciencia de dados','1',NULL),(29,'Bruna','bruna.santos@gmail.com','senha123bruna','321.654.987-65','desenvolvimento de software','1',NULL),(30,'Eduardo','eduardo.silveira@gmail.com','senhaeduardo2025','234.567.890-45','analise e desenvolvimento de sistemas','1',NULL),(31,'Reinaldo','Reinaldo.professor@gmail.com','reinaldotiinforma','745.145.567-65','administracao de banco de dados','1',NULL),(32,'Benedito','benedito.ensina@gmail.com','beneditosaber','987.654.321-12','ciencia de dados','1',NULL),(33,'Gertrudes','gertrudes.soft@gmail.com','gertrudesprogramadora','876.543.210-23','engenharia de software','1',NULL),(34,'Valdemar','valdemar.web@gmail.com','valdemarcriadorweb','765.432.109-34','desenvolvimento web','1',NULL),(35,'Ernestina','ernestina.comp@gmail.com','ernestinacomputacao','654.321.098-45','ciencia da computacao','1',NULL),(36,'Juvenal','juvenal.mobile@gmail.com','juvenalapp','543.210.987-56','desenvolvimento mobile','1',NULL),(37,'Onofre','onofre.ads@gmail.com','onofreanalista','432.109.876-67','analise e desenvolvimento de sistemas','1',NULL),(38,'Bernardina','bernardina.dba@gmail.com','bernardinadados','321.098.765-78','administracao de banco de dados','1',NULL),(39,'Isidoro','isidoro.arquiteto@gmail.com','isidoroarquitetura','210.987.654-89','arquitetura de software','1',NULL),(40,'Conceição','conceicao.engcomp@gmail.com','conceicaoengenheira','109.876.543-90','engenharia da computacao','1',NULL),(41,'Sebastião','sebastiao.dados@gmail.com','sebastiaociencia','998.776.554-01','ciencia de dados','1',NULL),(42,'Aparecida','aparecida.analise@gmail.com','aparecidaanalista','887.665.443-12','analise e desenvolvimento de sistemas','1',NULL),(43,'Ezequiel','ezequiel.info@gmail.com','ezequielcomputacao','776.554.332-23','ciencia da computacao','1',NULL),(44,'Doroteia','doroteia.desenvolve@gmail.com','doroteiawebdev','665.443.221-34','desenvolvimento web','1',NULL),(45,'Anselmo','anselmo.softeng@gmail.com','anselmosoftware','554.332.210-45','engenharia de software','1',NULL),(46,'Palmira','palmira.banco@gmail.com','palmiradba','443.221.109-56','administracao de banco de dados','1',NULL),(47,'Severino','severino.engenharia@gmail.com','severinoengcomp','332.210.098-67','engenharia da computacao','1',NULL),(48,'Iolanda','iolanda.arquiteta@gmail.com','iolandaarquiteta','221.109.987-78','arquitetura de software','1',NULL),(49,'Osvaldo','osvaldo.analista@gmail.com','osvaldoanalise','110.098.876-89','analise de sistemas','2',NULL),(50,'Romilda','romilda.desenvolve@gmail.com','romildadev','098.876.654-90','desenvolvimento de software','1',NULL),(51,'Teodoro','teodoro.dados@gmail.com','teodorociencia','879.654.321-00','ciencia de dados','1',NULL);
+/*!40000 ALTER TABLE `criador` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `playlist`
+--
+
+DROP TABLE IF EXISTS `playlist`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `playlist` (
+  `id_playlist` int NOT NULL AUTO_INCREMENT,
+  `id_usuario` int DEFAULT NULL,
+  `id_criador` int DEFAULT NULL,
+  `nome` varchar(255) NOT NULL,
+  `visibilidade` enum('PUBLICA','PRIVADA','NAO_LISTADA') NOT NULL,
+  PRIMARY KEY (`id_playlist`),
+  KEY `playlist_ibfk_1_idx` (`id_usuario`),
+  KEY `playlist_ibfk_2_idx` (`id_criador`)
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `playlist`
+--
+
+LOCK TABLES `playlist` WRITE;
+/*!40000 ALTER TABLE `playlist` DISABLE KEYS */;
+INSERT INTO `playlist` VALUES (5,1,NULL,'playlist da juliana','PRIVADA'),(6,NULL,2,'aulas de python','PUBLICA'),(7,3,NULL,'playlist do Ivan','PRIVADA'),(8,4,NULL,'playlist da Heloisa','PRIVADA'),(9,NULL,5,'aulas de react ','PUBLICA'),(10,NULL,1,'aula de banco de dados','PUBLICA'),(11,13,NULL,'bancos da ba','PRIVADA'),(12,7,NULL,'minha playlist','PUBLICA'),(13,17,NULL,'programação','PRIVADA'),(14,5,NULL,'playlist de back-end','PRIVADA'),(15,6,NULL,'playlist de fundamentos de programação','PRIVADA'),(16,7,NULL,'playlist do Marcos','PRIVADA'),(17,8,NULL,'playlist de algoritmos','PRIVADA'),(18,9,NULL,'playlist de design patterns','PRIVADA'),(19,10,NULL,'playlist de SQL avançado','PRIVADA'),(20,11,NULL,'playlist de MongoDB','PRIVADA'),(21,12,NULL,'playlist de Vue.js','PRIVADA'),(22,13,NULL,'playlist de Angular','PRIVADA'),(23,14,NULL,'playlist de C#','PRIVADA'),(24,15,NULL,'playlist de Flutter','PRIVADA'),(25,NULL,1,'aulas de JavaScript','PUBLICA'),(26,NULL,2,'aulas de Ruby','PUBLICA'),(27,NULL,3,'aulas de PHP','PUBLICA'),(28,NULL,4,'aulas de TypeScript','PUBLICA'),(29,NULL,5,'aulas de banco de dados','PUBLICA'),(30,NULL,6,'aulas de Docker','PUBLICA'),(31,NULL,7,'aulas de Git','PUBLICA'),(32,NULL,8,'aulas de API REST','PUBLICA'),(33,NULL,9,'aulas de arquitetura de software','PUBLICA'),(34,16,NULL,'playlist da Donatella','NAO_LISTADA'),(35,17,NULL,'playlist do Evandro','PRIVADA'),(36,18,NULL,'playlist do Fernando','PUBLICA'),(37,19,NULL,'playlist do rafa','PRIVADA'),(38,20,NULL,'playlist da Thalita','PUBLICA'),(39,21,NULL,'playlist do Nathan','PUBLICA'),(40,22,NULL,'playlist gustavo','NAO_LISTADA'),(41,23,NULL,'playlist da Paola','PRIVADA'),(42,NULL,47,'prova de segunda','PUBLICA');
+/*!40000 ALTER TABLE `playlist` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `playlist_video`
+--
+
+DROP TABLE IF EXISTS `playlist_video`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `playlist_video` (
+  `id_playlistvideo` int NOT NULL AUTO_INCREMENT,
+  `id_playlist` int NOT NULL,
+  `id_video` int NOT NULL,
+  `data_adicao` date NOT NULL,
+  `posicao_video` int NOT NULL,
+  PRIMARY KEY (`id_playlistvideo`),
+  KEY `fk_playlist_idx` (`id_playlist`),
+  KEY `fk_video_idx` (`id_video`),
+  CONSTRAINT `fk_playlist` FOREIGN KEY (`id_playlist`) REFERENCES `playlist` (`id_playlist`),
+  CONSTRAINT `fk_video` FOREIGN KEY (`id_video`) REFERENCES `video` (`id_video`)
+) ENGINE=InnoDB AUTO_INCREMENT=132 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `playlist_video`
+--
+
+LOCK TABLES `playlist_video` WRITE;
+/*!40000 ALTER TABLE `playlist_video` DISABLE KEYS */;
+INSERT INTO `playlist_video` VALUES (1,5,1,'2025-03-11',1),(2,5,2,'2025-03-11',2),(3,5,3,'2025-03-12',3),(4,6,1,'2025-03-12',1),(5,6,2,'2025-03-13',2),(6,6,4,'2025-03-13',3),(7,7,1,'2025-03-14',1),(8,7,3,'2025-03-14',2),(9,8,4,'2025-03-15',1),(10,8,3,'2025-03-15',2),(11,8,1,'2025-03-15',3),(12,9,2,'2025-03-16',1),(13,9,1,'2025-03-16',2),(14,9,3,'2025-03-16',3),(15,10,1,'2025-03-17',1),(16,10,2,'2025-03-17',2),(17,10,3,'2025-03-17',3),(18,10,4,'2025-03-17',4),(19,11,1,'2025-03-17',1),(20,11,7,'2025-03-17',2),(21,11,10,'2025-03-17',3),(22,11,14,'2025-03-17',4),(23,11,15,'2025-03-18',5),(24,12,12,'2025-03-18',1),(25,12,5,'2025-03-18',2),(26,13,6,'2025-03-18',1),(27,13,9,'2025-03-18',2),(28,14,14,'2025-03-21',1),(29,14,15,'2025-03-21',2),(30,14,16,'2025-03-21',3),(31,15,17,'2025-03-22',1),(32,15,18,'2025-03-22',2),(33,15,19,'2025-03-22',3),(34,16,20,'2025-03-23',1),(35,16,21,'2025-03-23',2),(36,16,22,'2025-03-23',3),(37,17,23,'2025-03-24',1),(38,17,24,'2025-03-24',2),(39,17,25,'2025-03-24',3),(40,18,26,'2025-03-25',1),(41,18,27,'2025-03-25',2),(42,18,28,'2025-03-25',3),(43,19,29,'2025-03-26',1),(44,19,30,'2025-03-26',2),(45,20,1,'2025-03-27',1),(46,20,2,'2025-03-27',2),(47,20,3,'2025-03-27',3),(48,21,4,'2025-03-28',1),(49,21,5,'2025-03-28',2),(50,21,6,'2025-03-28',3),(51,22,7,'2025-03-29',1),(52,22,8,'2025-03-29',2),(53,22,9,'2025-03-29',3),(54,23,10,'2025-03-30',1),(55,23,11,'2025-03-30',2),(56,23,12,'2025-03-30',3),(57,24,13,'2025-03-31',1),(58,24,14,'2025-03-31',2),(59,24,15,'2025-03-31',3),(60,25,1,'2025-04-30',1),(61,25,4,'2025-04-30',2),(62,25,6,'2025-04-30',3),(63,25,8,'2025-04-30',4),(64,26,5,'2025-04-30',1),(65,26,9,'2025-04-30',2),(66,26,23,'2025-04-30',3),(67,26,24,'2025-04-30',4),(68,27,25,'2025-04-30',1),(69,27,26,'2025-04-30',2),(70,27,27,'2025-04-30',3),(71,27,28,'2025-04-30',4),(72,27,29,'2025-04-30',5),(73,28,30,'2025-04-30',1),(75,28,31,'2025-04-30',2),(76,28,32,'2025-04-30',3),(77,28,33,'2025-04-30',4),(78,29,34,'2025-04-30',1),(79,29,35,'2025-04-30',2),(80,29,36,'2025-04-30',3),(81,29,37,'2025-04-30',4),(82,29,38,'2025-04-30',5),(83,30,39,'2025-04-30',1),(84,30,40,'2025-04-30',2),(85,30,41,'2025-04-30',3),(86,30,42,'2025-04-30',4),(87,31,43,'2025-04-30',1),(88,31,44,'2025-04-30',2),(89,32,45,'2025-04-30',1),(90,32,46,'2025-04-30',2),(91,32,47,'2025-04-30',3),(92,32,48,'2025-04-30',4),(93,32,49,'2025-04-30',5),(94,33,50,'2025-05-01',1),(95,33,51,'2025-05-01',2),(96,33,52,'2025-05-01',3),(97,33,53,'2025-05-01',4),(98,34,54,'2025-05-01',1),(99,34,55,'2025-05-01',2),(100,34,56,'2025-05-01',3),(101,35,57,'2025-05-01',1),(102,35,58,'2025-05-01',2),(103,35,59,'2025-05-01',3),(104,35,60,'2025-05-01',4),(105,36,61,'2025-05-01',1),(106,36,62,'2025-05-01',2),(107,36,63,'2025-05-01',3),(108,36,64,'2025-05-01',4),(109,37,65,'2025-05-01',1),(111,37,54,'2025-05-01',2),(112,37,22,'2025-05-01',3),(113,38,25,'2025-05-01',1),(114,38,1,'2025-05-01',2),(115,39,2,'2025-05-01',1),(116,39,10,'2025-05-01',2),(117,39,11,'2025-05-01',3),(118,40,12,'2025-05-01',1),(119,40,44,'2025-05-01',2),(120,40,42,'2025-05-01',3),(121,40,47,'2025-05-01',4),(122,41,48,'2025-05-01',1),(123,41,49,'2025-05-01',2),(124,41,62,'2025-05-01',3),(125,41,63,'2025-05-01',4),(126,42,64,'2025-05-02',1),(127,42,65,'2025-05-02',2),(129,42,5,'2025-05-02',2),(130,42,18,'2025-05-02',3),(131,42,31,'2025-05-02',4);
+/*!40000 ALTER TABLE `playlist_video` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `usuario`
+--
+
+DROP TABLE IF EXISTS `usuario`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `usuario` (
+  `id_usuario` int NOT NULL AUTO_INCREMENT,
+  `nome` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `senha` varchar(255) NOT NULL,
+  `interesses` varchar(255) NOT NULL,
+  `pergunta_resposta` varchar(100) NOT NULL,
+  `funcao` enum('0','1','2') NOT NULL,
+  `foto_url` varchar(500) DEFAULT NULL,
+  PRIMARY KEY (`id_usuario`),
+  UNIQUE KEY `email_UNIQUE` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=64 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `usuario`
+--
+
+LOCK TABLES `usuario` WRITE;
+/*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
+INSERT INTO `usuario` VALUES (1,'Juliana','jujubastos06@gmail.com','amominhamae2006','python, portugol, java','Escola Jardim das Flores','0','https://i1.sndcdn.com/artworks-sBgQ1jDDBDh6ydzw-5uuz3g-t240x240.jpg'),(2,'Gabriel','gabsferreira@gmail.com','31012007','php, javascript','Rex','0','https://assets.jus.com.br/system/profile_image/59119/c42497976a1b83756db23c4f035bcab2.jpeg'),(3,'Ivan','ivan_belario@gmail.com','ivfutebol@','typescript, java, javascript','São Paulo','0','https://assets.jus.com.br/system/profile_image/53256/af913d626b2c2ce2202e7fb88344046d.jpg'),(4,'Heloísa','helonunes_19@gmail.com','hntvlpostag','mysql, mongodb, oracle','Rua das Palmeiras','0','https://i.pinimg.com/236x/44/94/13/4494139164b3f16de09b8f68d7554cf7.jpg'),(5,'Maria','maria.oliveira@gmail.com','456123987','java, php','Lasanha','0',NULL),(6,'Lucas','lucas.souza@gmail.com','789653413','C++, ruby','Vingadores','0',NULL),(7,'Bruno','bruno.martins@gmail.com','48237589372','kotlin, java, javascript','Colégio Estrela do Norte','0',NULL),(8,'Rodrigo','rodlima.01@gmail.com','5738736347185','react, java','Thor','0',NULL),(9,'Thiago','titigas_4910@gmail.com','titigasloverock','mysql, oracle','Rio de Janeiro','0',NULL),(10,'Camila','camis_viera@gmail.com','araciosvaldokellycamila','html, css, java','Avenida Brasil','0',NULL),(11,'Jonas','jonas103452@gmail.com','14356335631','python, php','Pizza','0',NULL),(12,'Carla','carlinhabale@gmail.com','dancaevidas2','javascript, java, react, css','Harry Potter','0',NULL),(13,'Barbara','barezeil.lima@gmail.com','slalesbiana','mysql, mongodb, oracle','Escola Vida Nova','0',NULL),(14,'Bruno','brunotava@gmail.com','essasenhatoperson','javascript, php','Bob','0',NULL),(15,'Renato','renatolyra@gmail.com','shirtlessrenato@34','kotlin, java, python, php','Belo Horizonte','0',NULL),(16,'Donatella','donatellaversace@gmai.com','elaericademais426','html, css, react','Rua das Laranjeiras','0',NULL),(17,'Evandro','evandrodj@gmail.com','284756352musica','C++, php','Feijoada','0',NULL),(18,'Fernando','fernand0_4168@gmail.com','f3rn4nd0arribameo','groovy, kotlin, java','Jurassic Park','0',NULL),(19,'Rafael','rafinha5642@gmail.com','alunodafiec37485','react, css','Escola Nova Geração','0',NULL),(20,'Thalita','thalita_35@gmail.com','friendlycompetition','java, javascript','Nina','0',NULL),(21,'Natan','natan7831@gmail.com','ticriticam59482','typescript, javascript','Salvador','0',NULL),(22,'Gustavo','gustavokido@gmail.com','muitacriatividadeveyr','mysql, oracle','Rua das Flores','0',NULL),(23,'Paola','paola.tidinha@gmail.com','batatinhabemquentinha','kotlin, javascript','Sushi','0',NULL),(24,'Hemilio','hemili2047@gmail.com','espaguetegostosinho','python, portugol','Star Wars','0',NULL),(25,'Murilo ','murilosantanna@gmail.com','acabecomela','python, laravel','Escola Santo Antônio','2',NULL),(26,'Adriana ','adrianaImai23@gmail.com','amaiordodbd','oracle, postgresql','Mel','0',NULL),(27,'Diogo','diogo9865@gmail.com','esssasenhagenerica','java, javascript','Curitiba','0',NULL),(28,'Ulisses','ulio.isses@gmail.com','ulisses6683251','php, python, C++','Rua do Comércio','0',NULL),(29,'Calebe','calebe.lamaro@gmail.com','5421235886554','html, react, node.js','Hambúrguer','0',NULL),(30,'Taynara','taynara2007@gmail.com','taynara584284957','ruby, scala','Titanic','0',NULL),(31,'Omar','omar.camargo@gmail.com','senhasomar','kotlin, typescript','Escola Horizonte','0',NULL),(32,'Bianca','bianca.roma@gmail.com','essasenha53315','mysql, postgresql','Luna','0',NULL),(33,'Matheus','matheuskastro02gmail.com','muitaspessoasexistem','java, php','Manaus','0',NULL),(34,'Oliver','Olivergringo@gmail.com','oimate39475284','flutter, react','Rua da Paz','0',NULL),(35,'Danilo','danilo653@gmail.com','dalinosenhasahaha','python, C++','Strogonoff','0',NULL),(36,'Eduardo ','edu85628@gmail.com','eduedududu','laravel, javascript','Matrix','0',NULL),(37,'Ronaldo','ronnievaldo@gmail.com','6452856ronaldo','mysql, oracle','Colégio São Luiz','0',NULL),(38,'Rayane','rayane.luara@gmail.com','sabrinacarpenter','python, php','Simba','0',NULL),(39,'Gabriella','gabi3103@gmail.com','shadowofaman','javascript, mongodb','Recife','0',NULL),(40,'Fabrício','fabs5628@gmail.com','fabricioanjos','ruby, C++','Rua Nova Esperança','0',NULL),(41,'Manuella','amanu.bts@gmail.com','jiminjungkook','react, css, java','Nhoque','0',NULL),(42,'Samuel','samuelalves@gmail.com','samucabiruta','kotlin, scala','O Senhor dos Anéis','0',NULL),(43,'Thales','thales_3855@gmail.com','tha93754638','typescript, java','Escola Modelo','0',NULL),(44,'Alessandra','ale.sandra@gmail.com','alessandra123','java, javascript','Doctor Who','0',NULL),(45,'Ricardo','ricardo.dev@gmail.com','ricardoprograma','python, php','Campinas','0',NULL),(46,'Patrícia','pati.info@gmail.com','patriciaweb','html, css, javascript','Pipoca','0',NULL),(47,'Marcelo','marcelo.ti@gmail.com','marcelotecno','C++, python','Colégio Taquaral','0',NULL),(48,'Fernanda','fernanda.dados@gmail.com','fernandadb','mysql, oracle','Salada','0',NULL),(49,'Leonardo','leo.mobile@gmail.com','leonardomobile','react, java','Jogos Vorazes','0',NULL),(50,'Amanda','amanda.cloud@gmail.com','amandacloud','python, php','Elias Fausto','0',NULL),(51,'Gustavo','guga.ia@gmail.com','gustavoai','python, java','Sorvete','0',NULL),(52,'Isabela','isa.frontend@gmail.com','isabelafront','react, javascript','Bridgerton','0',NULL),(53,'Vinícius','vini.seguranca@gmail.com','viniciussecurity','java, php','Escola Araci Medeiros','0',NULL),(54,'Letícia','le.analista@gmail.com','leticiaanalise','mysql, mongodb','Avenida Salvador Cruzeiro','0',NULL),(55,'Sérgio','sergio.redes@gmail.com','sergiorede','C++, ruby','Brigadeiro','2',NULL),(56,'Natália','nati.uxui@gmail.com','nataliaux','html, css','Pânico','0',NULL),(57,'André','andre.devops@gmail.com','andrevops','java, javascript','Salto','0',NULL),(58,'Julie','juli.testes@gmail.com','julitestes','python, portugol','Hôrtolandia','0',NULL),(59,'Felipe','felipe.games@gmail.com','felipejogos','C++, php','LOL','0',NULL),(60,'Mariana','mari.mobiledev@gmail.com','marianamobile','kotlin, java','Escona Nação Unida','0',NULL),(61,'Thiago','thiago.iot@gmail.com','thiagoiot','typescript, javascript','Macarronada','0',NULL),(62,'Camila','cami.suporte@gmail.com','camilasuporte','mysql, oracle','Rua Agatha Ramos','0',NULL),(63,'Eduardo','edu.inteligencia@gmail.com','eduardoia','react, css','Jujuca','0',NULL);
+/*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `usuario_avaliacao`
+--
+
+DROP TABLE IF EXISTS `usuario_avaliacao`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `usuario_avaliacao` (
+  `sóprabotadado` int NOT NULL AUTO_INCREMENT,
+  `id_usuario` int NOT NULL,
+  `id_video` int NOT NULL,
+  `id_avaliacao` int NOT NULL,
+  `data_inicio` datetime NOT NULL,
+  `tempo_assistido` time NOT NULL,
+  PRIMARY KEY (`sóprabotadado`),
+  KEY `fk_usuario_id_usuario_idx` (`id_usuario`),
+  KEY `fk_video_id_video_idx` (`id_video`),
+  KEY `fk_avaliacao_avaliacao_idx` (`id_avaliacao`),
+  CONSTRAINT `fk_avaliacao_avaliacao` FOREIGN KEY (`id_avaliacao`) REFERENCES `avaliacao` (`id_avaliacao`),
+  CONSTRAINT `fk_usuario_id_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
+  CONSTRAINT `fk_video_id_video` FOREIGN KEY (`id_video`) REFERENCES `video` (`id_video`)
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `usuario_avaliacao`
+--
+
+LOCK TABLES `usuario_avaliacao` WRITE;
+/*!40000 ALTER TABLE `usuario_avaliacao` DISABLE KEYS */;
+INSERT INTO `usuario_avaliacao` VALUES (1,1,1,1,'2025-03-11 13:30:23','00:21:47'),(2,2,3,2,'2025-03-11 14:07:12','00:17:57'),(3,3,3,3,'2025-03-11 14:20:12','00:17:57'),(4,4,4,4,'2025-03-11 15:02:52','00:19:21'),(5,5,4,5,'2025-03-11 15:47:14','00:19:21'),(6,6,5,6,'2025-03-11 16:12:46','00:22:21'),(7,9,6,7,'2025-03-11 16:30:00','00:28:15'),(8,14,7,8,'2025-03-11 17:05:42','00:15:59'),(9,17,7,9,'2025-03-11 17:40:10','00:15:59'),(10,13,10,10,'2025-03-11 18:12:25','00:22:30'),(11,22,10,11,'2025-03-11 18:45:00','00:22:30'),(12,21,8,12,'2025-03-12 08:30:00','00:17:51'),(13,23,7,13,'2025-03-12 09:45:00','00:15:59'),(14,4,2,14,'2025-03-12 10:02:24','00:26:41'),(15,18,12,15,'2025-03-12 10:15:21','00:24:13'),(16,11,13,16,'2025-03-12 10:17:44','00:19:59'),(17,17,9,17,'2025-03-12 10:30:31','00:16:43'),(18,15,2,18,'2025-03-12 11:05:02','00:26:41'),(19,13,1,19,'2025-03-12 11:07:52','00:21:47'),(20,24,11,20,'2025-03-12 11:21:30','00:15:42'),(21,20,14,21,'2025-03-12 11:30:31','00:23:52'),(22,13,14,22,'2025-03-12 11:32:51','00:23:52'),(23,4,15,23,'2025-03-12 12:16:25','00:28:31'),(24,24,15,24,'2025-03-12 14:30:00','00:26:05'),(25,1,16,25,'2025-03-12 15:00:30','00:22:20'),(26,2,17,26,'2025-03-12 15:30:45','00:21:55'),(27,3,18,27,'2025-03-12 16:00:10','00:23:15'),(28,4,19,28,'2025-03-12 16:30:00','00:20:25'),(29,5,20,29,'2025-03-12 17:00:20','00:22:30'),(30,6,21,30,'2025-03-12 17:30:40','00:25:40'),(31,7,22,25,'2025-03-12 18:00:15','00:22:00'),(32,8,23,26,'2025-03-12 18:30:25','00:21:40'),(33,9,24,27,'2025-03-12 19:00:30','00:23:10'),(34,10,25,28,'2025-03-12 19:30:45','00:24:05'),(35,11,26,29,'2025-03-12 20:00:10','00:25:00'),(36,12,27,30,'2025-03-12 20:30:25','00:22:50'),(37,13,28,25,'2025-03-12 21:00:00','00:20:40'),(38,14,29,26,'2025-03-12 21:30:15','00:21:30'),(39,15,30,27,'2025-03-12 22:00:30','00:22:20');
+/*!40000 ALTER TABLE `usuario_avaliacao` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `video`
+--
+
+DROP TABLE IF EXISTS `video`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `video` (
+  `id_video` int NOT NULL AUTO_INCREMENT,
+  `id_criador` int NOT NULL,
+  `titulo` varchar(255) NOT NULL,
+  `descricao` text NOT NULL,
+  `url` varchar(500) NOT NULL,
+  `data_publicacao` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `categoria` varchar(100) NOT NULL,
+  `palavra_chave` varchar(100) NOT NULL,
+  PRIMARY KEY (`id_video`),
+  KEY `video_ibfk_1_idx` (`id_criador`),
+  CONSTRAINT `video_ibfk_1` FOREIGN KEY (`id_criador`) REFERENCES `criador` (`id_criador`)
+) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `video`
+--
+
+LOCK TABLES `video` WRITE;
+/*!40000 ALTER TABLE `video` DISABLE KEYS */;
+INSERT INTO `video` VALUES (1,1,'APRENDENDO A FAZER MODELOS CONCEITUAIS','Nesse video, ensino como funciona um modelo conceitual e como criar ele','https://www.youtube.com/watch?v=BzQ7kkTZVIo','2025-03-10 12:12:42','banco de dados','conceitual'),(2,2,'PYTHON LISTAS. RESOLVENDO EXERCÍCIOS','Nesse video, estou resolvendo os exercicios que passei no final do video de semana passada, onde vimos um pouco sobre listas no python','https://www.youtube.com/watch?v=ZFAOxCyC4tU&list=PLNyCgqr3-6Amx5T15bW-7k70wtzk9ZK16&index=3','2025-03-10 12:42:18','programação','python'),(3,3,'HTML E CSS, APRENDA DO INÍCIO.','Nesse video, voce aprendera a comecar um projeto html e css.','https://www.youtube.com/watch?v=n_Etdr7Dbjs','2025-03-10 13:55:21','programação','html'),(4,4,'APRENDA O ESSENCIAL DE SEGURANÇA DA INFORMAÇÃO','Nesse video, aprenderemos quais sao os conceitos, fundamento e mecanismos de seguranca da informacao','https://www.youtube.com/watch?v=Gfh2bxe3hGU&pp=ygUac2VndXJhbsOnYSBkYSBpbmZvcm1hw6fDo28%3D','2025-03-10 14:06:41','segurança','segurança'),(5,5,'REACT NO MOBILE, APRENDA DESDE O INÍCIO.','Nesse video, veremos as funcionalidades do react no mobile e como ele se diferencia do react para html.','https://www.youtube.com/watch?v=71shcOjC_a4&pp=ygUMcmVhY3QgbW9iaWxl','2025-03-10 15:12:42','programação','react'),(6,6,'O BÁSICO DE C++, VEJA AQUI.','Nesse video, ensino basico de c++ para iniciantes e no final do video, resolvo um exercicio.','https://www.youtube.com/watch?v=McbdxZ3Se2U&pp=ygUKYysrIGJhc2ljbw%3D%3D','2025-03-10 16:00:30','programação','c++'),(7,7,'CRIANDO UM PROJETO NO MONGODB.','Nesse video, ensino a criar um banco de dados no mongodb.','https://www.youtube.com/watch?v=4dTI1mVLX3I&pp=ygUIbW9uZ28gZGI%3D','2025-03-10 17:15:00','banco de dados','mongodb'),(8,8,'COMO ESTRUTURAR UM PROJETO.','Nesse video, aprendemos a melhor forma de estruturar um projeto de programação.','https://www.youtube.com/watch?v=tbtQnKRttL8&pp=ygUqY29tbyBlc3RydXR1cmFyIHVtIHByb2pldG8gZGUgcHJvZ3JhbWHDp2Fv','2025-03-10 18:05:00','estrutura de software','projeto'),(9,9,'PHP, AULA 1.','Nesse video, ensino por meio de exercicios o basico de php.','https://www.youtube.com/watch?v=YCXtaBXgP5A&pp=ygUEcGhwINIHCQm9AIO1pN6f1A%3D%3D','2025-03-10 19:25:00','programação','php'),(10,10,'ORACLE, COMO FUNCIONA.','Nesse video, conhecemos o básico do oracle e o porque dele ser um banco de dados muito utilizado no mercado.','https://www.youtube.com/watch?v=DEDPnjh4E6s&list=PLJZRlbWeQvwI8nRzviH5ckXwYudrw2T56&index=4','2025-03-10 19:30:00','banco de dados','oracle'),(11,11,'PORTUGOL, O BÁSICO DA PROGRAMAÇÃO','Nesse video, aprenderemos o básico da programação, o portugol.','https://www.youtube.com/watch?v=jndzJGPlgrc&list=PLEFQxmyNTPkGcP-PVIDZAOP3bxAa0_caE','2025-03-10 19:45:00','programação','portugol'),(12,12,'JAVASCRIPT, COMO CRIAR UM PROJETO DE BACK END.','Nesse video, ensino como funciona o back end e sua programação.','https://www.youtube.com/watch?v=YeEX1s4M9xg','2025-03-10 20:00:30','programação','javascript'),(13,13,'COMO USAR CSS COM REACT.','Nesse video, ensino como implementar css no react.','https://www.youtube.com/watch?v=20hlPRPVMoU','2025-03-10 20:15:00','programação','css'),(14,14,'NOSQL, CONCEITOS E FUNCIONALIDADES','Nesse video, vemos as diferenças do mysql do nosql.','https://www.youtube.com/watch?v=1B64oqE8PLs','2025-03-11 12:30:00','banco de dados','nosql'),(15,15,'POSTGRESQL, CRIANDO UM BANCO DO ZERO.','Nesse video, ensino como trabalhar com o PostgreSQL.','https://www.youtube.com/watch?v=Ft3F7wWA-x8&list=PLucm8g_ezqNoAkYKXN_zWupyH6hQCAwxY&index=6','2025-03-11 13:15:00','banco de dados','postgresql'),(16,16,'APRENDENDO JAVA DO ZERO','Neste vídeo, ensino o básico do Java e como configurar o ambiente de desenvolvimento.','https://www.youtube.com/watch?v=QEvFjbsXvZo','2025-03-11 17:00:00','programação','java'),(17,17,'INICIANDO COM FLUTTER','Neste vídeo, abordo os primeiros passos para criar aplicativos com Flutter.','https://www.youtube.com/watch?v=1GT0jVxVgSg','2025-03-11 17:30:00','programação','flutter'),(18,18,'APRENDENDO REACT NATIVE','Neste vídeo, ensino a usar React Native para criar aplicativos móveis.','https://www.youtube.com/watch?v=2Mrd7qXIzsE','2025-03-11 18:00:00','programação','react native'),(19,19,'COMO FUNCIONA O GIT','Neste vídeo, explico o funcionamento básico do Git e como utilizá-lo em projetos.','https://www.youtube.com/watch?v=DR2JMbUn6xw','2025-03-11 18:30:00','programação','git'),(20,20,'APRENDENDO SQL BÁSICO','Neste vídeo, ensino o básico sobre SQL e como fazer consultas simples em um banco de dados.','https://www.youtube.com/watch?v=4P9H6OL63Uk','2025-03-11 19:00:00','banco de dados','sql'),(21,21,'TUTORIAL DE POO EM JAVA','Neste vídeo, ensino os conceitos básicos de Programação Orientada a Objetos em Java.','https://www.youtube.com/watch?v=32pZfBQWqLk','2025-03-11 19:30:00','programação','poo, java'),(22,22,'DIFERENÇA ENTRE MYSQL E POSTGRESQL','Neste vídeo, comparo os dois bancos de dados relacionais mais populares, MySQL e PostgreSQL.','https://www.youtube.com/watch?v=UFi0Ul5Zt-k','2025-03-11 20:00:00','banco de dados','mysql, postgresql'),(23,23,'CRIE SEU PRIMEIRO PROJETO EM LARAVEL','Neste vídeo, ensino como iniciar um projeto com o framework Laravel.','https://www.youtube.com/watch?v=gfh3hYzX_4s','2025-03-11 20:30:00','programação','laravel'),(24,24,'CONSTRUINDO UM CRONÔMETRO EM JAVASCRIPT','Neste vídeo, ensino como criar um cronômetro simples com JavaScript.','https://www.youtube.com/watch?v=pPjaHLPoCPk','2025-03-11 21:00:00','programação','javascript, cronômetro'),(25,25,'COMO CRIAR APPS NO ANDROID','Neste vídeo, ensino como criar um aplicativo simples para Android usando Java.','https://www.youtube.com/watch?v=h9JdkWREZ8E','2025-03-11 21:30:00','programação','android, java'),(26,26,'COMO FUNCIONA O VUE.JS','Neste vídeo, explico como o Vue.js pode facilitar o desenvolvimento de front-end.','https://www.youtube.com/watch?v=nz98Cm8K9Gs','2025-03-11 22:00:00','programação','vue.js'),(27,27,'DESENVOLVENDO UMA API COM NODE.JS','Neste vídeo, ensino como criar uma API utilizando o Node.js e Express.','https://www.youtube.com/watch?v=c5hhmPpOtM8','2025-03-11 22:30:00','programação','node.js, express'),(28,28,'PRINCÍPIOS DE DESIGN DE SOFTWARE','Neste vídeo, ensino os principais princípios de design de software que todo desenvolvedor deve conhecer.','https://www.youtube.com/watch?v=V9jICcT1u5o','2025-03-11 23:00:00','estrutura de software','design de software'),(29,29,'USANDO O FRAMEWORK ANGULAR','Neste vídeo, explico como trabalhar com o framework Angular para criar aplicações dinâmicas.','https://www.youtube.com/watch?v=knZ1ks1NlsE','2025-03-11 23:30:00','programação','angular'),(30,30,'AUTOMAÇÃO DE TESTES COM SELENIUM','Neste vídeo, ensino como automatizar testes de aplicativos web utilizando o Selenium.','https://www.youtube.com/watch?v=AoBYGZerf8k','2025-03-12 00:00:00','programação','selenium'),(31,28,'VANTAGENS DO FLASK','Neste vídeo, mostro as vantagens de usar o Flask para construir APIs em Python.','https://www.youtube.com/watch?v=jkWcWjx1YcI','2025-03-12 02:00:00','programação','flask'),(32,29,'USANDO O GIT NO DIA A DIA','Neste vídeo, explico como usar o Git de forma eficiente no seu fluxo de trabalho diário.','https://www.youtube.com/watch?v=ASUEFwAhGZ4','2025-03-12 02:30:00','programação','git'),(33,1,'APRENDENDO A FAZER MODELOS LÓGICOS','Nesse vídeo, ensino como funfioca um modelo lógico e como criar ele. ','https://www.youtube.com/watch?v=P6YQSjju9f8&pp=ygUsY29tbyBmYXplIHVtIG1vZGVsbyBmaXNpY28gZGUgYmFuY28gZGUgZGFkb3M%3D','2025-03-12 10:20:00','banco de dados','físico'),(34,2,'PYTHON AVANÇADO, RESOLVENDO EXERCÍCIOS','Nesse vídeo, resolvo mais exercícios de python que estão na apostila que escrevi.','https://www.youtube.com/watch?v=mqcNw_dhl8I&list=PLHz_AreHm4dm6wYOIW20Nyg12TAjmMGT-&index=7','2025-03-12 10:30:00','programação','python'),(35,3,'ANIMAÇÕES NO CSS, DEIXANDO SEU SITE MAIS COLORIDO','Nesse vídeo, vemos como animar no css e a melhorar ','https://www.youtube.com/watch?v=KxXsvC9b5GI&list=PLaLQ4gJXUd6B45ASQfyr5K-qSNNQIwtqf&index=4','2025-03-12 11:15:00','programação','css'),(36,4,'COMO USAR O MALTEGO, FERRAMENTA QUE PODE SALVAR SEUS DADOS.','Nesse vídeo, aprendemos a utilizar o Maltego, programa de segurança que pode salvar seus dados.','https://www.youtube.com/watch?v=CNoEklVbU6M&pp=ygUTY29tbyB1c2FyIG8gbWFsdGVnbw%3D%3D','2025-03-12 11:25:00','segurança','maltego'),(37,5,'USANDO FLEX NO MOBILE JUNTO COM EXERCÍCIOS.','Nesse vídeo, vemos como a função flex funciona no mobile e no final do video resolvemos alguns exercícios.','https://www.youtube.com/watch?v=vl3IU_LlF2E&pp=ygUKcmVhY3QgZmxleA%3D%3D','2025-03-12 11:40:50','programação','flex'),(38,6,'C++ AULA 2, RESOLVENDO EXERCÍCIOS.','Nesse video, resolvo alguns exercicios de C++.','https://www.youtube.com/watch?v=aISV1NBigW4&list=PLchPL6pwIL68EZWsc55jd5P6_TYp7oMb_','2025-03-12 11:55:00','programação','c++'),(39,7,'COMO COLOCAR DADOS NO MONGODB.','Nesse vídeo, vemos como preencher um projeto no mongodb com dados.','https://www.youtube.com/watch?v=n2cC5U85130&pp=ygUaY29sb2NhbmRvIGRhZG9zIG5vIG1vbmdvZGI%3D','2025-03-12 12:02:00','banco de dados','mongodb'),(40,8,'OS PADRÕES EM ARQUITETURA DE SOFTWARE.','Nesse video, veremos os diferentes tipos de padrão de software.','https://www.youtube.com/watch?v=kYx1QC1XZSo','2025-03-12 12:10:30','estrutura de software','arquitetura, padrão'),(41,9,'PHP, AULA 2.','Nesse vídeo, vamos avançando no conteúdo de php e no final passo uma lista de exercícios.','https://www.youtube.com/watch?v=P4JpDNH--UE&pp=ygUKUEhQIEFVTEEgMg%3D%3D','2025-03-12 12:17:50','programação','php'),(42,10,'ORACLE, COLOCANDO DADOS.','Nesse vídeo, vemos como colocar dados no Oracle.','https://www.youtube.com/watch?v=mD5bnuj7f7c&pp=ygUbUFJFRU5DSEVORE8gREFET1MgTk8gT1JBQ0xF','2025-03-12 12:23:50','banco de dados','oracle'),(43,11,'PORTUGOL, COMO ELE TE AJUDA NA PROGRAMAÇÃO.','Nesse vídeo, falo um pouco sobre por quê aprender o portugol, mesmo não sendo muito utilizado.','https://www.youtube.com/watch?v=OCsdAB0H418&pp=ygUYUE9SVFVPTCBQT1IgUVVFIEFQUkVOREVS0gcJCX4JAYcqIYzv','2025-03-12 12:30:21','programação','portugol'),(44,12,'JAVASCRIPT, COMO LER ARQUIVOS DA ÁREA DE TRABALHO.','Nesse vídeo, veremos como fazer com que um projeto leia um arquivo na área de trabalho.','https://www.youtube.com/watch?v=OnVNLU4q99o&pp=ygUXSkFWQVNDUklQVCBMRVIgQVJRVUlWT1M%3D','2025-03-12 12:36:00','programação','javascript'),(45,30,'APRENDENDO PYTHON DO ZERO','Neste vídeo, ensino o básico da linguagem Python para iniciantes.','https://www.youtube.com/watch?v=6GFVjCxvJ0A','2025-03-12 03:00:00','programação','python'),(46,1,'MYSQL, LEFT RIGHT E INNER JOIN','Neste vídeo, ensino o uso das joins no mysql','https://www.youtube.com/watch?v=165r4qUvp8Q','2025-04-28 17:35:00','banco de dados','join'),(47,2,'TRABALHANDO COM FUNÇÕES EM PYTHON','Neste vídeo, exploro a criação e o uso de funções na linguagem Python.','https://www.youtube.com/watch?v=u8piwlScXT8','2025-04-28 17:50:00','programação','funções python'),(48,3,'ESTILIZANDO FORMULÁRIOS COM CSS','Neste vídeo, mostro técnicas para estilizar formulários web de forma criativa com CSS.','https://www.youtube.com/watch?v=BKATrAAWrRo','2025-04-28 18:05:00','desenvolvimento web','formulários css'),(49,4,'CRIPTOGRAFIA BÁSICA PARA SEGURANÇA','Neste vídeo, apresento os fundamentos da criptografia e sua importância na segurança da informação.','https://www.youtube.com/watch?v=Yf4T91Kk1Gs','2025-04-28 18:20:00','segurança','criptografia básica'),(50,5,'COMPONENTES REUTILIZÁVEIS COM REACT MOBILE','Neste vídeo, ensino como criar e utilizar componentes reutilizáveis no desenvolvimento mobile com React.','https://www.youtube.com/watch?v=oPOKpSFqy-I','2025-04-28 18:35:00','programação','react mobile componentes'),(51,6,'POO EM C++: HERANÇA E POLIMORFISMO','Neste vídeo, explico os conceitos de herança e polimorfismo na Programação Orientada a Objetos com C++.','https://www.youtube.com/watch?v=qiGTRJlCnlA','2025-04-28 18:50:00','programação','poo c++'),(52,7,'CONSULTAS AVANÇADAS NO MONGODB','Neste vídeo, demonstro como realizar consultas complexas em bancos de dados MongoDB.','https://www.youtube.com/watch?v=wFM7LVUFb88','2025-04-28 19:05:00','banco de dados','consultas mongodb'),(53,8,'MELHORES PRÁTICAS DE CODIFICAÇÃO','Neste vídeo, discuto algumas das melhores práticas para escrever código de software de qualidade.','https://www.youtube.com/watch?v=GUanHEGlje4','2025-04-28 19:20:00','estrutura de software','boas práticas código'),(54,9,'FRAMEWORKS PHP: LARAVEL','Neste vídeo, introduzo o framework Laravel e mostro como iniciar um projeto.','https://www.youtube.com/watch?v=4oxjaQCJRaA','2025-04-28 19:35:00','programação','laravel php'),(55,10,'ADMINISTRAÇÃO DE USUÁRIOS NO ORACLE','Neste vídeo, ensino como gerenciar usuários e permissões no banco de dados Oracle.','https://www.youtube.com/watch?v=uJMxCO5m1xk','2025-04-28 19:50:00','banco de dados','administração oracle'),(56,11,'ESTRUTURAS DE CONTROLE EM PORTUGOL','Neste vídeo, exploro as estruturas de controle como condicionais e loops na linguagem Portugol.','https://www.youtube.com/watch?v=ZAo9T78-32Q','2025-04-28 20:05:00','programação','portugol estruturas de controle'),(57,12,'MANIPULAÇÃO DO DOM COM JAVASCRIPT','Neste vídeo, ensino como manipular o Document Object Model (DOM) utilizando JavaScript.','https://www.youtube.com/watch?v=0dBY09OJm04','2025-04-28 20:20:00','programação','dom javascript'),(58,13,'ANIMANDO ELEMENTOS COM CSS AVANÇADO','Neste vídeo, mostro técnicas avançadas para criar animações complexas com CSS.','https://www.youtube.com/watch?v=6x82lDZuCjQ','2025-04-28 20:35:00','programação','animações css avançado'),(59,14,'BANCOS DE DADOS NOSQL: KEY-VALUE STORES','Neste vídeo, explico o conceito e o uso de bancos de dados NoSQL do tipo Key-Value Store.','https://www.youtube.com/watch?v=QV9c5t0BDwc','2025-04-28 20:50:00','banco de dados','nosql key-value'),(60,15,'FUNÇÕES AVANÇADAS DO POSTGRESQL','Neste vídeo, exploro algumas das funcionalidades avançadas do banco de dados PostgreSQL.','https://www.youtube.com/watch?v=R7RzPQ1BlrA','2025-04-28 21:05:00','banco de dados','postgresql avançado'),(61,16,'DESIGN DE INTERFACES COM JAVA SWING','Neste vídeo, ensino como criar interfaces gráficas utilizando a biblioteca Swing do Java.','https://www.youtube.com/watch?v=tD_kHo_HAwM','2025-04-28 21:20:00','programação','java swing ui'),(62,17,'WIDGETS PERSONALIZADOS COM FLUTTER','Neste vídeo, mostro como criar widgets personalizados para desenvolver interfaces únicas com Flutter.','https://www.youtube.com/watch?v=EBaH_xt44HY','2025-04-28 21:35:00','programação','flutter widgets'),(63,18,'Navegação e Rotas no React Native','Neste vídeo, explico como implementar a navegação entre diferentes telas em aplicativos React Native.','https://www.youtube.com/watch?v=7lVWq32a65Y','2025-04-28 21:50:00','programação','react native navegação'),(64,19,'BRANCHING E MERGING COM GIT','Neste vídeo, demonstro como utilizar branches e realizar merges de forma eficiente com o Git.','https://www.youtube.com/watch?v=t_UND1if4eI','2025-04-28 22:05:00','programação','git branching merging'),(65,20,'JOINTS EM SQL: UNINDO TABELAS','Neste vídeo, ensino como utilizar diferentes tipos de JOIN para combinar dados de múltiplas tabelas em SQL.','https://www.youtube.com/watch?v=4AiIY15Yrt4','2025-04-28 22:20:00','banco de dados','sql joins');
+/*!40000 ALTER TABLE `video` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2025-05-21 19:20:06
