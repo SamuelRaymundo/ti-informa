@@ -380,12 +380,10 @@ html, body {
 }
 
 .botaoLimparErro {
-  /* Remove as propriedades 'bottom' e 'right' para centralizar melhor */
   position: absolute;
-  top: 50%;   /* Posiciona o topo do botão no meio verticalmente do pai */
-  left: 50%;  /* Posiciona a esquerda do botão no meio horizontalmente do pai */
-  transform: translate(-50%, -50%); /* Ajusta o botão em -50% da sua própria largura e altura, centralizando-o perfeitamente */
-
+  top: 50%;   
+  left: 50%;  
+  transform: translate(-50%, -50%); 
   padding: 10px 20px;
   font-size: 16px;
   background-color: #007bff;
