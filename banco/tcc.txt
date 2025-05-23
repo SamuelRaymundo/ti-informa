@@ -123,7 +123,7 @@ INSERT INTO `tcc`.`criador` (`nome`, `email`, `senha`, `cpf`, `formacao`) VALUES
 INSERT INTO `tcc`.`criador` (`nome`, `email`, `senha`, `cpf`, `formacao`) VALUES ('Doroteia', 'doroteia.desenvolve@gmail.com', 'doroteiawebdev', '665.443.221-34', 'desenvolvimento web');
 INSERT INTO `tcc`.`criador` (`nome`, `email`, `senha`, `cpf`, `formacao`) VALUES ('Anselmo', 'anselmo.softeng@gmail.com', 'anselmosoftware', '554.332.210-45', 'engenharia de software');
 INSERT INTO `tcc`.`criador` (`nome`, `email`, `senha`, `cpf`, `formacao`) VALUES ('Palmira', 'palmira.banco@gmail.com', 'palmiradba', '443.221.109-56', 'administracao de banco de dados');
-INSERT INTO `tcc`.`criador` (`nome`, `email`, `senha`, `cpf`, `formacao`) VALUES ('Severino', 'severino.engenharia@gmail.com', 'severinoengcomp', '332.210.098-67', 'engenharia da computacao');
+INSERT INTO `tcc`.`criador` (`nome`, `email`, `senha`, `cpf`, 'foto_url', `formacao`) VALUES ('Severino', 'severino.engenharia@gmail.com', 'severinoengcomp', '332.210.098-67',''https://br.web.img3.acsta.net/c_310_420/pictures/210/152/21015281_20130625213155152.jpg', 'engenharia da computacao');
 INSERT INTO `tcc`.`criador` (`nome`, `email`, `senha`, `cpf`, `formacao`) VALUES ('Iolanda', 'iolanda.arquiteta@gmail.com', 'iolandaarquiteta', '221.109.987-78', 'arquitetura de software');
 INSERT INTO `tcc`.`criador` (`nome`, `email`, `senha`, `cpf`, `formacao`) VALUES ('Osvaldo', 'osvaldo.analista@gmail.com', 'osvaldoanalise', '110.098.876-89', 'analise de sistemas');
 INSERT INTO `tcc`.`criador` (`nome`, `email`, `senha`, `cpf`, `formacao`) VALUES ('Romilda', 'romilda.desenvolve@gmail.com', 'romildadev', '098.876.654-90', 'desenvolvimento de software');
@@ -359,7 +359,7 @@ INSERT INTO `tcc`.`playlist_video` (`id_playlist`, `id_video`, `data_adicao`, `p
 
 USUARIO
 
-INSERT INTO `usuario` VALUES (1,'Juliana','jujubastos06@gmail.com','amominhamae2006','python, portugol, java');
+INSERT INTO `usuario` VALUES (1,'Juliana','jujubastos06@gmail.com','amominhamae2006', 'https://upload.wikimedia.org/wikipedia/commons/0/0a/Lady_Gaga_at_the_White_House_in_2023_%283%29.jpg','python, portugol, java');
 INSERT INTO `usuario` VALUES (2,'Gabriel','gabsferreira@gmail.com','31012007','php, javascript');
 INSERT INTO `usuario` VALUES (3,'Ivan','ivan_belario@gmail.com','ivfutebol@','typescript, java, javascript');
 INSERT INTO `usuario` VALUES (4,'Heloísa','helonunes_19@gmail.com','hntvlpostag','mysql, mongodb, oracle');
