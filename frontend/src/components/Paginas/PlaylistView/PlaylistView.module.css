@@ -1,0 +1,89 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 65%;
+    margin: 117px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    position: relative;
+    min-height: calc(100vh - 117px - 20px);
+    overflow: auto;
+    max-height: 90vh;
+  }
+  
+  .tituloPlaylist {
+    font-size: 35px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .visibilidade {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 20px;
+  }
+  
+  .listaVideos {
+    width: 65%;
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .itemVideo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    padding: 15px;
+  }
+  
+  .nomeArquivo {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  
+  .videoPlayer {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: 8px;
+  }
+
+  .videoPlayerWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .tituloPlaylistVideo {
+    font-size: 22px;
+    font-weight: normal; 
+    margin-bottom: 10px;
+    color: #333;
+    font-weight: normal; 
+    text-align: center;   
+    width: 100%;         
+  }
+
+.tituloVideo {
+  text-align: center; 
+  width: 100%;
+  display: block;
+}

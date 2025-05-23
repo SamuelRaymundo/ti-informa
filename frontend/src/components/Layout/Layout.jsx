@@ -47,8 +47,6 @@ const Menu = () => {
           )}
           {isLogged && (<li onClick={() => navegarPara('/interesses')}><HiOutlineAcademicCap /> Interesses</li>
           )}
-          {isLogged && (<li onClick={() => navegarPara('/config')}><HiAdjustments /> Configuração</li>
-          )}
         </ul>
       </div>
     </div>
