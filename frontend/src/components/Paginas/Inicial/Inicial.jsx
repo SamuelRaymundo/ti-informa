@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from './Inicial.module.css';
 import sampleImage from './Foto.jpg';
 import Layout from '../../Layout/Layout';
+import axios from '../../../api/axios-config';
 
 const Inicial = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -22,20 +23,32 @@ const Inicial = () => {
   };
 
   const togglePasswordVisibility = () => {
-    setShowPassword((prev) => !prev);
+    setShowPassword(prev => !prev);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    if (!formData.email.includes('@')) {
-      setError('Por favor, insira um e-mail válido.');
-      return;
+
+    try {
+      const response = await axios.post('/auth/login', {
+        email: formData.email,
+        senha: formData.password,
+      });
+      localStorage.setItem('token', response.data.token);
+      setUsuarioLogado(true);
+      navegarPara('/home');
+    } catch (err) {
+      if (err.response) {
+        if (err.response.status === 401) {
+          setError('E-mail ou senha incorretos');
+        } else {
+          setError('Erro ao fazer login');
+        }
+      } else {
+        setError('Não foi possível conectar ao servidor');
+      }
     }
-    
-    localStorage.setItem('token', 'fake-token');
-    setUsuarioLogado(true);
-    navegarPara('/home');
   };
 
   const handleLogout = () => {
