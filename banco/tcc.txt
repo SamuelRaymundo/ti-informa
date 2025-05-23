@@ -184,7 +184,7 @@ UPDATE `tcc`.`criador` SET `funcao` = '1' WHERE (`id_criador` = '51');
 
 PLAYLIST
 
-INSERT INTO `playlist` VALUES (5,1,NULL,'playlist da juliana','privada');
+INSERT INTO `playlist` VALUES (5,1,NULL,'playlist da juliana','NAO_LISTADA');
 INSERT INTO `playlist` VALUES (6,NULL,2,'aulas de python','publica');
 INSERT INTO `playlist` VALUES (7,3,NULL,'playlist do Ivan','privada');
 INSERT INTO `playlist` VALUES (8,4,NULL,'playlist da Heloisa','privada');
@@ -217,7 +217,7 @@ INSERT INTO `tcc`.`playlist` (`id_usuario`, `nome`, `visibilidade`) VALUES ('16'
 INSERT INTO `tcc`.`playlist` (`id_usuario`, `nome`, `visibilidade`) VALUES ('17', 'playlist do Evandro', 'privada');
 INSERT INTO `tcc`.`playlist` (`id_usuario`, `nome`, `visibilidade`) VALUES ('18', 'playlist do Fernando', 'publica');
 INSERT INTO `tcc`.`playlist` (`id_usuario`, `nome`, `visibilidade`) VALUES ('19', 'playlist do rafa', 'privada');
-INSERT INTO `tcc`.`playlist` (`id_usuario`, `nome`, `visibilidade`) VALUES ('20', 'playlist da Thalita', 'publica');
+INSERT INTO `tcc`.`playlist` (`id_usuario`, `nome`, `visibilidade`) VALUES ('20', 'playlist da Thalita', 'NAO_LISTADA');
 INSERT INTO `tcc`.`playlist` (`id_usuario`, `nome`, `visibilidade`) VALUES ('21', 'playlist do Nathan', 'publica');
 INSERT INTO `tcc`.`playlist` (`id_usuario`, `nome`, `visibilidade`) VALUES ('22', 'playlist gustavo', 'privada');
 INSERT INTO `tcc`.`playlist` (`id_usuario`, `nome`, `visibilidade`) VALUES ('23', 'playlist da Paola', 'privada');
