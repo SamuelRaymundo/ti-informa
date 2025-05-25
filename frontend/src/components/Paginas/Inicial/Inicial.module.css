@@ -1,21 +1,3 @@
-/* Barra superior*/
-.bar {
-  background-color: #8CA8C2;
-  height: 80px;
-  width: 100%;
-  position: fixed;
-  left: 0;
-  z-index: 1000;
-}
-
-.bar.top {
-  top: 0;
-}
-
-.bar.bottom {
-  bottom: 0;
-}
-
 .menuButton {
   background: none;
   border: none;
@@ -105,7 +87,6 @@
   align-items: center;
 }
 
-/* Formulario Login */
 .card {
   background-color: #f5f5f5;
   padding: 95px 30px;
@@ -179,7 +160,6 @@
   width: 100%;
   margin: 30px 0;
   position: relative;
-
 }
 
 .line {
@@ -214,7 +194,6 @@
   text-decoration: underline; 
 }
 
-/* Cadastre-se em baixo do login*/
 .register {
   background-color: #f5f5f5;
   padding: 21px;
@@ -243,7 +222,6 @@
   outline: none;
 }
 
-
 .registerLink:hover {
   text-decoration: underline;
 }
@@ -268,14 +246,11 @@ body {
   cursor: pointer;
   margin-bottom: 15px;
   position: relative;
-
 }
 
 .googleButton:hover {
   background-color: #C2332B; 
 }
-
-/*Com conta*/
 
 .logoutButton {
   width: 100%;
@@ -300,4 +275,165 @@ body {
   font-weight: bold;
   font-size: 1.35rem;
   margin-bottom: 20px;
+}
+
+@media (max-width: 1600px) {
+  .headerTitle {
+    margin-left: 1200px;
+  }
+  
+  .image {
+    transform: translateX(-80px);
+  }
+  
+  .card, .register {
+    transform: translateX(-150px);
+  }
+}
+
+@media (max-width: 1400px) {
+  .headerTitle {
+    margin-left: 1000px;
+  }
+  
+  .image {
+    transform: translateX(-50px);
+  }
+  
+  .card, .register {
+    transform: translateX(-120px);
+  }
+}
+
+@media (max-width: 1200px) {
+  .headerTitle {
+    margin-left: 800px;
+  }
+  
+  .image {
+    transform: translateX(-30px);
+    max-width: 900px;
+    height: 550px;
+  }
+  
+  .card, .register {
+    transform: translateX(-100px);
+    width: 380px;
+  }
+  
+  .card {
+    padding: 80px 25px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .headerTitle {
+    margin-left: 600px;
+  }
+  
+  .container {
+    justify-content: space-around;
+  }
+  
+  .image {
+    transform: translateX(0);
+    max-width: 700px;
+    height: 500px;
+  }
+  
+  .card, .register {
+    transform: translateX(0);
+    width: 350px;
+  }
+  
+  .card {
+    padding: 70px 20px;
+  }
+  
+  .title {
+    top: -35px;
+    font-size: 34px;
+  }
+}
+
+@media (max-width: 768px) {
+  .headerTitle {
+    margin-left: 0;
+    font-size: 28px;
+    margin-right: 20px;
+  }
+  
+  .container {
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 10px;
+    overflow-y: auto;
+  }
+  
+  .imageSection {
+    margin-right: 0;
+    margin-bottom: 20px;
+    width: 100%;
+  }
+  
+  .image {
+    max-width: 100%;
+    height: 300px;
+    transform: none;
+  }
+  
+  .formSection {
+    width: 100%;
+  }
+  
+  .card, .register {
+    width: 100%;
+    max-width: 400px;
+    transform: none;
+    margin-bottom: 20px;
+  }
+  
+  .card {
+    padding: 50px 20px;
+  }
+  
+  .title {
+    top: -25px;
+    font-size: 30px;
+  }
+  
+  .input, .button, .googleButton {
+    padding: 12px;
+  }
+  
+  .button {
+    top: 15px;
+  }
+  
+  .forgotPassword {
+    top: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .headerTitle {
+    font-size: 24px;
+  }
+  
+  .card {
+    padding: 40px 15px;
+  }
+  
+  .title {
+    font-size: 26px;
+    top: -20px;
+  }
+  
+  .input, .button, .googleButton {
+    padding: 10px;
+  }
+  
+  .logoutButton, .logadoMessage {
+    font-size: 1rem;
+  }
 }

@@ -18,7 +18,6 @@ const PlaylistView = () => {
           headers: { Authorization: `Bearer ${token}` }
         });
         
-        // Debug: Verifique a estrutura dos dados recebidos
         console.log('Dados da playlist:', response.data);
         
         setPlaylist(response.data);
