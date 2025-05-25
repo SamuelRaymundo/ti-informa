@@ -176,11 +176,11 @@
 .forgotPassword {
   background: none;
   border: none;
-  color: #007bff; 
+  color: #007bff;
   cursor: pointer;
   text-decoration: underline;
-  font-size: 1rem; 
-  outline: none; 
+  font-size: 1rem;
+  outline: none;
   margin-top: 10px;
   position: relative;
   top: 50px;
@@ -191,7 +191,7 @@
 }
 
 .forgotPassword:hover {
-  text-decoration: underline; 
+  text-decoration: underline;
 }
 
 .register {
@@ -239,7 +239,7 @@ body {
 .googleButton {
   width: 100%;
   padding: 13.5px;
-  background-color: #DB4437; 
+  background-color: #DB4437;
   color: white;
   border: none;
   border-radius: 4px;
@@ -249,7 +249,7 @@ body {
 }
 
 .googleButton:hover {
-  background-color: #C2332B; 
+  background-color: #C2332B;
 }
 
 .logoutButton {
@@ -277,163 +277,377 @@ body {
   margin-bottom: 20px;
 }
 
-@media (max-width: 1600px) {
+@media (max-width: 320px) {
   .headerTitle {
-    margin-left: 1200px;
-  }
-  
-  .image {
-    transform: translateX(-80px);
-  }
-  
-  .card, .register {
-    transform: translateX(-150px);
-  }
-}
-
-@media (max-width: 1400px) {
-  .headerTitle {
-    margin-left: 1000px;
-  }
-  
-  .image {
-    transform: translateX(-50px);
-  }
-  
-  .card, .register {
-    transform: translateX(-120px);
-  }
-}
-
-@media (max-width: 1200px) {
-  .headerTitle {
-    margin-left: 800px;
-  }
-  
-  .image {
-    transform: translateX(-30px);
-    max-width: 900px;
-    height: 550px;
-  }
-  
-  .card, .register {
-    transform: translateX(-100px);
-    width: 380px;
-  }
-  
-  .card {
-    padding: 80px 25px;
-  }
-}
-
-@media (max-width: 1024px) {
-  .headerTitle {
-    margin-left: 600px;
-  }
-  
-  .container {
-    justify-content: space-around;
-  }
-  
-  .image {
-    transform: translateX(0);
-    max-width: 700px;
-    height: 500px;
-  }
-  
-  .card, .register {
-    transform: translateX(0);
-    width: 350px;
-  }
-  
-  .card {
-    padding: 70px 20px;
-  }
-  
-  .title {
-    top: -35px;
-    font-size: 34px;
-  }
-}
-
-@media (max-width: 768px) {
-  .headerTitle {
+    font-size: 20px;
     margin-left: 0;
-    font-size: 28px;
-    margin-right: 20px;
+    margin-right: 10px;
   }
-  
+
+  .logo {
+    width: 100px;
+  }
+
   .container {
     flex-direction: column;
-    justify-content: flex-start;
-    padding: 10px;
-    overflow-y: auto;
+    padding: 5px;
+    margin-top: 60px;
+    margin-bottom: 60px;
   }
-  
+
   .imageSection {
-    margin-right: 0;
-    margin-bottom: 20px;
-    width: 100%;
+    margin-bottom: 15px;
   }
-  
+
   .image {
+    transform: translateX(0);
+    height: 180px;
     max-width: 100%;
-    height: 300px;
-    transform: none;
   }
-  
-  .formSection {
-    width: 100%;
-  }
-  
+
   .card, .register {
     width: 100%;
-    max-width: 400px;
+    max-width: 300px;
+    padding: 30px 10px;
+    transform: none;
+    margin-bottom: 15px;
+  }
+
+  .title {
+    font-size: 24px;
+    top: -15px;
+  }
+
+  .input, .button, .googleButton {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .button {
+    top: 10px;
+  }
+
+  .forgotPassword {
+    top: 20px;
+    font-size: 0.8rem;
+  }
+
+  .logoutButton, .logadoMessage {
+    font-size: 0.9rem;
+  }
+}
+
+@media (min-width: 321px) and (max-width: 480px) {
+  .headerTitle {
+    font-size: 24px;
+    margin-left: 0;
+    margin-right: 20px;
+  }
+
+  .container {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .imageSection {
+    margin-bottom: 20px;
+  }
+
+  .image {
+    transform: translateX(0);
+    height: 220px;
+    max-width: 100%;
+  }
+
+  .card, .register {
+    width: 100%;
+    max-width: 350px;
+    padding: 40px 15px;
     transform: none;
     margin-bottom: 20px;
   }
-  
-  .card {
-    padding: 50px 20px;
-  }
-  
+
   .title {
-    top: -25px;
-    font-size: 30px;
+    font-size: 28px;
+    top: -20px;
   }
-  
+
   .input, .button, .googleButton {
-    padding: 12px;
+    padding: 10px;
   }
-  
+
   .button {
     top: 15px;
   }
-  
+
   .forgotPassword {
     top: 30px;
   }
 }
 
-@media (max-width: 480px) {
+@media (min-width: 481px) and (max-width: 767px) {
   .headerTitle {
-    font-size: 24px;
+    font-size: 28px;
+    margin-left: 0;
+    margin-right: 20px;
   }
-  
-  .card {
-    padding: 40px 15px;
+
+  .container {
+    flex-direction: column;
+    padding: 15px;
   }
-  
+
+  .imageSection {
+    margin-bottom: 25px;
+  }
+
+  .image {
+    transform: translateX(0);
+    height: 300px;
+    max-width: 100%;
+  }
+
+  .card, .register {
+    width: 100%;
+    max-width: 400px;
+    padding: 50px 20px;
+    transform: none;
+    margin-bottom: 25px;
+  }
+
   .title {
-    font-size: 26px;
-    top: -20px;
+    font-size: 32px;
+    top: -30px;
   }
-  
+
   .input, .button, .googleButton {
-    padding: 10px;
+    padding: 12px;
   }
-  
-  .logoutButton, .logadoMessage {
-    font-size: 1rem;
+
+  .button {
+    top: 20px;
+  }
+
+  .forgotPassword {
+    top: 40px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .headerTitle {
+    margin-left: 500px;
+    font-size: 30px;
+  }
+
+  .container {
+    justify-content: space-around;
+  }
+
+  .image {
+    transform: translateX(0);
+    max-width: 75%;
+    height: 400px;
+  }
+
+  .card, .register {
+    transform: translateX(0);
+    width: 320px;
+  }
+
+  .title {
+    top: -30px;
+    font-size: 32px;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1200px) {
+  .headerTitle {
+    margin-left: 700px;
+  }
+
+  .image {
+    transform: translateX(-20px);
+    max-width: 75%;
+    height: 450px;
+  }
+
+  .card, .register {
+    transform: translateX(-80px);
+    width: 360px;
+  }
+}
+
+@media (min-width: 1201px) and (max-width: 1440px) {
+  .headerTitle {
+    margin-left: 900px;
+  }
+
+  .image {
+    transform: translateX(-60px);
+    max-width: 75%;
+    height: 500px;
+  }
+
+  .card, .register {
+    transform: translateX(-150px);
+    width: 400px;
+  }
+}
+
+@media (min-width: 1441px) and (max-width: 1920px) {
+  .headerTitle {
+    margin-left: 1200px;
+  }
+
+  .image {
+    max-width: 80%;
+    transform: translateX(-80px);
+  }
+
+  .card, .register {
+    transform: translateX(-150px);
+  }
+}
+
+@media (min-width: 1921px) and (max-width: 2560px) {
+  .headerTitle {
+    margin-left: 1700px;
+    font-size: 40px;
+  }
+
+  .image {
+    max-width: 1100px;
+    height: 650px;
+    transform: translateX(-150px);
+  }
+
+  .card, .register {
+    width: 500px;
+    transform: translateX(-150px);
+  }
+
+  .title {
+    font-size: 48px;
+    top: -55px;
+  }
+
+  .input, .button, .googleButton {
+    padding: 16px;
+    font-size: 1.1rem;
+  }
+}
+
+@media (min-width: 2561px) and (max-width: 3840px) {
+  .headerTitle {
+    margin-left: 2400px;
+    font-size: 50px;
+  }
+
+  .image {
+    max-width: 1400px;
+    height: 800px;
+    transform: translateX(-200px);
+  }
+
+  .card, .register {
+    width: 600px;
+    transform: translateX(-300px);
+  }
+
+  .title {
+    font-size: 58px;
+    top: -65px;
+  }
+
+  .input, .button, .googleButton {
+    padding: 18px;
+    font-size: 1.2rem;
+  }
+}
+
+@media (min-width: 3841px) and (max-width: 5120px) {
+  .headerTitle {
+    margin-left: 3500px;
+    font-size: 60px;
+  }
+
+  .image {
+    max-width: 1900px;
+    height: 1000px;
+    transform: translateX(-250px);
+  }
+
+  .card, .register {
+    width: 800px;
+    padding: 160px 60px;
+    transform: translateX(-400px);
+  }
+
+  .title {
+    font-size: 70px;
+    top: -80px;
+  }
+
+  .input, .button, .googleButton {
+    padding: 22px;
+    font-size: 1.4rem;
+  }
+}
+
+@media (min-width: 5121px) and (max-width: 7680px) {
+  .headerTitle {
+    margin-left: 5000px;
+    font-size: 80px;
+  }
+
+  .image {
+    max-width: 2500px;
+    height: 1500px;
+    transform: translateX(-350px);
+  }
+
+  .card, .register {
+    width: 1000px;
+    padding: 200px 80px;
+    transform: translateX(-500px);
+  }
+
+  .title {
+    font-size: 90px;
+    top: -100px;
+  }
+
+  .input, .button, .googleButton {
+    padding: 26px;
+    font-size: 1.6rem;
+  }
+}
+
+@media (min-width: 7681px) {
+  .headerTitle {
+    margin-left: 7000px;
+    font-size: 100px;
+  }
+
+  .image {
+    max-width: 3200px;
+    height: 2000px;
+    transform: translateX(-500px);
+  }
+
+  .card, .register {
+    width: 1200px;
+    padding: 250px 100px;
+    transform: translateX(-600px);
+  }
+
+  .title {
+    font-size: 110px;
+    top: -120px;
+  }
+
+  .input, .button, .googleButton {
+    padding: 30px;
+    font-size: 1.8rem;
   }
 }
