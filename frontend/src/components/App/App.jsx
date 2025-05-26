@@ -12,6 +12,7 @@ import RegisterCriador from '../Paginas/RegisterCriador/RegisterCriador';
 import UploadVideo from '../Paginas/UploadVideo/UploadVideo'; 
 import PlaylistView from '../Paginas/PlaylistView/PlaylistView';
 import VideoPage from '../Paginas/VideoPage/VideoPage';
+import RedefinirSenha from '../Paginas/RedefinirSenha/RedefinirSenha';
 import ErrorBoundary from './ErrorBoundary';
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
                     <Route path="/perfil" element={<Perfil />} />
                     <Route path="/assinatura" element={<Assinatura />} />
                     <Route path="/EsqueceuSenha" element={<EsqueceuSenha />} />
+                    <Route path="/RedefinirSenha" element={<RedefinirSenha />} />
                     <Route path="/RegisterCriador" element={<RegisterCriador />} />
                     <Route path="/upload-video" element={<UploadVideo />} />
                     <Route path="/playlist/:playlistId" element={<PlaylistView />} />

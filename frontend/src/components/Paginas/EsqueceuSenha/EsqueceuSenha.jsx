@@ -50,7 +50,7 @@ const EsqueceuSenha = () => {
       );
       if (resp.ok) {
         alert('Resposta correta! Redirecionando para redefinir senha.');
-        navegarPara('/redefinir-senha', { state: { email } });
+        navegarPara('/RedefinirSenha', { state: { email } });
       } else {
         const errorText = await resp.text(); 
         setErro(errorText || 'Resposta incorreta. Tente novamente.');
