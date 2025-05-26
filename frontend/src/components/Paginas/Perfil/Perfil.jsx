@@ -89,6 +89,7 @@ const Perfil = () => {
   const [secoesAtivas, setSecoesAtivas] = useState([]);
   const [interessesUsuario, setInteressesUsuario] = useState('');
   const navigate = useNavigate();
+  const TamanhoNomePlaylist = 30;
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -148,7 +149,7 @@ const Perfil = () => {
     carregarDados();
   }, [navigate]);
 
-  const aoClicarEditar = () => {};
+  const aoClicarEditar = () => { };
   const aoClicarSair = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('nomeCompleto');
@@ -163,6 +164,10 @@ const Perfil = () => {
     const token = localStorage.getItem('token');
     if (!novaPlaylistNome.trim()) {
       alert('Por favor, insira um nome para a playlist');
+      return;
+    }
+    if (novaPlaylistNome.length > TamanhoNomePlaylist) {
+      alert(`O nome da playlist não pode exceder ${TamanhoNomePlaylist} caracteres.`);
       return;
     }
 
@@ -205,9 +210,15 @@ const Perfil = () => {
             <input
               type="text"
               className={styles.inputNovaPlaylist}
-              placeholder="Nome da nova playlist"
+              placeholder={`Nome da nova playlist (máx. ${TamanhoNomePlaylist} caracteres)`}
               value={novaPlaylistNome}
-              onChange={e => setNovaPlaylistNome(e.target.value)}
+              onChange={e => {
+                // Limita o comprimento do nome da playlist
+                if (e.target.value.length <= TamanhoNomePlaylist) {
+                  setNovaPlaylistNome(e.target.value);
+                }
+              }}
+              maxLength={TamanhoNomePlaylist} // Adiciona o atributo maxLength para feedback visual
             />
             <button
               className={styles.botaoNovaPlaylist}
@@ -243,33 +254,69 @@ const Perfil = () => {
     },
   ];
 
-  const secaoInteresses = {
+  function extrairInteressesPorCategoria(interesses, categoria) {
+    const categoriasMapa = { // Renomeado para evitar conflito com 'categorias' de antes
+      'Linguagens de Programação': ['Python', 'Java', 'C++'],
+      'Desenvolvimento Web': ['HTML', 'CSS', 'React', 'Angular'],
+      'Banco de Dados': ['SQL', 'NoSQL', 'MongoDB']
+    };
+
+    if (!interesses) return [];
+
+    return interesses.split(',')
+      .map(i => i.trim())
+      .filter(interesse => categoriasMapa[categoria] && categoriasMapa[categoria].includes(interesse));
+  }
+
+    const secaoInteresses = {
     id: 'interesses',
     titulo: 'Interesses',
     conteudo: (
       <div className={styles.tabelaContainer}>
         {interessesUsuario ? (
           <div>
-            <h3 className={styles.subtituloCategorias}>Linguagens de Programação</h3>
-            <ul className={styles.listaInteresses}>
-              {extrairInteressesPorCategoria(interessesUsuario, 'Linguagens de Programação').map((interesse, index) => (
-                <li key={`prog-${index}`}>{interesse}</li>
-              ))}
-            </ul>
-            
-            <h3 className={styles.subtituloCategorias}>Desenvolvimento Web</h3>
-            <ul className={styles.listaInteresses}>
-              {extrairInteressesPorCategoria(interessesUsuario, 'Desenvolvimento Web').map((interesse, index) => (
-                <li key={`web-${index}`}>{interesse}</li>
-              ))}
-            </ul>
-            
-            <h3 className={styles.subtituloCategorias}>Banco de Dados</h3>
-            <ul className={styles.listaInteresses}>
-              {extrairInteressesPorCategoria(interessesUsuario, 'Banco de Dados').map((interesse, index) => (
-                <li key={`db-${index}`}>{interesse}</li>
-              ))}
-            </ul>
+            {/* Linguagens de Programação */}
+            {extrairInteressesPorCategoria(interessesUsuario, 'Linguagens de Programação').length > 0 && (
+              <>
+                <h3 className={styles.subtituloCategorias}>Linguagens de Programação</h3>
+                <ul className={styles.listaInteresses}>
+                  {extrairInteressesPorCategoria(interessesUsuario, 'Linguagens de Programação').map((interesse, index) => (
+                    <li key={`prog-${index}`}>{interesse}</li>
+                  ))}
+                </ul>
+              </>
+            )}
+
+            {/* Desenvolvimento Web */}
+            {extrairInteressesPorCategoria(interessesUsuario, 'Desenvolvimento Web').length > 0 && (
+              <>
+                <h3 className={styles.subtituloCategorias}>Desenvolvimento Web</h3>
+                <ul className={styles.listaInteresses}>
+                  {extrairInteressesPorCategoria(interessesUsuario, 'Desenvolvimento Web').map((interesse, index) => (
+                    <li key={`web-${index}`}>{interesse}</li>
+                  ))}
+                </ul>
+              </>
+            )}
+
+            {/* Banco de Dados */}
+            {extrairInteressesPorCategoria(interessesUsuario, 'Banco de Dados').length > 0 && (
+              <>
+                <h3 className={styles.subtituloCategorias}>Banco de Dados</h3>
+                <ul className={styles.listaInteresses}>
+                  {extrairInteressesPorCategoria(interessesUsuario, 'Banco de Dados').map((interesse, index) => (
+                    <li key={`db-${index}`}>{interesse}</li>
+                  ))}
+                </ul>
+              </>
+            )}
+            {/* Se nenhum interesse for definido em todas as categorias */}
+            {
+              extrairInteressesPorCategoria(interessesUsuario, 'Linguagens de Programação').length === 0 &&
+              extrairInteressesPorCategoria(interessesUsuario, 'Desenvolvimento Web').length === 0 &&
+              extrairInteressesPorCategoria(interessesUsuario, 'Banco de Dados').length === 0 &&
+              <p>Nenhum interesse definido.</p>
+            }
           </div>
         ) : (
           <p>Nenhum interesse definido.</p>
@@ -277,16 +324,17 @@ const Perfil = () => {
       </div>
     ),
   };
-  
+
+
   function extrairInteressesPorCategoria(interesses, categoria) {
     const categorias = {
       'Linguagens de Programação': ['Python', 'Java', 'C++'],
       'Desenvolvimento Web': ['HTML', 'CSS', 'React', 'Angular'],
       'Banco de Dados': ['SQL', 'NoSQL', 'MongoDB']
     };
-  
+
     if (!interesses) return [];
-    
+
     return interesses.split(',')
       .map(i => i.trim())
       .filter(interesse => categorias[categoria].includes(interesse));
@@ -304,12 +352,12 @@ const Perfil = () => {
         </div>
         <div className={styles.listaVideos}>
           {Array.isArray(videosOrdenados) && videosOrdenados.map((video, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className={styles.itemVideo}
             >
               <h3 className={styles.nomeArquivo}>{video.titulo}</h3>
-              <div 
+              <div
                 className={styles.videoContainer}
                 onClick={() => navigate(`/video/${video.id_video || video.id}`, { state: { video } })}
                 style={{ cursor: 'pointer' }}
@@ -335,8 +383,8 @@ const Perfil = () => {
   };
 
   const secoesFiltradas = isCriador
-    ? [secaoVideos, ...secoesBase] 
-    : [...secoesBase, secaoInteresses]; 
+    ? [secaoVideos, ...secoesBase]
+    : [...secoesBase, secaoInteresses];
 
   if (loading) {
     return (
@@ -404,10 +452,8 @@ const Perfil = () => {
                 {secao.titulo} <HiChevronDown />
               </p>
               <div
-                className={`${styles.conteudoSecao} ${
-                  secoesAtivas.includes(secao.id) ? styles.aberta : ''
-                }`}
-              >
+                className={`${styles.conteudoSecao} ${secoesAtivas.includes(secao.id) ? styles.aberta : ''
+                  }`}              >
                 {secao.conteudo}
               </div>
             </div>
