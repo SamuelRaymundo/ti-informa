@@ -12,6 +12,8 @@ import javax.crypto.SecretKey;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class TokenService {
@@ -21,31 +23,35 @@ public class TokenService {
 
     public String gerarToken(UserDetailsImpl userDetails) {
         SecretKey key = getChaveSecreta();
+
+        List<Map<String, String>> roles = userDetails.getAuthorities().stream()
+                .map(authority -> Map.of("authority", authority.getAuthority()))
+                .toList();
+
         return Jwts.builder()
                 .setIssuer("auth-api")
                 .setSubject(userDetails.getEmail())
-                .claim("role", userDetails.getAuthorities())
+                .claim("roles", roles)  // "roles" é mais comum, mas pode manter "role" se preferir
                 .setExpiration(gerarDataExpiracao())
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
-    private Date gerarDataExpiracao() {
-        return Date.from(LocalDateTime.now(ZoneOffset.UTC)
-                .plusHours(2)
-                .toInstant(ZoneOffset.UTC));
-    }
 
+    private Date gerarDataExpiracao() {
+        return Date.from(
+                LocalDateTime.now(ZoneOffset.UTC)
+                        .plusHours(2)
+                        .toInstant(ZoneOffset.UTC)
+        );
+    }
 
     public String extrairUsuario(String token) {
         try {
-            String usuario = extrairClaims(token).getSubject();
-            return usuario;
+            return extrairClaims(token).getSubject();
         } catch (Exception e) {
             return null;
         }
     }
-
-
 
     public boolean isTokenExpirado(String token) {
         try {
@@ -56,10 +62,11 @@ public class TokenService {
     }
 
     public String validarToken(String token) {
-        String usuario = extrairUsuario(token);
-        return (usuario != null && !isTokenExpirado(token))
-                ? "Token válido para o usuário: " + usuario
-                : "Token inválido";
+        var usuario = extrairUsuario(token);
+        if (usuario != null && !isTokenExpirado(token)) {
+            return "Token válido para o usuário: " + usuario;
+        }
+        return "Token inválido";
     }
 
     private Claims extrairClaims(String token) {
@@ -70,7 +77,6 @@ public class TokenService {
                 .parseClaimsJws(token)
                 .getBody();
     }
-
 
     private SecretKey getChaveSecreta() {
         return Keys.hmacShaKeyFor(secret.getBytes());

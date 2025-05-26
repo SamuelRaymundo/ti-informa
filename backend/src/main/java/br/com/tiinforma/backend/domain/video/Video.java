@@ -41,7 +41,8 @@ public class Video implements Serializable {
 
     private String categoria;
 
-    private String palavra_chave;
+    @Column(name = "palavra_chave")
+    private String palavraChave;
 
     @ManyToOne
     @JoinColumn(name = "id_criador")

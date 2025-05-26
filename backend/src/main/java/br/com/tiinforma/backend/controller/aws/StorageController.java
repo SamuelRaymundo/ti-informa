@@ -4,6 +4,7 @@ import br.com.tiinforma.backend.domain.criador.Criador;
 import br.com.tiinforma.backend.domain.userDetails.UserDetailsImpl;
 import br.com.tiinforma.backend.domain.usuario.Usuario;
 import br.com.tiinforma.backend.domain.video.Video;
+import br.com.tiinforma.backend.domain.video.VideoResponseDto;
 import br.com.tiinforma.backend.domain.video.VideoUploadDTO;
 import br.com.tiinforma.backend.exceptions.ResourceNotFoundException;
 import br.com.tiinforma.backend.repositories.CriadorRepository;
@@ -20,13 +21,14 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -90,7 +92,7 @@ public class StorageController {
                     palavraChave
             );
 
-            String response = storageService.uploadFile(
+            String response = String.valueOf(storageService.uploadFile(
                     dto.getFile(),
                     dto.getTitulo(),
                     dto.getDescricao(),
@@ -98,7 +100,7 @@ public class StorageController {
                     dto.getDataCadastro(),
                     String.join(",", dto.getPalavraChave()),
                     criador
-            );
+            ));
 
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (JsonProcessingException e) {
@@ -118,15 +120,11 @@ public class StorageController {
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "Criador não encontrado"));
             List<Video> videos = videoRepository.findByCriadorId(criador.getId());
             return ResponseEntity.ok(videos);
-        } catch (ResponseStatusException e) {
-            System.err.println("ResponseStatusException in listarMeusVideos: " + e.getMessage());
-            return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
         } catch (Exception e) {
-            System.err.println("Error in listarMeusVideos: " + e.getMessage());
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao buscar vídeos: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao buscar vídeos");
         }
     }
+
 
     @PostMapping("foto/{tipo}/{id}")
     public ResponseEntity<String> uploadFoto(
@@ -166,9 +164,15 @@ public class StorageController {
     @DeleteMapping("/delete/{fileName}")
     public ResponseEntity<String> deleteFile(
             @PathVariable String fileName,
-            @AuthenticationPrincipal UserDetailsImpl userDetails
+            @AuthenticationPrincipal UserDetails userDetails
     ) {
-        String mensagem = storageService.deleteFile("Arquivo:" + fileName,"Deletado pelo usuario:" + userDetails.getUsername());
+        String mensagem = storageService.deleteFile(fileName, userDetails.getUsername());
         return ResponseEntity.ok(mensagem);
     }
+
+
+
+
+
+
 }

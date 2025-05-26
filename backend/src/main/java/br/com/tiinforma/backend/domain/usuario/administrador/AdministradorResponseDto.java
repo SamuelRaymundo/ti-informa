@@ -1,22 +1,19 @@
-package br.com.tiinforma.backend.domain.usuario;
+package br.com.tiinforma.backend.domain.usuario.administrador;
 
 import br.com.tiinforma.backend.domain.enums.Funcao;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-
+import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UsuarioResponseDto {
-    private Long id;
+public class AdministradorResponseDto {
+
     private String nome;
     private String email;
-    private String interesses;
     private Funcao funcao;
-    private String pergunta;
-    private String resposta;
+    private String fotoUrl;
 }

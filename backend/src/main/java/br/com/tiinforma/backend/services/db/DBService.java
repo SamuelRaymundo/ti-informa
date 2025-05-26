@@ -15,12 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class DBService {
@@ -57,34 +54,7 @@ public class DBService {
         }
     }
 
-    @Transactional
-    public Video salvarVideo(
-            String titulo,
-            String descricao,
-            String categoria,
-            String palavraChaveString,
-            String videoKey,
-            Criador criador
-    ) {
-        List<String> palavrasChaveList = null;
-        if (palavraChaveString != null && !palavraChaveString.trim().isEmpty()) {
-            palavrasChaveList = Arrays.stream(palavraChaveString.split(","))
-                    .map(String::trim)
-                    .collect(Collectors.toList());
-        }
 
-        Video video = Video.builder()
-                .titulo(titulo)
-                .descricao(descricao)
-                .categoria(categoria)
-                .palavra_chave(palavrasChaveList != null ? String.join(",", palavrasChaveList) : null)
-                .dataPublicacao(LocalDate.now())
-                .key(videoKey)
-                .criador(criador)
-                .build();
-
-        return videoRepository.save(video);
-    }
 
     private void criarUsuarios() {
         List<Usuario> usuarios = List.of(
@@ -101,9 +71,21 @@ public class DBService {
                         .senha(passwordEncoder.encode("senha456"))
                         .interesses("Eletrônica, Techno")
                         .funcao(Funcao.USUARIO)
+                        .build(),
+                Usuario.builder()
+                        .nome("Samuel Raymundo")
+                        .email("samuel@email.com")
+                        .senha(passwordEncoder.encode("senha1234"))
+                        .funcao(Funcao.ADMINISTRADOR)
                         .build()
         );
-        usuarioRepository.saveAll(usuarios);
+
+        for (Usuario u : usuarios) {
+            boolean existeEmail = usuarioRepository.findByEmail(u.getEmail()).isPresent();
+            if (!existeEmail) {
+                usuarioRepository.save(u);
+            }
+        }
     }
 
     private void criarCriadores() {
@@ -125,8 +107,16 @@ public class DBService {
                         .funcao(Funcao.CRIADOR)
                         .build()
         );
-        criadorRepository.saveAll(criadores);
+
+        for (Criador c : criadores) {
+            boolean existeCpf = criadorRepository.findByCpf(c.getCpf()).isPresent();
+            boolean existeEmail = criadorRepository.findByEmail(c.getEmail()).isPresent();
+            if (!existeCpf && !existeEmail) {
+                criadorRepository.save(c);
+            }
+        }
     }
+
 
     private void criarAssinaturas() {
         List<Usuario> usuarios = usuarioRepository.findAll();
@@ -158,7 +148,7 @@ public class DBService {
                         .descricao("Aprenda técnicas avançadas de edição.")
                         .dataPublicacao(LocalDate.now())
                         .categoria("Cinema")
-                        .palavra_chave("edição,cinema")
+                        .palavraChave("edição,cinema")
                         .key("video123.mp4")
                         .criador(criadores.get(0))
                         .build(),
@@ -166,7 +156,7 @@ public class DBService {
                         .titulo("Teoria Musical Básica")
                         .descricao("Introdução à teoria musical.")
                         .categoria("Música")
-                        .palavra_chave("música,teoria")
+                        .palavraChave("música,teoria")
                         .key("music456.mp4")
                         .criador(criadores.get(1))
                         .build()

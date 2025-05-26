@@ -257,7 +257,7 @@ const Register = () => {
                     <h3 style={{ fontSize: '1.3rem', fontWeight: 'bold', marginBottom: '10px', display: 'inline-block' }}>
                       {secao.tituloSecao}
                     </h3>
-                    <div style={{ display: 'inline-block', width: 'calc(100% - 200px)', height: '1px', backgroundColor: '#ccc', marginLeft: '10px', verticalAlign: 'middle' }}></div>
+                    <div style={{ display: 'inline-block', width: 'calc(100% - 150px)', height: '1px', backgroundColor: '#ccc', marginLeft: '10px', verticalAlign: 'middle' }}></div>
                     <div style={{ display: 'flex', gap: '10px', marginTop: '10px', flexWrap: 'wrap' }}>
                       {secao.interesses.map((interesse) => (
                         <button

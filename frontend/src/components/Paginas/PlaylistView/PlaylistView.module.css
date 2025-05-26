@@ -81,3 +81,9 @@
     text-align: center;   
     width: 100%;         
   }
+
+.tituloVideo {
+  text-align: center; 
+  width: 100%;
+  display: block;
+}

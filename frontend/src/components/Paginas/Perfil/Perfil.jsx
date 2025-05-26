@@ -5,28 +5,41 @@ import { HiChevronDown, HiCog, HiPlus } from 'react-icons/hi';
 import Layout from '../../Layout/Layout';
 import axios from '../../../api/axios-config';
 
+const getThumbnailSource = (videoKey) => {
+  if (!videoKey) return 'https://placehold.co/300x167';
+  return `https://tcc-fiec-ti-informa.s3.us-east-2.amazonaws.com/thumbnails/${videoKey.replace('.mp4', '.jpg')}`;
+};
+
 const AddToPlaylistButton = ({ videoId, playlists }) => {
   const [showSelect, setShowSelect] = useState(false);
   const [selectedPlaylist, setSelectedPlaylist] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleAdd = async () => {
-    if (!selectedPlaylist) return;
+    if (!selectedPlaylist || !videoId) {
+      alert('Selecione uma playlist e verifique o vídeo');
+      return;
+    }
+
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
       await axios.post(
-        `/auth/playlist/${selectedPlaylist}/adicionar-video`,
-        null,
+        `/playlists/${selectedPlaylist}/adicionar-video`,
+        {},
         {
           params: { videoId },
-          headers: { Authorization: `Bearer ${token}` },
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
         }
       );
       alert('Vídeo adicionado à playlist!');
       setShowSelect(false);
-    } catch {
-      alert('Erro ao adicionar vídeo à playlist');
+    } catch (error) {
+      console.error('Erro ao adicionar vídeo:', error);
+      alert(error.response?.data || 'Erro ao adicionar vídeo à playlist');
     } finally {
       setLoading(false);
     }
@@ -74,6 +87,7 @@ const Perfil = () => {
   const [loadingPlaylists, setLoadingPlaylists] = useState(true);
   const [novaPlaylistNome, setNovaPlaylistNome] = useState('');
   const [secoesAtivas, setSecoesAtivas] = useState([]);
+  const [interessesUsuario, setInteressesUsuario] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -91,6 +105,7 @@ const Perfil = () => {
         setNomeCompleto(response.data.nome);
         setEmailUsuario(response.data.email);
         setIsCriador(response.data.isCriador || false);
+        setInteressesUsuario(response.data.interesses);
 
         if (response.data.isCriador) {
           setSecoesAtivas(['videos', 'playlists']);
@@ -104,7 +119,7 @@ const Perfil = () => {
             }
           }
         } else {
-          setSecoesAtivas(['playlists']);
+          setSecoesAtivas(['playlists', 'interesses']);
           setVideosUsuario([]);
         }
       } catch (error) {
@@ -121,7 +136,7 @@ const Perfil = () => {
 
       try {
         setLoadingPlaylists(true);
-        const res = await axios.get('/auth/minhas-playlists', { headers });
+        const res = await axios.get('/playlists/minhas-playlists', { headers });
         setPlaylists(res.data);
       } catch {
         setError('Erro ao buscar playlists do usuário.');
@@ -154,7 +169,7 @@ const Perfil = () => {
     try {
       setLoadingPlaylists(true);
       const res = await axios.post(
-        '/auth/criar-playlist',
+        '/playlists/criar',
         { nome: novaPlaylistNome, visibilidade: 'PRIVADA' },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -209,29 +224,73 @@ const Perfil = () => {
             </div>
           ) : (
             <div className={styles.listaPlaylistsGrid}>
-            {playlists.length === 0 && <p>Você não possui playlists.</p>}
-            {playlists.slice().reverse().map(playlist => (
-              <div
-                key={playlist.id_playlist || playlist.id}
-                className={styles.playlistCard}
-                onClick={() => navigate(`/playlist/${playlist.id_playlist || playlist.id}`, { state: { playlist }})}
-              >
-                <h4>{playlist.nome}</h4>
-                <p>Visibilidade: {playlist.visibilidade}</p>
-                <p>{playlist.videos?.length || 0} vídeos</p>
-              </div>
-            ))}
-          </div>
+              {playlists.length === 0 && <p>Você não possui playlists.</p>}
+              {playlists.slice().reverse().map(playlist => (
+                <div
+                  key={playlist.id_playlist || playlist.id}
+                  className={styles.playlistCard}
+                  onClick={() => navigate(`/playlist/${playlist.id_playlist || playlist.id}`, { state: { playlist } })}
+                >
+                  <h4>{playlist.nome}</h4>
+                  <p>Visibilidade: {playlist.visibilidade}</p>
+                  <p>{playlist.videos?.length || 0} vídeos</p>
+                </div>
+              ))}
+            </div>
           )}
         </div>
       ),
     },
-    {
-      id: 'interesses',
-      titulo: 'Interesses',
-      subSecoes: ['Interesse 1', 'Interesse 2', 'Interesse 3'],
-    },
   ];
+
+  const secaoInteresses = {
+    id: 'interesses',
+    titulo: 'Interesses',
+    conteudo: (
+      <div className={styles.tabelaContainer}>
+        {interessesUsuario ? (
+          <div>
+            <h3 className={styles.subtituloCategorias}>Linguagens de Programação</h3>
+            <ul className={styles.listaInteresses}>
+              {extrairInteressesPorCategoria(interessesUsuario, 'Linguagens de Programação').map((interesse, index) => (
+                <li key={`prog-${index}`}>{interesse}</li>
+              ))}
+            </ul>
+            
+            <h3 className={styles.subtituloCategorias}>Desenvolvimento Web</h3>
+            <ul className={styles.listaInteresses}>
+              {extrairInteressesPorCategoria(interessesUsuario, 'Desenvolvimento Web').map((interesse, index) => (
+                <li key={`web-${index}`}>{interesse}</li>
+              ))}
+            </ul>
+            
+            <h3 className={styles.subtituloCategorias}>Banco de Dados</h3>
+            <ul className={styles.listaInteresses}>
+              {extrairInteressesPorCategoria(interessesUsuario, 'Banco de Dados').map((interesse, index) => (
+                <li key={`db-${index}`}>{interesse}</li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <p>Nenhum interesse definido.</p>
+        )}
+      </div>
+    ),
+  };
+  
+  function extrairInteressesPorCategoria(interesses, categoria) {
+    const categorias = {
+      'Linguagens de Programação': ['Python', 'Java', 'C++'],
+      'Desenvolvimento Web': ['HTML', 'CSS', 'React', 'Angular'],
+      'Banco de Dados': ['SQL', 'NoSQL', 'MongoDB']
+    };
+  
+    if (!interesses) return [];
+    
+    return interesses.split(',')
+      .map(i => i.trim())
+      .filter(interesse => categorias[categoria].includes(interesse));
+  }
 
   const secaoVideos = {
     id: 'videos',
@@ -244,55 +303,40 @@ const Perfil = () => {
           </button>
         </div>
         <div className={styles.listaVideos}>
-        {Array.isArray(videosOrdenados) && videosOrdenados.map((video, index) => (
-          <div key={index} className={styles.itemVideo}>
-            <h3 className={styles.nomeArquivo}>{video.titulo}</h3>
-            <div className={styles.videoContainer}>
-              <video
-                controls
-                className={styles.videoPlayer}
-                width="320"
-                height="180"
-                onError={(e) => {
-                  console.error("Erro detalhado:", {
-                    videoKey: video.key,
-                    fullUrl: `https://tcc-fiec-ti-informa.s3.us-east-2.amazonaws.com/${video.key}`,
-                    errorEvent: e.nativeEvent
-                  });
-
-                  const errorContainer = e.target.parentNode;
-                  errorContainer.innerHTML = `
-                    <div class="${styles.videoError}">
-                      <p>Erro ao carregar o vídeo</p>
-                      <p>Título: ${video.titulo}</p>
-                      <p>Key: ${video.key}</p>
-                      <a href="https://tcc-fiec-ti-informa.s3.us-east-2.amazonaws.com/${video.key}"
-                        target="_blank"
-                        rel="noopener noreferrer">
-                        Testar URL diretamente
-                      </a>
-                    </div>
-                  `;
-                }}
+          {Array.isArray(videosOrdenados) && videosOrdenados.map((video, index) => (
+            <div 
+              key={index} 
+              className={styles.itemVideo}
+            >
+              <h3 className={styles.nomeArquivo}>{video.titulo}</h3>
+              <div 
+                className={styles.videoContainer}
+                onClick={() => navigate(`/video/${video.id_video || video.id}`, { state: { video } })}
+                style={{ cursor: 'pointer' }}
               >
-                <source
-                  src={`https://tcc-fiec-ti-informa.s3.us-east-2.amazonaws.com/${video.key}`}
-                  type="video/mp4"
+                <img
+                  src={getThumbnailSource(video.key)}
+                  alt={`Thumbnail do vídeo ${video.titulo}`}
+                  className={styles.videoThumbnail}
+                  onError={(e) => {
+                    e.target.src = 'https://placehold.co/300x167';
+                  }}
                 />
-                Seu navegador não suporta vídeos HTML5.
-              </video>
+              </div>
+              <AddToPlaylistButton
+                videoId={video.id_video || video.id}
+                playlists={playlists}
+              />
             </div>
-            <AddToPlaylistButton videoId={video.id_video} playlists={playlists} />
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
       </div>
     ),
   };
 
   const secoesFiltradas = isCriador
-    ? [secaoVideos, ...secoesBase]
-    : [...secoesBase];
+    ? [secaoVideos, ...secoesBase] 
+    : [...secoesBase, secaoInteresses]; 
 
   if (loading) {
     return (
@@ -306,10 +350,6 @@ const Perfil = () => {
     return (
       <div className={styles.container}>
         <p className={styles.errorMessage}>{error}</p>
-        {/* Botão para limpar o erro */}
-        <button className={styles.botaoLimparErro} onClick={() => setError('')}>
-          Tentar novamente
-        </button>
       </div>
     );
   }
