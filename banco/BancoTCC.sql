@@ -18,6 +18,8 @@
 --
 -- Table structure for table `assinatura`
 --
+create database tcc;
+use tcc;
 
 DROP TABLE IF EXISTS `assinatura`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
