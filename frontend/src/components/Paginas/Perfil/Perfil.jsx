@@ -88,8 +88,12 @@ const Perfil = () => {
   const [novaPlaylistNome, setNovaPlaylistNome] = useState('');
   const [secoesAtivas, setSecoesAtivas] = useState([]);
   const [interessesUsuario, setInteressesUsuario] = useState('');
+  const [isEditing, setIsEditing] = useState(false); 
   const navigate = useNavigate();
   const TamanhoNomePlaylist = 30;
+
+  const [originalDescricaoUsuario, setOriginalDescricaoUsuario] = useState('');
+
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -107,6 +111,8 @@ const Perfil = () => {
         setEmailUsuario(response.data.email);
         setIsCriador(response.data.isCriador || false);
         setInteressesUsuario(response.data.interesses);
+        setDescricaoUsuario(response.data.descricao || '');
+        setOriginalDescricaoUsuario(response.data.descricao || '');
 
         if (response.data.isCriador) {
           setSecoesAtivas(['videos', 'playlists']);
@@ -149,7 +155,35 @@ const Perfil = () => {
     carregarDados();
   }, [navigate]);
 
-  const aoClicarEditar = () => { };
+
+  //Isso ira ser trocado quando fizerem o endpoint
+  const aoClicarEditar = async () => {
+    if (isEditing) {
+      try {
+        const token = localStorage.getItem('token');
+        await axios.put(
+          '/auth/me', // ou o endpoint correto para atualizar o perfil
+          { descricao: descricaoUsuario },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        alert('Descrição atualizada com sucesso!');
+        setIsEditing(false); // Sai do modo de edição
+        setOriginalDescricaoUsuario(descricaoUsuario); // Atualiza a descrição original
+      } catch (error) {
+        console.error('Erro ao atualizar descrição:', error);
+        alert('Erro ao atualizar descrição: ' + (error.response?.data?.message || 'Tente novamente mais tarde'));
+      }
+    } else {
+
+      setIsEditing(true);
+    }
+  };
+
+  const aoClicarCancelarEdicao = () => {
+    setDescricaoUsuario(originalDescricaoUsuario); 
+    setIsEditing(false); 
+  };
+
   const aoClicarSair = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('nomeCompleto');
@@ -213,12 +247,11 @@ const Perfil = () => {
               placeholder={`Nome da nova playlist (máx. ${TamanhoNomePlaylist} caracteres)`}
               value={novaPlaylistNome}
               onChange={e => {
-                // Limita o comprimento do nome da playlist
                 if (e.target.value.length <= TamanhoNomePlaylist) {
                   setNovaPlaylistNome(e.target.value);
                 }
               }}
-              maxLength={TamanhoNomePlaylist} // Adiciona o atributo maxLength para feedback visual
+              maxLength={TamanhoNomePlaylist} 
             />
             <button
               className={styles.botaoNovaPlaylist}
@@ -255,7 +288,7 @@ const Perfil = () => {
   ];
 
   function extrairInteressesPorCategoria(interesses, categoria) {
-    const categoriasMapa = { // Renomeado para evitar conflito com 'categorias' de antes
+    const categoriasMapa = {
       'Linguagens de Programação': ['Python', 'Java', 'C++'],
       'Desenvolvimento Web': ['HTML', 'CSS', 'React', 'Angular'],
       'Banco de Dados': ['SQL', 'NoSQL', 'MongoDB']
@@ -268,7 +301,7 @@ const Perfil = () => {
       .filter(interesse => categoriasMapa[categoria] && categoriasMapa[categoria].includes(interesse));
   }
 
-    const secaoInteresses = {
+  const secaoInteresses = {
     id: 'interesses',
     titulo: 'Interesses',
     conteudo: (
@@ -324,21 +357,6 @@ const Perfil = () => {
       </div>
     ),
   };
-
-
-  function extrairInteressesPorCategoria(interesses, categoria) {
-    const categorias = {
-      'Linguagens de Programação': ['Python', 'Java', 'C++'],
-      'Desenvolvimento Web': ['HTML', 'CSS', 'React', 'Angular'],
-      'Banco de Dados': ['SQL', 'NoSQL', 'MongoDB']
-    };
-
-    if (!interesses) return [];
-
-    return interesses.split(',')
-      .map(i => i.trim())
-      .filter(interesse => categorias[categoria].includes(interesse));
-  }
 
   const secaoVideos = {
     id: 'videos',
@@ -420,6 +438,7 @@ const Perfil = () => {
               placeholder="Descrição do usuário."
               value={descricaoUsuario}
               onChange={e => setDescricaoUsuario(e.target.value)}
+              readOnly={!isEditing} 
             />
             {isCriador ? (
               <p className={styles.tipoUsuario}>Criador de Conteúdo</p>
@@ -430,8 +449,13 @@ const Perfil = () => {
           </div>
           <div className={styles.botoesContainer}>
             <button className={styles.botaoEditar} onClick={aoClicarEditar}>
-              Editar
+              {isEditing ? 'Salvar Alterações' : 'Editar'} 
             </button>
+            {isEditing && ( 
+              <button className={styles.botaoCancelar} onClick={aoClicarCancelarEdicao}>
+                Cancelar
+              </button>
+            )}
             {!isCriador && (
               <button
                 className={styles.botaoRegister}
@@ -453,7 +477,7 @@ const Perfil = () => {
               </p>
               <div
                 className={`${styles.conteudoSecao} ${secoesAtivas.includes(secao.id) ? styles.aberta : ''
-                  }`}              >
+                }`}              >
                 {secao.conteudo}
               </div>
             </div>
