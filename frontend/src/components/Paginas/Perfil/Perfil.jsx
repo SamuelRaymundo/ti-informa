@@ -5,10 +5,17 @@ import { HiChevronDown, HiCog, HiPlus } from 'react-icons/hi';
 import Layout from '../../Layout/Layout';
 import axios from '../../../api/axios-config';
 
-const getThumbnailSource = (videoKey) => {
-  if (!videoKey) return 'https://placehold.co/300x167';
-  return `https://tcc-fiec-ti-informa.s3.us-east-2.amazonaws.com/thumbnails/${videoKey.replace('.mp4', '.jpg')}`;
+const getThumbnailSource = (video) => {
+  const s3BaseUrl = 'https://tcc-fiec-ti-informa.s3.us-east-2.amazonaws.com/';
+  if (video?.thumbnail) {
+    return `${s3BaseUrl}${video.thumbnail}`;
+  }
+  if (video?.key) {
+    return `${s3BaseUrl}${video.key}`;
+  }
+  return 'https://placehold.co/300x169?text=Thumbnail+Indispon%C3%ADvel';
 };
+
 
 const AddToPlaylistButton = ({ videoId, playlists }) => {
   const [showSelect, setShowSelect] = useState(false);
@@ -223,7 +230,7 @@ const Perfil = () => {
   };
 
   const videosOrdenados = [...videosUsuario].sort((a, b) => {
-    return new Date(b.dataPublicacao) - new Date(a.dataPublicacao);
+    return new Date(a.dataPublicacao) - new Date(b.dataPublicacao); 
   });
 
   const alternarSecao = idSecao => {
@@ -369,23 +376,23 @@ const Perfil = () => {
           </button>
         </div>
         <div className={styles.listaVideos}>
-          {Array.isArray(videosOrdenados) && videosOrdenados.map((video, index) => (
-            <div
-              key={index}
+          {Array.isArray(videosOrdenados) && [...videosOrdenados].reverse().map((video, index) => (
+            <div 
+              key={index} 
               className={styles.itemVideo}
             >
               <h3 className={styles.nomeArquivo}>{video.titulo}</h3>
-              <div
+              <div 
                 className={styles.videoContainer}
                 onClick={() => navigate(`/video/${video.id_video || video.id}`, { state: { video } })}
                 style={{ cursor: 'pointer' }}
               >
-                <img
-                  src={getThumbnailSource(video.key)}
+              <img
+                  src={getThumbnailSource(video)}
                   alt={`Thumbnail do vídeo ${video.titulo}`}
                   className={styles.videoThumbnail}
                   onError={(e) => {
-                    e.target.src = 'https://placehold.co/300x167';
+                    e.target.src = 'https://placehold.co/300x169?text=Thumbnail+Indispon%C3%ADvel';
                   }}
                 />
               </div>
