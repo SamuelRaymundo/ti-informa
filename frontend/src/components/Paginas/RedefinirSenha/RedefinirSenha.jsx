@@ -41,10 +41,11 @@ const RedefinirSenha = () => {
 
     try {
       const resp = await fetch('http://localhost:8080/auth/recuperar-senha/redefinir', {
-        method: 'POST',
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, novaSenha }),
       });
+
 
       if (resp.ok) {
         setSucesso('Senha redefinida com sucesso! Redirecionando para o login...');
