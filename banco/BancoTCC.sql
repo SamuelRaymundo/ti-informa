@@ -30,7 +30,7 @@ CREATE TABLE `assinatura` (
   `plano` enum('premium','premium_plus') NOT NULL,
   `data_inicio` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `data_fim` timestamp NOT NULL,
-  `preço` float NOT NULL,
+  `preco` float NOT NULL,
   PRIMARY KEY (`id_assinatura`),
   KEY `assinatura_ibfk_1_idx` (`id_usuario`),
   CONSTRAINT `assinatura_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`)
@@ -206,13 +206,13 @@ DROP TABLE IF EXISTS `usuario_avaliacao`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `usuario_avaliacao` (
-  `sóprabotadado` int NOT NULL AUTO_INCREMENT,
+  `id_usuario_avaliacao` int NOT NULL AUTO_INCREMENT,
   `id_usuario` int NOT NULL,
   `id_video` int NOT NULL,
   `id_avaliacao` int NOT NULL,
   `data_inicio` datetime NOT NULL,
   `tempo_assistido` time NOT NULL,
-  PRIMARY KEY (`sóprabotadado`),
+  PRIMARY KEY (`id_usuario_avaliacao`),
   KEY `fk_usuario_id_usuario_idx` (`id_usuario`),
   KEY `fk_video_id_video_idx` (`id_video`),
   KEY `fk_avaliacao_avaliacao_idx` (`id_avaliacao`),
@@ -274,4 +274,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-29 19:12:48
+-- Dump completed on 2025-05-29 20:41:40
