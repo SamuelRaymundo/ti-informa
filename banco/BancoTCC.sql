@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `tcc` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `tcc`;
 -- MySQL dump 10.13  Distrib 8.0.38, for Win64 (x86_64)
 --
 -- Host: localhost    Database: tcc
@@ -18,8 +20,6 @@
 --
 -- Table structure for table `assinatura`
 --
-create database tcc;
-use tcc;
 
 DROP TABLE IF EXISTS `assinatura`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -121,7 +121,9 @@ CREATE TABLE `playlist` (
   `visibilidade` enum('PUBLICA','PRIVADA','NAO_LISTADA') NOT NULL,
   PRIMARY KEY (`id_playlist`),
   KEY `playlist_ibfk_1_idx` (`id_usuario`),
-  KEY `playlist_ibfk_2_idx` (`id_criador`)
+  KEY `playlist_ibfk_2_idx` (`id_criador`),
+  CONSTRAINT `fk_criador_playlist` FOREIGN KEY (`id_criador`) REFERENCES `criador` (`id_criador`),
+  CONSTRAINT `fk_usuario_playlist` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`)
 ) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -274,4 +276,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-29 20:41:40
+-- Dump completed on 2025-05-29 22:24:44
