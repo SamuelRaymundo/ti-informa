@@ -16,13 +16,13 @@ const VideoPage = () => {
   const [recommendedError, setRecommendedError] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [creatorProfilePhoto, setCreatorProfilePhoto] = useState('https://st4.depositphotos.com/29453910/37778/v/450/depositphotos_377785374-stock-illustration-hand-drawn-modern-man-avatar.jpg');
-  
   const [userRating, setUserRating] = useState(0);
   const [comment, setComment] = useState('');
   const [ratingMessage, setRatingMessage] = useState('');
   const [hasRated, setHasRated] = useState(false);
   const [currentUserId, setCurrentUserId] = useState(null);
   const [existingEvaluation, setExistingEvaluation] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     document.documentElement.classList.add(styles.htmlVideoPage);
@@ -248,10 +248,55 @@ const VideoPage = () => {
     }
   };
 
+  const handleDeleteEvaluation = async () => {
+    if (!existingEvaluation) return;
+    
+    try {
+      setIsDeleting(true);
+      setRatingMessage('Removendo sua avaliação...');
+      
+      const token = localStorage.getItem('token');
+      if (!token) {
+        navigate('/login');
+        return;
+      }
+
+      await axios.delete(`/avaliacoes/${existingEvaluation.id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      setExistingEvaluation(null);
+      setHasRated(false);
+      setUserRating(0);
+      setComment('');
+      setRatingMessage('Avaliação removida com sucesso!');
+      
+      setVideoData(prev => ({
+        ...prev,
+        numeroAvaliacoes: Math.max((prev.numeroAvaliacoes || 1) - 1, 0),
+        mediaAvaliacoes: prev.numeroAvaliacoes <= 1 ? 0 : 
+          ((prev.mediaAvaliacoes || 0) * (prev.numeroAvaliacoes || 0) - userRating) / 
+          Math.max((prev.numeroAvaliacoes || 1) - 1, 1)
+      }));
+
+    } catch (err) {
+      console.error('Erro ao remover avaliação:', err);
+      setRatingMessage(err.response?.data?.message || 'Erro ao remover avaliação. Tente novamente.');
+    } finally {
+      setIsDeleting(false);
+      setTimeout(() => setRatingMessage(''), 3000);
+    }
+  };
+
   const formatDate = useCallback((dateString) => {
     try {
       if (!dateString) return 'Data desconhecida';
-      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      const options = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        timeZone: 'America/Sao_Paulo' 
+      };
       return new Date(dateString).toLocaleDateString('pt-BR', options);
     } catch {
       return 'Data inválida';
@@ -354,14 +399,41 @@ const VideoPage = () => {
                 <span className={styles.videoStat}>
                   <span>{formatDate(videoData.dataPublicacao)}</span>
                 </span>
-                {videoData.mediaAvaliacoes !== undefined && (
-                  <span className={styles.videoStat}>
-                    • Média: {videoData.mediaAvaliacoes.toFixed(1)} ({videoData.numeroAvaliacoes} avaliações)
-                  </span>
+                <span className={styles.videoStat}>
+                  • Média: {videoData.mediaAvaliacoes?.toFixed(1) || '0.0'} ({videoData.numeroAvaliacoes || 0} avaliações)
+                </span>
+              </div>
+
+              <div className={styles.creatorInfo}>
+                <div className={styles.creatorLeft}>
+                  <img
+                    src={creatorProfilePhoto}
+                    alt={videoData.criador?.nome || 'Criador'}
+                    className={styles.creatorAvatar}
+                    onError={(e) => {
+                      e.target.src = 'https://st4.depositphotos.com/29453910/37778/v/450/depositphotos_377785374-stock-illustration-hand-drawn-modern-man-avatar.jpg';
+                    }}
+                  />
+                  <div>
+                    <h3 className={styles.creatorName}>
+                      {videoData.criador?.nome || 'Criador desconhecido'}
+                    </h3>
+                    <p className={styles.subscriberCount}>
+                      {videoData.criador?.totalInscritos || 0} inscritos
+                    </p>
+                  </div>
+                </div>
+                {videoData.criador?.id && (
+                  <button
+                    className={`${styles.subscribeButton} ${isSubscribed ? styles.subscribed : ''}`}
+                    onClick={handleSubscribe}
+                    disabled={!videoData.criador.id}
+                  >
+                    {isSubscribed ? 'Inscrito' : 'Inscrever-se'}
+                  </button>
                 )}
               </div>
 
-              {/* Evaluation Section */}
               <div className={styles.evaluationSection}>
                 <h3 className={styles.evaluationTitle}>
                   {existingEvaluation ? 'Sua Avaliação' : 'Avalie este vídeo'}
@@ -385,6 +457,13 @@ const VideoPage = () => {
                     <p className={styles.evaluationDate}>
                       Avaliado em: {formatDate(existingEvaluation.dataAvaliacao)}
                     </p>
+                    <button
+                      className={styles.deleteEvaluationButton}
+                      onClick={handleDeleteEvaluation}
+                      disabled={isDeleting}
+                    >
+                      {isDeleting ? 'Removendo...' : 'Remover Avaliação'}
+                    </button>
                   </div>
                 ) : (
                   <>
@@ -417,36 +496,6 @@ const VideoPage = () => {
                   </>
                 )}
                 {ratingMessage && <p className={styles.ratingMessage}>{ratingMessage}</p>}
-              </div>
-
-              <div className={styles.creatorInfo}>
-                <div className={styles.creatorLeft}>
-                  <img
-                    src={creatorProfilePhoto}
-                    alt={videoData.criador?.nome || 'Criador'}
-                    className={styles.creatorAvatar}
-                    onError={(e) => {
-                      e.target.src = 'https://st4.depositphotos.com/29453910/37778/v/450/depositphotos_377785374-stock-illustration-hand-drawn-modern-man-avatar.jpg';
-                    }}
-                  />
-                  <div>
-                    <h3 className={styles.creatorName}>
-                      {videoData.criador?.nome || 'Criador desconhecido'}
-                    </h3>
-                    <p className={styles.subscriberCount}>
-                      {videoData.criador?.totalInscritos || 0} inscritos
-                    </p>
-                  </div>
-                </div>
-                {videoData.criador?.id && (
-                  <button
-                    className={`${styles.subscribeButton} ${isSubscribed ? styles.subscribed : ''}`}
-                    onClick={handleSubscribe}
-                    disabled={!videoData.criador.id}
-                  >
-                    {isSubscribed ? 'Inscrito' : 'Inscrever-se'}
-                  </button>
-                )}
               </div>
 
               <div className={styles.videoDescription}>
