@@ -48,9 +48,13 @@ html::-webkit-scrollbar {
 }
 
 .logo {
-  width: 126.5px;
+  max-height: 80px;   /* altura máxima */
   height: auto;
+  width: auto;
+  max-width: 20vw;    /* largura máxima relativa à viewport */
+  object-fit: contain;
 }
+
 
 .menuLateral {
   position: fixed;
@@ -83,6 +87,8 @@ html::-webkit-scrollbar {
 .menuLateral li:hover {
   background-color: #6B8BA4;
 }
+
+/* MEDIA QUERIES ABAIXO */
 
 @media (max-width: 320px) {
   .cabecalho {

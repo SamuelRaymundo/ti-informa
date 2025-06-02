@@ -27,11 +27,11 @@ const Menu = () => {
   return (
     <div>
       <div className={styles.cabecalho}>
+                <img src={logo} alt="Logo" className={styles.logo} />
         <button className={styles.botaoMenu} onClick={toggleMenu}>
           {menuAberto ? <FaTimes /> : <FaBars />}
         </button>
         <span className={styles.tituloCabecalho}>T.I Informa</span>
-        <img src={logo} alt="Logo" className={styles.logo} />
       </div>
       <div className={`${styles.menuLateral} ${menuAberto ? styles.menuAberto : ''}`}>
         <ul>
