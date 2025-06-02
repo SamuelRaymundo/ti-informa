@@ -1,153 +1,270 @@
-import React, { useState, useEffect, useCallback } from 'react'
-import { useNavigate, useParams, useLocation } from 'react-router-dom'
-import axios from '../../../api/axios-config'
-import styles from './VideoPage.module.css'
-import Layout from '../../Layout/Layout'
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import axios from '../../../api/axios-config';
+import styles from './VideoPage.module.css';
+import Layout from '../../Layout/Layout';
 
 const VideoPage = () => {
-  const { videoId } = useParams()
-  const location = useLocation()
-  const navigate = useNavigate()
+  const { videoId } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const [videoData, setVideoData] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-  const [recommendedVideos, setRecommendedVideos] = useState([])
-  const [recommendedError, setRecommendedError] = useState('')
-  const [isSubscribed, setIsSubscribed] = useState(false)
-  const [creatorProfilePhoto, setCreatorProfilePhoto] = useState('https://st4.depositphotos.com/29453910/37778/v/450/depositphotos_377785374-stock-illustration-hand-drawn-modern-man-avatar.jpg')
+  const [videoData, setVideoData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [recommendedVideos, setRecommendedVideos] = useState([]);
+  const [recommendedError, setRecommendedError] = useState('');
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [creatorProfilePhoto, setCreatorProfilePhoto] = useState('https://st4.depositphotos.com/29453910/37778/v/450/depositphotos_377785374-stock-illustration-hand-drawn-modern-man-avatar.jpg');
+  
+  const [userRating, setUserRating] = useState(0);
+  const [comment, setComment] = useState('');
+  const [ratingMessage, setRatingMessage] = useState('');
+  const [hasRated, setHasRated] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState(null);
+  const [existingEvaluation, setExistingEvaluation] = useState(null);
 
   useEffect(() => {
-    document.documentElement.classList.add(styles.htmlVideoPage)
+    document.documentElement.classList.add(styles.htmlVideoPage);
     return () => {
-      document.documentElement.classList.remove(styles.htmlVideoPage)
-    }
-  }, [])
+      document.documentElement.classList.remove(styles.htmlVideoPage);
+    };
+  }, []);
 
   const getVideoSource = useCallback((videoKey) => {
-    if (!videoKey) return ''
-    return `https://tcc-fiec-ti-informa.s3.us-east-2.amazonaws.com/${videoKey}`
-  }, [])
+    if (!videoKey) return '';
+    return `https://tcc-fiec-ti-informa.s3.us-east-2.amazonaws.com/${videoKey}`;
+  }, []);
 
   const getThumbnailSource = useCallback((videoKey) => {
-    if (!videoKey) return 'https://via.placeholder.com/320x180'
-    return `https://tcc-fiec-ti-informa.s3.us-east-2.amazonaws.com/thumbnails/${videoKey.replace('.mp4', '.jpg')}`
-  }, [])
+    if (!videoKey) return 'https://via.placeholder.com/320x180';
+    return `https://tcc-fiec-ti-informa.s3.us-east-2.amazonaws.com/thumbnails/${videoKey.replace('.mp4', '.jpg')}`;
+  }, []);
+
+  const getSimulatedUserId = () => {
+    const storedUserId = localStorage.getItem('userId');
+    return storedUserId ? parseInt(storedUserId, 10) : 1;
+  };
 
   useEffect(() => {
     const fetchVideoData = async () => {
-      setLoading(true)
-      setError('')
-      setRecommendedError('')
+      setLoading(true);
+      setError('');
+      setRecommendedError('');
+      setHasRated(false);
+      setUserRating(0);
+      setComment('');
+      setRatingMessage('');
 
-      const token = localStorage.getItem('token')
-      const headers = token ? { Authorization: `Bearer ${token}` } : {}
+      const token = localStorage.getItem('token');
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
-      let currentVideoData = null
+      setCurrentUserId(getSimulatedUserId());
+
+      let currentVideoData = null;
 
       try {
         if (location.state?.video && (location.state.video.id_video || location.state.video.id)) {
-          currentVideoData = location.state.video
-          setVideoData(currentVideoData)
+          currentVideoData = location.state.video;
+          setVideoData(currentVideoData);
         } else {
           if (!videoId) {
-            throw new Error('ID do vídeo não encontrado')
+            throw new Error('ID do vídeo não encontrado');
           }
-          const response = await axios.get(`/file/video/${videoId}`, { headers })
+          const response = await axios.get(`/file/video/${videoId}`, { headers });
           if (!response.data) {
-            throw new Error('Dados do vídeo não recebidos')
+            throw new Error('Dados do vídeo não recebidos');
           }
-          currentVideoData = response.data
-          setVideoData(currentVideoData)
+          currentVideoData = response.data;
+          setVideoData(currentVideoData);
         }
 
         if (currentVideoData?.criador?.fotoPerfil) {
-          setCreatorProfilePhoto(currentVideoData.criador.fotoPerfil)
+          setCreatorProfilePhoto(currentVideoData.criador.fotoPerfil);
         } else {
-          setCreatorProfilePhoto('https://st4.depositphotos.com/29453910/37778/v/450/depositphotos_377785374-stock-illustration-hand-drawn-modern-man-avatar.jpg')
+          setCreatorProfilePhoto('https://st4.depositphotos.com/29453910/37778/v/450/depositphotos_377785374-stock-illustration-hand-drawn-modern-man-avatar.jpg');
+        }
+        
+        if (token && videoId) {
+          try {
+            const userId = getSimulatedUserId();
+            const evalResponse = await axios.get(`/avaliacoes/usuario/${userId}/video/${videoId}`, { 
+              headers: { Authorization: `Bearer ${token}` } 
+            });
+            
+            if (evalResponse.data) {
+              setExistingEvaluation(evalResponse.data);
+              setHasRated(true);
+              setUserRating(evalResponse.data.nota);
+              setComment(evalResponse.data.comentario);
+            }
+          } catch {
+            console.log('Usuário ainda não avaliou este vídeo');
+          }
         }
 
       } catch (err) {
-        console.error('Erro ao carregar vídeo principal:', err)
-        setError(err.message || 'Erro ao carregar o vídeo. Por favor, tente novamente.')
-        setLoading(false) 
-        return 
-      } finally {
-        if (currentVideoData) setLoading(false);
+        console.error('Erro ao carregar vídeo principal:', err);
+        setError(err.message || 'Erro ao carregar o vídeo. Por favor, tente novamente.');
+        setLoading(false);
+        return;
       }
 
       if (currentVideoData) {
         try {
-          const recResponse = await axios.get('/file/videos-recomendados', { headers })
-          setRecommendedVideos(Array.isArray(recResponse.data) ? recResponse.data : [])
+          const recResponse = await axios.get('/file/videos-recomendados', { headers });
+          setRecommendedVideos(Array.isArray(recResponse.data) ? recResponse.data : []);
         } catch (recError) {
-          console.error('Erro ao buscar recomendados:', recError)
-          setRecommendedVideos([])
-          setRecommendedError('Não foi possível carregar vídeos recomendados no momento.')
+          console.error('Erro ao buscar recomendados:', recError);
+          setRecommendedVideos([]);
+          setRecommendedError('Não foi possível carregar vídeos recomendados no momento.');
         }
 
-        if (token && currentVideoData.id_criador) {
+        if (token && currentVideoData.criador?.id) {
           try {
-            const subResponse = await axios.get(`/subscriptions/check/${currentVideoData.id_criador}`, { headers })
-            setIsSubscribed(subResponse.data?.isSubscribed || false)
+            const subResponse = await axios.get(`/subscriptions/check/${currentVideoData.criador.id}`, { headers });
+            setIsSubscribed(subResponse.data?.isSubscribed || false);
           } catch (subError) {
-            console.error('Erro ao verificar inscrição:', subError)
-            setIsSubscribed(false)
+            console.error('Erro ao verificar inscrição:', subError);
+            setIsSubscribed(false);
           }
         }
       }
       setLoading(false);
-    }
+    };
 
-    fetchVideoData()
-  }, [videoId, location.state, navigate, getVideoSource, getThumbnailSource]) 
+    fetchVideoData();
+  }, [videoId, location.state, navigate, getVideoSource, getThumbnailSource]);
 
   const handleSubscribe = async () => {
     try {
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('token');
       if (!token) {
-        navigate('/login')
-        return
+        navigate('/login');
+        return;
       }
 
-      if (!videoData?.id_criador) {
-        throw new Error('Criador do vídeo não identificado')
+      if (!videoData?.criador?.id) {
+        throw new Error('Criador do vídeo não identificado');
       }
 
       if (isSubscribed) {
-        await axios.delete(`/subscriptions/unsubscribe/${videoData.id_criador}`, {
+        await axios.delete(`/subscriptions/unsubscribe/${videoData.criador.id}`, {
           headers: { Authorization: `Bearer ${token}` }
-        })
+        });
       } else {
-        await axios.post(`/subscriptions/subscribe/${videoData.id_criador}`, {}, {
+        await axios.post(`/subscriptions/subscribe/${videoData.criador.id}`, {}, {
           headers: { Authorization: `Bearer ${token}` }
-        })
+        });
       }
-      setIsSubscribed(!isSubscribed)
+      setIsSubscribed(!isSubscribed);
     } catch (err) {
-      console.error('Erro na inscrição:', err)
-      alert(err.response?.data?.message || 'Erro ao processar inscrição. Tente novamente.')
+      console.error('Erro na inscrição:', err);
+      setRatingMessage(err.response?.data?.message || 'Erro ao processar inscrição. Tente novamente.');
+      setTimeout(() => setRatingMessage(''), 3000);
     }
-  }
+  };
+
+  const handleStarClick = (rating) => {
+    if (!hasRated) { 
+      setUserRating(rating);
+    }
+  };
+
+  const handleSubmitEvaluation = async () => {
+    if (hasRated) {
+        setRatingMessage('Você já avaliou este vídeo.');
+        setTimeout(() => setRatingMessage(''), 3000);
+        return;
+    }
+
+    if (userRating === 0) {
+      setRatingMessage('Por favor, selecione uma nota (estrelas).');
+      setTimeout(() => setRatingMessage(''), 3000);
+      return;
+    }
+
+    if (!comment.trim()) {
+      setRatingMessage('Por favor, adicione um comentário.');
+      setTimeout(() => setRatingMessage(''), 3000);
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+          navigate('/login');
+          return;
+      }
+
+      setRatingMessage('Enviando sua avaliação...');
+
+      const response = await axios.post('/avaliacoes/create', {
+          userId: currentUserId,
+          videoId: videoId,
+          nota: userRating,
+          comentario: comment
+      }, {
+          headers: { 
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json'
+          }
+      });
+
+      if (response.data) {
+          setHasRated(true);
+          setExistingEvaluation(response.data);
+          setRatingMessage('Obrigado pela sua avaliação!');
+          setVideoData(prev => ({
+              ...prev,
+              numeroAvaliacoes: (prev.numeroAvaliacoes || 0) + 1,
+              mediaAvaliacoes: (
+                  (prev.mediaAvaliacoes || 0) * (prev.numeroAvaliacoes || 0) + userRating
+              ) / ((prev.numeroAvaliacoes || 0) + 1)
+          }));
+      }
+    } catch (err) {
+      console.error('Erro ao avaliar o vídeo:', err);
+      if (err.response?.status === 409) {  
+          setRatingMessage('Você já avaliou este vídeo anteriormente.');
+          setHasRated(true);
+          try {
+            const userId = getSimulatedUserId();
+            const evalResponse = await axios.get(`/avaliacoes/usuario/${userId}/video/${videoId}`, { 
+            });
+            if (evalResponse.data) {
+              setExistingEvaluation(evalResponse.data);
+              setUserRating(evalResponse.data.nota);
+              setComment(evalResponse.data.comentario);
+            }
+          } catch (fetchErr) {
+            console.error('Erro ao buscar avaliação existente:', fetchErr);
+          }
+      } else {
+          setRatingMessage(err.response?.data?.message || 'Erro ao avaliar. Tente novamente.');
+      }
+    } finally {
+        setTimeout(() => setRatingMessage(''), 3000);
+    }
+  };
 
   const formatDate = useCallback((dateString) => {
     try {
-      if (!dateString) return 'Data desconhecida'
-      const options = { year: 'numeric', month: 'long', day: 'numeric' }
-      return new Date(dateString).toLocaleDateString('pt-BR', options)
+      if (!dateString) return 'Data desconhecida';
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      return new Date(dateString).toLocaleDateString('pt-BR', options);
     } catch {
-      return 'Data inválida'
+      return 'Data inválida';
     }
-  }, [])
+  }, []);
 
   const handleRecommendedVideoClick = useCallback((video) => {
-    if (!video) return
+    if (!video) return;
     navigate(`/video/${video.id_video || video.id}`, {
       state: { video },
       replace: true
-    })
-  }, [navigate])
-
+    });
+  }, [navigate]);
 
   if (loading) {
     return (
@@ -158,7 +275,7 @@ const VideoPage = () => {
           <p>Carregando vídeo...</p>
         </div>
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -175,7 +292,7 @@ const VideoPage = () => {
           </button>
         </div>
       </div>
-    )
+    );
   }
 
   if (!videoData) {
@@ -192,7 +309,7 @@ const VideoPage = () => {
           </button>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -207,7 +324,7 @@ const VideoPage = () => {
               className={styles.videoPlayer}
               src={getVideoSource(videoData.key)}
               onError={(e) => {
-                console.error('Erro ao carregar vídeo:', e)
+                console.error('Erro ao carregar vídeo:', e);
                 e.target.parentElement.innerHTML = `
                   <div class="${styles.videoError}">
                     <p>Erro ao carregar o vídeo</p>
@@ -218,7 +335,7 @@ const VideoPage = () => {
                       Tentar novamente
                     </button>
                   </div>
-                `
+                `;
               }}
             >
               Seu navegador não suporta vídeos HTML5.
@@ -237,16 +354,79 @@ const VideoPage = () => {
                 <span className={styles.videoStat}>
                   <span>{formatDate(videoData.dataPublicacao)}</span>
                 </span>
+                {videoData.mediaAvaliacoes !== undefined && (
+                  <span className={styles.videoStat}>
+                    • Média: {videoData.mediaAvaliacoes.toFixed(1)} ({videoData.numeroAvaliacoes} avaliações)
+                  </span>
+                )}
+              </div>
+
+              {/* Evaluation Section */}
+              <div className={styles.evaluationSection}>
+                <h3 className={styles.evaluationTitle}>
+                  {existingEvaluation ? 'Sua Avaliação' : 'Avalie este vídeo'}
+                </h3>
+                
+                {existingEvaluation ? (
+                  <div className={styles.existingEvaluation}>
+                    <div className={styles.stars}>
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <span
+                          key={star}
+                          className={`${styles.star} ${star <= existingEvaluation.nota ? styles.filledStar : ''}`}
+                        >
+                          &#9733;
+                        </span>
+                      ))}
+                    </div>
+                    <div className={styles.existingComment}>
+                      <p>{existingEvaluation.comentario}</p>
+                    </div>
+                    <p className={styles.evaluationDate}>
+                      Avaliado em: {formatDate(existingEvaluation.dataAvaliacao)}
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <div className={styles.stars}>
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <span
+                          key={star}
+                          className={`${styles.star} ${star <= userRating ? styles.filledStar : ''}`}
+                          onClick={() => handleStarClick(star)}
+                          style={{ cursor: hasRated ? 'not-allowed' : 'pointer' }}
+                        >
+                          &#9733;
+                        </span>
+                      ))}
+                    </div>
+                    <textarea
+                      className={styles.commentInput}
+                      placeholder="Deixe seu comentário aqui..."
+                      value={comment}
+                      onChange={(e) => setComment(e.target.value)}
+                      disabled={hasRated}
+                    />
+                    <button
+                      className={styles.submitEvaluationButton}
+                      onClick={handleSubmitEvaluation}
+                      disabled={hasRated || userRating === 0 || !comment.trim()}
+                    >
+                      {hasRated ? 'Avaliado' : 'Enviar Avaliação'}
+                    </button>
+                  </>
+                )}
+                {ratingMessage && <p className={styles.ratingMessage}>{ratingMessage}</p>}
               </div>
 
               <div className={styles.creatorInfo}>
                 <div className={styles.creatorLeft}>
                   <img
-                    src={creatorProfilePhoto} 
+                    src={creatorProfilePhoto}
                     alt={videoData.criador?.nome || 'Criador'}
                     className={styles.creatorAvatar}
                     onError={(e) => {
-                      e.target.src = 'https://st4.depositphotos.com/29453910/37778/v/450/depositphotos_377785374-stock-illustration-hand-drawn-modern-man-avatar.jpg' 
+                      e.target.src = 'https://st4.depositphotos.com/29453910/37778/v/450/depositphotos_377785374-stock-illustration-hand-drawn-modern-man-avatar.jpg';
                     }}
                   />
                   <div>
@@ -258,11 +438,11 @@ const VideoPage = () => {
                     </p>
                   </div>
                 </div>
-                {videoData.id_criador && (
+                {videoData.criador?.id && (
                   <button
                     className={`${styles.subscribeButton} ${isSubscribed ? styles.subscribed : ''}`}
                     onClick={handleSubscribe}
-                    disabled={!videoData.id_criador}
+                    disabled={!videoData.criador.id}
                   >
                     {isSubscribed ? 'Inscrito' : 'Inscrever-se'}
                   </button>
@@ -280,7 +460,7 @@ const VideoPage = () => {
           <h3 className={styles.recommendationsTitle}>Recomendados</h3>
           <div className={styles.recommendedVideos}>
             {recommendedError ? (
-              <p className={styles.errorMessage}>{recommendedError}</p> 
+              <p className={styles.errorMessage}>{recommendedError}</p>
             ) : recommendedVideos.length > 0 ? (
               recommendedVideos.map((video) => (
                 <div
@@ -294,7 +474,7 @@ const VideoPage = () => {
                       alt={video.titulo}
                       className={styles.thumbnail}
                       onError={(e) => {
-                        e.target.src = 'https://via.placeholder.com/168x94'
+                        e.target.src = 'https://via.placeholder.com/168x94';
                       }}
                     />
                     <span className={styles.videoDuration}>10:30</span>
@@ -319,7 +499,7 @@ const VideoPage = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default VideoPage
+export default VideoPage;
