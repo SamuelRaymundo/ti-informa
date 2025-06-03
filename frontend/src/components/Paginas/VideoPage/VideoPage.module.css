@@ -238,14 +238,13 @@ button:disabled {
   margin-top: 20px;
   white-space: pre-line;
 }
-
 .recommendationsTitle {
-  font-size: 1.2rem;
-  margin-bottom: 15px;
+  font-size: 1.8rem; 
+  margin-bottom: 25px;
   color: #333;
   background-color: #ffffffe1;
-  padding: 8px 20px;
-  border-radius: 8px;
+  padding: 15px 30px; 
+  border-radius: 12px; 
   width: 100%;
   box-sizing: border-box;
   text-align: center;
@@ -254,12 +253,12 @@ button:disabled {
 .recommendedVideos {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 22px; 
 }
 
 .recommendedVideoCard {
   display: flex;
-  gap: 8px;
+  gap: 15px;
   cursor: pointer;
 }
 
@@ -269,21 +268,21 @@ button:disabled {
 }
 
 .thumbnail {
-  width: 168px;
-  height: 94px;
-  border-radius: 4px;
+  width: 250px; 
+  height: 140px;
+  border-radius: 8px; 
   object-fit: cover;
 }
 
 .videoDuration {
   position: absolute;
-  bottom: 5px;
-  right: 5px;
+  bottom: 10px; 
+  right: 10px; 
   background-color: rgba(0, 0, 0, 0.8);
   color: white;
-  padding: 2px 4px;
-  border-radius: 2px;
-  font-size: 0.7rem;
+  padding: 4px 8px; 
+  border-radius: 4px;
+  font-size: 0.72rem; 
 }
 
 .recommendedVideoInfo {
@@ -292,12 +291,13 @@ button:disabled {
 }
 
 .recommendedVideoTitle {
-  font-size: 0.9rem;
-  margin: 0 0 5px 0;
+  font-size: 1.05rem; 
+  margin: 0 0 10px 0;
   color: #333;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  -webkit-line-clamp: 2;
 }
 
 .deleteEvaluationButton {
@@ -915,7 +915,7 @@ button:disabled {
   }
 
   .sidebar {
-    max-width: 400px;
+    max-width: 500px;
     transform: translateX(115px);
   }
 
@@ -930,7 +930,7 @@ button:disabled {
   }
 
   .videoTitle {
-    font-size: 1.55rem;
+    font-size: 1.45rem;
   }
 
   .recommendationsTitle {
@@ -959,7 +959,7 @@ button:disabled {
   }
 
   .sidebar {
-    max-width: 450px;
+    max-width: 150px;
     transform: translateX(200px);
   }
 

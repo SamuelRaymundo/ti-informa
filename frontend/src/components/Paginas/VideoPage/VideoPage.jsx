@@ -4,7 +4,19 @@ import axios from '../../../api/axios-config';
 import styles from './VideoPage.module.css';
 import Layout from '../../Layout/Layout';
 
+const getThumbnailSource = (video) => {
+  const s3BaseUrl = 'https://tcc-fiec-ti-informa.s3.us-east-2.amazonaws.com/';
+  if (video?.thumbnail) {
+    return `${s3BaseUrl}${video.thumbnail}`;
+  }
+  if (video?.key) {
+    return `${s3BaseUrl}${video.key}`;
+  }
+  return 'https://placehold.co/300x169?text=Thumbnail+Indispon%C3%ADvel';
+};
+
 const VideoPage = () => {
+  
   const { videoId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -23,7 +35,7 @@ const VideoPage = () => {
   const [currentUserId, setCurrentUserId] = useState(null);
   const [existingEvaluation, setExistingEvaluation] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
-
+  
   useEffect(() => {
     document.documentElement.classList.add(styles.htmlVideoPage);
     return () => {
@@ -34,11 +46,6 @@ const VideoPage = () => {
   const getVideoSource = useCallback((videoKey) => {
     if (!videoKey) return '';
     return `https://tcc-fiec-ti-informa.s3.us-east-2.amazonaws.com/${videoKey}`;
-  }, []);
-
-  const getThumbnailSource = useCallback((videoKey) => {
-    if (!videoKey) return 'https://via.placeholder.com/320x180';
-    return `https://tcc-fiec-ti-informa.s3.us-east-2.amazonaws.com/thumbnails/${videoKey.replace('.mp4', '.jpg')}`;
   }, []);
 
   const getSimulatedUserId = () => {
@@ -134,7 +141,7 @@ const VideoPage = () => {
     };
 
     fetchVideoData();
-  }, [videoId, location.state, navigate, getVideoSource, getThumbnailSource]);
+  }, [videoId, location.state, navigate, getVideoSource]);
 
   const handleSubscribe = async () => {
     try {
@@ -513,17 +520,17 @@ const VideoPage = () => {
             ) : recommendedVideos.length > 0 ? (
               recommendedVideos.map((video) => (
                 <div
-                  key={video.id_video || video.id}
+                  key={video.id} 
                   className={styles.recommendedVideoCard}
                   onClick={() => handleRecommendedVideoClick(video)}
                 >
                   <div className={styles.thumbnailContainer}>
                     <img
-                      src={getThumbnailSource(video.key)}
+                      src={getThumbnailSource(video)}
                       alt={video.titulo}
                       className={styles.thumbnail}
                       onError={(e) => {
-                        e.target.src = 'https://via.placeholder.com/168x94';
+                        e.target.src = 'https://placehold.co/300x169?text=Thumbnail+Indispon%C3%ADvel'
                       }}
                     />
                     <span className={styles.videoDuration}>10:30</span>

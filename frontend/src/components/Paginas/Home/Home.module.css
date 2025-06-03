@@ -154,6 +154,221 @@ body {
   flex-direction: column;
 }
 
+.recommendedVideos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.recommendedVideoCard {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.recommendedVideoCard:hover {
+  transform: scale(1.02);
+}
+
+.thumbnailContainer {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; 
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.thumbnail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.videoDuration {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.recommendedVideoInfo {
+  padding: 8px 0;
+}
+
+.recommendedVideoTitle {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.recommendedVideoCreator {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+.recommendedVideoStats {
+  margin: 0;
+  font-size: 12px;
+  color: #888;
+}
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.errorMessage {
+  color: red;
+  padding: 20px;
+  text-align: center;
+}
+
+.noVideosMessage {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+}
+
+.recommendedVideos {
+  display: flex;
+  gap: 20px;
+  padding: 10px 0;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  height: auto;
+  max-width: calc( (360px * 5) + (20px * 4) );
+  margin: 0 auto;
+}
+
+.carouselContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: center;
+  z-index: 5;
+}
+
+.carouselButton {
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white; 
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 10; 
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 2rem; 
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+  pointer-events: none; 
+}
+
+.carouselButton:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.carouselButton svg {
+  color: white;
+  fill: white;
+  font-size: 2rem;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.carouselContainer:hover .carouselButton {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
+.prevButton {
+  left: -15px;
+  transform: translateY(-40px);
+}
+
+.nextButton {
+  right: -15px;
+  transform: translateY(-40px);
+}
+
+.recommendedVideos {
+  display: flex;
+  gap: 20px;
+  padding: 10px 0;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  height: auto;
+  max-width: calc( (360px * 5) + (20px * 4) );
+  margin: 0 auto;
+}
+
+.recommendedVideoCard {
+  min-width: 360px;
+  max-width: 360px;
+  flex-shrink: 0;
+  margin-bottom: 20px;
+}
+
+.thumbnailContainer {
+  width: 100%;
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.thumbnail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.videoDuration {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.noVideosMessage {
+  text-align: center;
+  width: 100%;
+  padding: 20px;
+  color: #888;
+}
+
 .tituloSecao,
 .card {
   caret-color: transparent;
