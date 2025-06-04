@@ -99,7 +99,7 @@ const Interesses = () => {
           <div className={styles.cartao}>
             <h2 className={styles.titulo}>Interesses</h2>
             <p className={styles.textoBoasVindas}>
-              Bem-vindo! Escolha seus interesses para recomendarmos os melhores cursos para você
+              Altere seus interesses aqui para recomendarmos os melhores cursos para você
             </p>
             <div className={styles.secao}>
               <h3 className={styles.tituloSecao}>Linguagens de Programação</h3>
