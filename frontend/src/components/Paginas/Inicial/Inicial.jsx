@@ -54,7 +54,7 @@ const Inicial = () => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     setUsuarioLogado(false);
-    navegarPara('/login');
+    navegarPara('/');
   };
 
   if (usuarioLogado) {

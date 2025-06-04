@@ -27,6 +27,7 @@ const Menu = () => {
   return (
     <div>
       <div className={styles.cabecalho}>
+
         <button className={styles.botaoMenu} onClick={toggleMenu}>
           {menuAberto ? <FaTimes /> : <FaBars />}
         </button>

@@ -6,12 +6,41 @@ import Layout from '../../Layout/Layout';
 const Interesses = () => {
   const navegarPara = useNavigate();
   const [interessesSelecionados, setInteressesSelecionados] = useState([]);
+  const [mensagemErro, setMensagemErro] = useState('');
 
+  // Efeito para buscar os interesses do usuário ao carregar o componente
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) {
       navegarPara('/login');
+      return;
     }
+
+    const buscarInteressesDoUsuario = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/auth/me', { // Endpoint para buscar dados do usuário, incluindo interesses
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const userData = await response.json();
+          // Assumindo que a resposta do backend tem um campo 'interesses' que é uma string separada por vírgulas
+          if (userData.interesses) {
+            setInteressesSelecionados(userData.interesses.split(',').map(item => item.trim()));
+          }
+        } else {
+          console.error('Erro ao buscar interesses do usuário:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Erro de conexão ao buscar interesses:', error);
+      }
+    };
+
+    buscarInteressesDoUsuario();
   }, [navegarPara]);
 
   const selecionarInteresse = (interesse) => {
@@ -20,17 +49,23 @@ const Interesses = () => {
     } else {
       setInteressesSelecionados([...interessesSelecionados, interesse]);
     }
+    setMensagemErro('');
   };
 
   const estaSelecionado = (interesse) => interessesSelecionados.includes(interesse);
 
-  const irParaHome = async () => {
+  const irParaHome = async () => { // O nome da função continua 'irParaHome', mas vai para o perfil
+    if (interessesSelecionados.length === 0) {
+      setMensagemErro('Por favor, selecione ao menos um interesse para continuar.');
+      return;
+    }
+
     const token = localStorage.getItem('token');
     if (!token) {
       navegarPara('/login');
       return;
     }
-  
+
     try {
       const response = await fetch('http://localhost:8080/auth/usuario/interesses', {
         method: 'PUT',
@@ -39,12 +74,13 @@ const Interesses = () => {
           'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
-          interesses: interessesSelecionados.join(','), 
+          interesses: interessesSelecionados.join(','),
         }),
       });
-  
+
       if (response.ok) {
-        navegarPara('/home');
+        // *** MUDANÇA AQUI: REDIRECIONA PARA /perfil ***
+        navegarPara('/perfil');
       } else {
         const errorData = await response.json();
         alert(errorData.message || 'Erro ao salvar interesses');
@@ -63,7 +99,7 @@ const Interesses = () => {
           <div className={styles.cartao}>
             <h2 className={styles.titulo}>Interesses</h2>
             <p className={styles.textoBoasVindas}>
-              Bem-vindo! Escolha seus interesses para recomendarmos os melhores cursos para você
+              Altere seus interesses aqui para recomendarmos os melhores cursos para você
             </p>
             <div className={styles.secao}>
               <h3 className={styles.tituloSecao}>Linguagens de Programação</h3>
@@ -143,6 +179,7 @@ const Interesses = () => {
                 </button>
               </div>
             </div>
+            {mensagemErro && <p className={styles.mensagemErro}>{mensagemErro}</p>}
             <button className={styles.botaoPronto} onClick={irParaHome}>
               Pronto
             </button>

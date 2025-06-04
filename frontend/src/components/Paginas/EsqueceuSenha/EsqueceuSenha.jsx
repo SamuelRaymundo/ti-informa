@@ -20,13 +20,19 @@ const EsqueceuSenha = () => {
       );
       if (resp.ok) {
         const pergunta = await resp.text();
-        setPerguntaSeguranca(pergunta);
-        setEtapa(2);
+        if (pergunta) {
+          setPerguntaSeguranca(pergunta);
+          setEtapa(2);
+        } else {
+          setErro('Pergunta de segurança não configurada para este e-mail.');
+        }
       } else {
-        setErro('E-mail não encontrado.');
+        const errorText = await resp.text();
+        setErro(errorText || 'E-mail não encontrado ou erro desconhecido.');
       }
-    } catch {
-      setErro('Erro ao buscar pergunta de segurança.');
+    } catch (fetchError) {
+      console.error('Erro na requisição de pergunta de segurança:', fetchError);
+      setErro('Erro ao buscar pergunta de segurança. Verifique sua conexão.');
     }
   };
 
@@ -44,12 +50,14 @@ const EsqueceuSenha = () => {
       );
       if (resp.ok) {
         alert('Resposta correta! Redirecionando para redefinir senha.');
-        navegarPara('/redefinir-senha', { state: { email } });
+        navegarPara('/RedefinirSenha', { state: { email } });
       } else {
-        setErro('Resposta incorreta. Tente novamente.');
+        const errorText = await resp.text(); 
+        setErro(errorText || 'Resposta incorreta. Tente novamente.');
       }
-    } catch {
-      setErro('Erro ao verificar resposta.');
+    } catch (fetchError) {
+      console.error('Erro na requisição de verificação de resposta:', fetchError);
+      setErro('Erro ao verificar resposta. Verifique sua conexão.');
     }
   };
 
@@ -63,7 +71,7 @@ const EsqueceuSenha = () => {
             {etapa === 1 && (
               <>
                 <p className={styles.instructionText}>
-                  Digite seu e-mail ver se existe.
+                  Digite seu e-mail para verificar se existe uma pergunta de segurança.
                 </p>
                 <form onSubmit={buscarPerguntaSeguranca}>
                   <input
