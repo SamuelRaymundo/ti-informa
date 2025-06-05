@@ -87,7 +87,7 @@ CREATE TABLE `criador` (
   `senha` varchar(255) NOT NULL,
   `cpf` varchar(14) NOT NULL,
   `foto_url` varchar(500) DEFAULT NULL,
-  `descricao` text,
+  `descricao` varchar(255) DEFAULT NULL,
   `formacao` text NOT NULL,
   `funcao` enum('1','2') NOT NULL,
   PRIMARY KEY (`id_criador`),
@@ -182,7 +182,7 @@ CREATE TABLE `usuario` (
   `senha` varchar(255) NOT NULL,
   `interesses` varchar(255) NOT NULL,
   `foto_url` varchar(500) DEFAULT NULL,
-  `descricao` text,
+  `descricao` varchar(255) DEFAULT NULL,
   `pergunta_resposta` varchar(100) NOT NULL,
   `funcao` enum('0','1','2') NOT NULL,
   PRIMARY KEY (`id_usuario`),
@@ -276,4 +276,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-05-29 22:24:44
+-- Dump completed on 2025-06-05 19:13:14
