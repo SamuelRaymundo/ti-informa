@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Perfil.module.css';
-import { HiChevronDown, HiCog, HiPlus } from 'react-icons/hi';
+import { HiChevronDown, HiPlus } from 'react-icons/hi';
 import Layout from '../../Layout/Layout';
 import axios from '../../../api/axios-config';
 
@@ -15,7 +15,6 @@ const getThumbnailSource = (video) => {
   }
   return 'https://placehold.co/300x169?text=Thumbnail+Indispon%C3%ADvel';
 };
-
 
 const AddToPlaylistButton = ({ videoId, playlists }) => {
   const [showSelect, setShowSelect] = useState(false);
@@ -61,10 +60,11 @@ const AddToPlaylistButton = ({ videoId, playlists }) => {
         Adicionar à Playlist
       </button>
       {showSelect && (
-        <div>
+        <div className={styles.playlistSelectContainer}>
           <select
             value={selectedPlaylist}
             onChange={e => setSelectedPlaylist(e.target.value)}
+            className={styles.playlistSelect}
           >
             <option value="">Selecione uma playlist</option>
             {playlists.map(pl => (
@@ -73,7 +73,11 @@ const AddToPlaylistButton = ({ videoId, playlists }) => {
               </option>
             ))}
           </select>
-          <button onClick={handleAdd} disabled={!selectedPlaylist || loading}>
+          <button 
+            onClick={handleAdd} 
+            disabled={!selectedPlaylist || loading}
+            className={styles.playlistAddButton}
+          >
             {loading ? 'Adicionando...' : 'Adicionar'}
           </button>
         </div>
@@ -95,12 +99,13 @@ const Perfil = () => {
   const [novaPlaylistNome, setNovaPlaylistNome] = useState('');
   const [secoesAtivas, setSecoesAtivas] = useState([]);
   const [interessesUsuario, setInteressesUsuario] = useState('');
-  const [isEditing, setIsEditing] = useState(false); 
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingPlaylistId, setEditingPlaylistId] = useState(null);
+  const [newVisibility, setNewVisibility] = useState('');
   const navigate = useNavigate();
   const TamanhoNomePlaylist = 30;
 
   const [originalDescricaoUsuario, setOriginalDescricaoUsuario] = useState('');
-
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -162,33 +167,30 @@ const Perfil = () => {
     carregarDados();
   }, [navigate]);
 
-
-  //Isso ira ser trocado quando fizerem o endpoint
   const aoClicarEditar = async () => {
     if (isEditing) {
       try {
         const token = localStorage.getItem('token');
         await axios.put(
-          '/auth/me', // ou o endpoint correto para atualizar o perfil
+          '/auth/me',
           { descricao: descricaoUsuario },
           { headers: { Authorization: `Bearer ${token}` } }
         );
         alert('Descrição atualizada com sucesso!');
-        setIsEditing(false); // Sai do modo de edição
-        setOriginalDescricaoUsuario(descricaoUsuario); // Atualiza a descrição original
+        setIsEditing(false);
+        setOriginalDescricaoUsuario(descricaoUsuario);
       } catch (error) {
         console.error('Erro ao atualizar descrição:', error);
         alert('Erro ao atualizar descrição: ' + (error.response?.data?.message || 'Tente novamente mais tarde'));
       }
     } else {
-
       setIsEditing(true);
     }
   };
 
   const aoClicarCancelarEdicao = () => {
-    setDescricaoUsuario(originalDescricaoUsuario); 
-    setIsEditing(false); 
+    setDescricaoUsuario(originalDescricaoUsuario);
+    setIsEditing(false);
   };
 
   const aoClicarSair = () => {
@@ -197,6 +199,7 @@ const Perfil = () => {
     localStorage.removeItem('email');
     navigate('/login');
   };
+
   const aoClicarAdicionarVideo = () => {
     navigate('/upload-video');
   };
@@ -229,8 +232,39 @@ const Perfil = () => {
     }
   };
 
+  const atualizarVisibilidade = async (playlistId) => {
+    const token = localStorage.getItem('token');
+    if (!newVisibility) {
+      alert('Selecione uma visibilidade');
+      return;
+    }
+
+    try {
+      setLoadingPlaylists(true);
+      await axios.patch(
+        `/playlists/${playlistId}/visibilidade`,
+        { visibilidade: newVisibility },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      
+      const res = await axios.get('/playlists/minhas-playlists', { 
+        headers: { Authorization: `Bearer ${token}` } 
+      });
+      setPlaylists(res.data);
+      
+      setEditingPlaylistId(null);
+      setNewVisibility('');
+      alert('Visibilidade atualizada com sucesso!');
+    } catch (error) {
+      console.error('Erro ao atualizar visibilidade:', error);
+      alert(error.response?.data || 'Erro ao atualizar visibilidade');
+    } finally {
+      setLoadingPlaylists(false);
+    }
+  };
+
   const videosOrdenados = [...videosUsuario].sort((a, b) => {
-    return new Date(a.dataPublicacao) - new Date(b.dataPublicacao); 
+    return new Date(a.dataPublicacao) - new Date(b.dataPublicacao);
   });
 
   const alternarSecao = idSecao => {
@@ -239,6 +273,15 @@ const Perfil = () => {
         ? prev.filter(id => id !== idSecao)
         : [...prev, idSecao]
     );
+  };
+
+  const getVisibilidadeLabel = (visibilidade) => {
+    switch (visibilidade) {
+      case 'PUBLICA': return 'Pública';
+      case 'NAO_LISTADA': return 'Não Listada';
+      case 'PRIVADA': return 'Privada';
+      default: return visibilidade;
+    }
   };
 
   const secoesBase = [
@@ -258,7 +301,7 @@ const Perfil = () => {
                   setNovaPlaylistNome(e.target.value);
                 }
               }}
-              maxLength={TamanhoNomePlaylist} 
+              maxLength={TamanhoNomePlaylist}
             />
             <button
               className={styles.botaoNovaPlaylist}
@@ -280,11 +323,64 @@ const Perfil = () => {
                 <div
                   key={playlist.id_playlist || playlist.id}
                   className={styles.playlistCard}
-                  onClick={() => navigate(`/playlist/${playlist.id_playlist || playlist.id}`, { state: { playlist } })}
                 >
-                  <h4>{playlist.nome}</h4>
-                  <p>Visibilidade: {playlist.visibilidade}</p>
-                  <p>{playlist.videos?.length || 0} vídeos</p>
+                  <h4 
+                    onClick={() => navigate(`/playlist/${playlist.id_playlist || playlist.id}`, { state: { playlist } })}
+                    className={styles.playlistTitle}
+                  >
+                    {playlist.nome}
+                  </h4>
+                  
+                  {editingPlaylistId === playlist.id ? (
+                    <div className={styles.visibilityEditor}>
+                      <select
+                        value={newVisibility}
+                        onChange={e => setNewVisibility(e.target.value)}
+                        className={styles.visibilitySelect}
+                      >
+                        <option value="" disabled>Visibilidades</option>
+                        {['PUBLICA', 'NAO_LISTADA', 'PRIVADA']
+                          .filter(visibilityOption => visibilityOption !== playlist.visibilidade)
+                          .map(option => (
+                            <option key={option} value={option}>
+                              {getVisibilidadeLabel(option)}
+                            </option>
+                          ))
+                        }
+                      </select>
+                      <div className={styles.buttonContainer}>
+                        <button 
+                          onClick={() => atualizarVisibilidade(playlist.id)}
+                          className={styles.visibilitySaveButton}
+                        >
+                          Salvar
+                        </button>
+                        <button 
+                          onClick={() => setEditingPlaylistId(null)}
+                          className={styles.visibilityCancelButton}
+                        >
+                          Cancelar
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className={styles.visibilityContainer}>
+                      <span className={`${styles.visibilityBadge} ${styles[`visibilityBadge_${playlist.visibilidade}`]}`}>
+                        {getVisibilidadeLabel(playlist.visibilidade)}
+                      </span>
+                      <button 
+                        onClick={() => {
+                          setEditingPlaylistId(playlist.id);
+                          setNewVisibility(''); // Resetar newVisibility para que a primeira opção seja "Selecione a visibilidade"
+                        }}
+                        className={styles.editVisibilityButton}
+                      >
+                        Alterar
+                      </button>
+                    </div>
+                  )}
+                  
+                  <p className={styles.videoCount}>{playlist.videos?.length || 0} vídeo(s)</p>
                 </div>
               ))}
             </div>
@@ -315,7 +411,6 @@ const Perfil = () => {
       <div className={styles.tabelaContainer}>
         {interessesUsuario ? (
           <div>
-            {/* Linguagens de Programação */}
             {extrairInteressesPorCategoria(interessesUsuario, 'Linguagens de Programação').length > 0 && (
               <>
                 <h3 className={styles.subtituloCategorias}>Linguagens de Programação</h3>
@@ -327,7 +422,6 @@ const Perfil = () => {
               </>
             )}
 
-            {/* Desenvolvimento Web */}
             {extrairInteressesPorCategoria(interessesUsuario, 'Desenvolvimento Web').length > 0 && (
               <>
                 <h3 className={styles.subtituloCategorias}>Desenvolvimento Web</h3>
@@ -339,7 +433,6 @@ const Perfil = () => {
               </>
             )}
 
-            {/* Banco de Dados */}
             {extrairInteressesPorCategoria(interessesUsuario, 'Banco de Dados').length > 0 && (
               <>
                 <h3 className={styles.subtituloCategorias}>Banco de Dados</h3>
@@ -350,7 +443,6 @@ const Perfil = () => {
                 </ul>
               </>
             )}
-            {/* Se nenhum interesse for definido em todas as categorias */}
             {
               extrairInteressesPorCategoria(interessesUsuario, 'Linguagens de Programação').length === 0 &&
               extrairInteressesPorCategoria(interessesUsuario, 'Desenvolvimento Web').length === 0 &&
@@ -387,7 +479,7 @@ const Perfil = () => {
                 onClick={() => navigate(`/video/${video.id_video || video.id}`, { state: { video } })}
                 style={{ cursor: 'pointer' }}
               >
-              <img
+                <img
                   src={getThumbnailSource(video)}
                   alt={`Thumbnail do vídeo ${video.titulo}`}
                   className={styles.videoThumbnail}
@@ -445,7 +537,7 @@ const Perfil = () => {
               placeholder="Descrição do usuário."
               value={descricaoUsuario}
               onChange={e => setDescricaoUsuario(e.target.value)}
-              readOnly={!isEditing} 
+              readOnly={!isEditing}
             />
             {isCriador ? (
               <p className={styles.tipoUsuario}>Criador de Conteúdo</p>
@@ -456,9 +548,9 @@ const Perfil = () => {
           </div>
           <div className={styles.botoesContainer}>
             <button className={styles.botaoEditar} onClick={aoClicarEditar}>
-              {isEditing ? 'Salvar Alterações' : 'Editar'} 
+              {isEditing ? 'Salvar Alterações' : 'Editar'}
             </button>
-            {isEditing && ( 
+            {isEditing && (
               <button className={styles.botaoCancelar} onClick={aoClicarCancelarEdicao}>
                 Cancelar
               </button>
@@ -483,8 +575,8 @@ const Perfil = () => {
                 {secao.titulo} <HiChevronDown />
               </p>
               <div
-                className={`${styles.conteudoSecao} ${secoesAtivas.includes(secao.id) ? styles.aberta : ''
-                }`}              >
+                className={`${styles.conteudoSecao} ${secoesAtivas.includes(secao.id) ? styles.aberta : ''}`}
+              >
                 {secao.conteudo}
               </div>
             </div>
