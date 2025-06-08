@@ -14,6 +14,63 @@
   max-height: 90vh;
 }
 
+.botaoAdicionarPlaylist {
+  background-color: #007bff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+  color: white; 
+}
+
+.botaoAdicionarPlaylist:hover {
+  background-color: #e1e1e1;
+  color: #000;
+}
+
+.playlistDropdownPerfil {
+  position: absolute; 
+  top: 100%; 
+  right: 0;
+  margin-top: 8px;
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  min-width: 200px;
+}
+
+.playlistSelectPerfil {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+.confirmAddButtonPerfil {
+  width: 100%;
+  padding: 8px;
+  background-color: rgb(6, 95, 212);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.confirmAddButtonPerfil:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.confirmAddButtonPerfil:hover:enabled {
+    background-color: rgb(4, 70, 158); 
+}
+
 .videoThumbnail {
   width: 100%;
   height: auto;

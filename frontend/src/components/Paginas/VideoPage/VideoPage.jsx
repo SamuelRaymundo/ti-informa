@@ -16,7 +16,6 @@ const getThumbnailSource = (video) => {
 };
 
 const VideoPage = () => {
-  
   const { videoId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -35,7 +34,11 @@ const VideoPage = () => {
   const [currentUserId, setCurrentUserId] = useState(null);
   const [existingEvaluation, setExistingEvaluation] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
-  
+  const [playlists, setPlaylists] = useState([]);
+  const [loadingPlaylists, setLoadingPlaylists] = useState(false);
+  const [showPlaylistSelect, setShowPlaylistSelect] = useState(false);
+  const [selectedPlaylist, setSelectedPlaylist] = useState('');
+
   useEffect(() => {
     document.documentElement.classList.add(styles.htmlVideoPage);
     return () => {
@@ -52,6 +55,57 @@ const VideoPage = () => {
     const storedUserId = localStorage.getItem('userId');
     return storedUserId ? parseInt(storedUserId, 10) : 1;
   };
+
+  const handleAddToPlaylist = async () => {
+    if (!selectedPlaylist || !videoId) {
+      alert('Selecione uma playlist e verifique o vídeo');
+      return;
+    }
+
+    setLoadingPlaylists(true);
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post(
+        `/playlists/${selectedPlaylist}/adicionar-video`,
+        {},
+        {
+          params: { videoId: videoId.toString() },
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      alert('Vídeo adicionado à playlist!');
+      setShowPlaylistSelect(false);
+    } catch (error) {
+      console.error('Erro ao adicionar vídeo:', error);
+      alert(error.response?.data?.message || 'Erro ao adicionar vídeo à playlist');
+    } finally {
+      setLoadingPlaylists(false);
+    }
+  };
+
+  useEffect(() => {
+    const fetchPlaylists = async () => {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      try {
+        setLoadingPlaylists(true);
+        const res = await axios.get('/playlists/minhas-playlists', { 
+          headers: { Authorization: `Bearer ${token}` } 
+        });
+        setPlaylists(res.data);
+      } catch (error) {
+        console.error('Erro ao buscar playlists:', error);
+      } finally {
+        setLoadingPlaylists(false);
+      }
+    };
+
+    fetchPlaylists();
+  }, []);
 
   useEffect(() => {
     const fetchVideoData = async () => {
@@ -430,15 +484,53 @@ const VideoPage = () => {
                     </p>
                   </div>
                 </div>
-                {videoData.criador?.id && (
-                  <button
-                    className={`${styles.subscribeButton} ${isSubscribed ? styles.subscribed : ''}`}
-                    onClick={handleSubscribe}
-                    disabled={!videoData.criador.id}
-                  >
-                    {isSubscribed ? 'Inscrito' : 'Inscrever-se'}
-                  </button>
-                )}
+                <div className={styles.actionButtons}>
+                  {videoData.criador?.id && (
+                    <button
+                      className={`${styles.subscribeButton} ${isSubscribed ? styles.subscribed : ''}`}
+                      onClick={handleSubscribe}
+                      disabled={!videoData.criador.id}
+                    >
+                      {isSubscribed ? 'Inscrito' : 'Inscrever-se'}
+                    </button>
+                  )}
+                  {localStorage.getItem('token') && (
+                    <div className={styles.playlistAction}>
+                      <button
+                        className={styles.addToPlaylistButton}
+                        onClick={() => setShowPlaylistSelect(!showPlaylistSelect)}
+                      >
+                        Adicionar à Playlist
+                      </button>
+                      {showPlaylistSelect && (
+                        <div className={styles.playlistDropdown}>
+                          <select
+                            value={selectedPlaylist}
+                            onChange={(e) => setSelectedPlaylist(e.target.value)}
+                            className={styles.playlistSelect}
+                          >
+                            <option value="">Selecione uma playlist</option>
+                            {playlists.map((pl) => (
+                              <option 
+                                key={pl.id_playlist || pl.id} 
+                                value={pl.id_playlist || pl.id}
+                              >
+                                {pl.nome}
+                              </option>
+                            ))}
+                          </select>
+                          <button
+                            onClick={handleAddToPlaylist}
+                            disabled={!selectedPlaylist || loadingPlaylists}
+                            className={styles.confirmAddButton}
+                          >
+                            {loadingPlaylists ? 'Adicionando...' : 'Confirmar'}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className={styles.evaluationSection}>

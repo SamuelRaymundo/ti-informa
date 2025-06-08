@@ -39,7 +39,7 @@ const PlaylistView = () => {
       console.warn('Vídeo sem chave:', video);
       return (
         <div className={styles.videoPlaceholder}>
-          Vídeo não disponível (sem chave)
+          Vídeo não disponível
         </div>
       );
     }
