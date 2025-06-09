@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import axios from '../../../api/axios-config';
-import styles from './VideoPage.module.css';
+import styles from './PlaylistVideo.module.css';
 import Layout from '../../Layout/Layout';
 
 const getThumbnailSource = (video) => {
@@ -15,8 +15,9 @@ const getThumbnailSource = (video) => {
   return 'https://placehold.co/300x169?text=Thumbnail+Indispon%C3%ADvel';
 };
 
-const VideoPage = () => {
+const PlaylistVideo = () => {
   const { videoId } = useParams();
+  const [currentVideoId, setCurrentVideoId] = useState(videoId);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -38,18 +39,41 @@ const VideoPage = () => {
   const [loadingPlaylists, setLoadingPlaylists] = useState(false);
   const [showPlaylistSelect, setShowPlaylistSelect] = useState(false);
   const [selectedPlaylist, setSelectedPlaylist] = useState('');
+  const [playlistVideos, setPlaylistVideos] = useState([]);
+  const [playlistName, setPlaylistName] = useState('');
 
   useEffect(() => {
-    document.documentElement.classList.add(styles.htmlVideoPage);
+    document.documentElement.classList.add(styles.htmlPlaylistVideo);
     return () => {
-      document.documentElement.classList.remove(styles.htmlVideoPage);
+      document.documentElement.classList.remove(styles.htmlPlaylistVideo);
     };
   }, []);
 
   const getVideoSource = useCallback((videoKey) => {
-    if (!videoKey) return '';
+    if (!videoKey) {
+      console.error("getVideoSource: videoKey é nulo ou vazio");
+      return '';
+    }
     return `https://tcc-fiec-ti-informa.s3.us-east-2.amazonaws.com/${videoKey}`;
   }, []);
+
+  const handleVideoClick = (video) => {
+    const newVideoId = video.videoId;
+    if (!newVideoId) {
+      console.error("ID do vídeo não encontrado:", video);
+      return;
+    }
+    setCurrentVideoId(newVideoId);
+    console.log("Navegando para o vídeo:", newVideoId);
+    navigate(`/playlist/${location.state?.playlistId}/video/${newVideoId}`, {
+      state: {
+        video,
+        fromPlaylist: true,
+        playlistId: location.state?.playlistId,
+        playlistVideos
+      }
+    });
+  };
 
   const getSimulatedUserId = () => {
     const storedUserId = localStorage.getItem('userId');
@@ -118,26 +142,34 @@ const VideoPage = () => {
       setRatingMessage('');
 
       const token = localStorage.getItem('token');
-      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      if (!token) {
+        navigate('/login');
+        return;
+      }
 
+      const headers = { Authorization: `Bearer ${token}` };
       setCurrentUserId(getSimulatedUserId());
 
       let currentVideoData = null;
 
       try {
-        if (location.state?.video && (location.state.video.id_video || location.state.video.id)) {
+        if (location.state?.video) {
           currentVideoData = location.state.video;
           setVideoData(currentVideoData);
-        } else {
-          if (!videoId) {
-            throw new Error('ID do vídeo não encontrado');
-          }
-          const response = await axios.get(`/file/video/${videoId}`, { headers });
-          if (!response.data) {
-            throw new Error('Dados do vídeo não recebidos');
-          }
+          setCurrentVideoId(currentVideoData.videoId || currentVideoData.id);
+        }
+        if (location.state?.playlistId) {
+          const playlistRes = await axios.get(`/playlists/${location.state.playlistId}`, { headers });
+          setPlaylistName(playlistRes.data?.nome || '');
+          setPlaylistVideos(playlistRes.data?.videos || []);
+        }
+        else if (videoId) {
+          const response = await axios.get(`/api/videos/${videoId}`, { headers });
           currentVideoData = response.data;
           setVideoData(currentVideoData);
+          setCurrentVideoId(currentVideoData.videoId || currentVideoData.id);
+        } else {
+          throw new Error('ID do vídeo não encontrado');
         }
 
         if (currentVideoData?.criador?.fotoPerfil) {
@@ -145,14 +177,14 @@ const VideoPage = () => {
         } else {
           setCreatorProfilePhoto('https://st4.depositphotos.com/29453910/37778/v/450/depositphotos_377785374-stock-illustration-hand-drawn-modern-man-avatar.jpg');
         }
-        
+
         if (token && videoId) {
           try {
             const userId = getSimulatedUserId();
             const evalResponse = await axios.get(`/avaliacoes/usuario/${userId}/video/${videoId}`, {
               headers: { Authorization: `Bearer ${token}` }
             });
-            
+
             if (evalResponse.data) {
               setExistingEvaluation(evalResponse.data);
               setHasRated(true);
@@ -174,13 +206,9 @@ const VideoPage = () => {
       if (currentVideoData) {
         try {
           const recResponse = await axios.get('/file/videos-recomendados', { headers });
-          const filteredRecommendedVideos = Array.isArray(recResponse.data)
-            ? recResponse.data.filter(recVideo => {
-                const currentVideoIdentifier = videoId || currentVideoData.id_video || currentVideoData.id;
-                return recVideo.id_video != currentVideoIdentifier && recVideo.id != currentVideoIdentifier;
-              })
-            : [];
-          setRecommendedVideos(filteredRecommendedVideos);
+          // Filtra os vídeos recomendados para remover o vídeo principal
+          setRecommendedVideos(Array.isArray(recResponse.data) ?
+            recResponse.data.filter(recVideo => recVideo.id_video !== currentVideoId && recVideo.id !== currentVideoId) : []);
         } catch (recError) {
           console.error('Erro ao buscar recomendados:', recError);
           setRecommendedVideos([]);
@@ -201,7 +229,7 @@ const VideoPage = () => {
     };
 
     fetchVideoData();
-  }, [videoId, location.state, navigate, getVideoSource]);
+  }, [videoId, location.state, navigate, getVideoSource, currentVideoId]); // Adicionado currentVideoId como dependência
 
   const handleSubscribe = async () => {
     try {
@@ -240,9 +268,9 @@ const VideoPage = () => {
 
   const handleSubmitEvaluation = async () => {
     if (hasRated) {
-        setRatingMessage('Você já avaliou este vídeo.');
-        setTimeout(() => setRatingMessage(''), 3000);
-        return;
+      setRatingMessage('Você já avaliou este vídeo.');
+      setTimeout(() => setRatingMessage(''), 3000);
+      return;
     }
 
     if (userRating === 0) {
@@ -260,68 +288,68 @@ const VideoPage = () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) {
-          navigate('/login');
-          return;
+        navigate('/login');
+        return;
       }
 
       setRatingMessage('Enviando sua avaliação...');
 
       const response = await axios.post('/avaliacoes/create', {
-          userId: currentUserId,
-          videoId: videoId,
-          nota: userRating,
-          comentario: comment
+        userId: currentUserId,
+        videoId: videoId,
+        nota: userRating,
+        comentario: comment
       }, {
-          headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json'
-          }
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
       });
 
       if (response.data) {
-          setHasRated(true);
-          setExistingEvaluation(response.data);
-          setRatingMessage('Obrigado pela sua avaliação!');
-          setVideoData(prev => ({
-              ...prev,
-              numeroAvaliacoes: (prev.numeroAvaliacoes || 0) + 1,
-              mediaAvaliacoes: (
-                  (prev.mediaAvaliacoes || 0) * (prev.numeroAvaliacoes || 0) + userRating
-              ) / ((prev.numeroAvaliacoes || 0) + 1)
-          }));
+        setHasRated(true);
+        setExistingEvaluation(response.data);
+        setRatingMessage('Obrigado pela sua avaliação!');
+        setVideoData(prev => ({
+          ...prev,
+          numeroAvaliacoes: (prev.numeroAvaliacoes || 0) + 1,
+          mediaAvaliacoes: (
+            (prev.mediaAvaliacoes || 0) * (prev.numeroAvaliacoes || 0) + userRating
+          ) / ((prev.numeroAvaliacoes || 0) + 1)
+        }));
       }
     } catch (err) {
       console.error('Erro ao avaliar o vídeo:', err);
       if (err.response?.status === 409) {
-          setRatingMessage('Você já avaliou este vídeo anteriormente.');
-          setHasRated(true);
-          try {
-            const userId = getSimulatedUserId();
-            const evalResponse = await axios.get(`/avaliacoes/usuario/${userId}/video/${videoId}`, {
-            });
-            if (evalResponse.data) {
-              setExistingEvaluation(evalResponse.data);
-              setUserRating(evalResponse.data.nota);
-              setComment(evalResponse.data.comentario);
-            }
-          } catch (fetchErr) {
-            console.error('Erro ao buscar avaliação existente:', fetchErr);
+        setRatingMessage('Você já avaliou este vídeo anteriormente.');
+        setHasRated(true);
+        try {
+          const userId = getSimulatedUserId();
+          const evalResponse = await axios.get(`/avaliacoes/usuario/${userId}/video/${videoId}`, {
+          });
+          if (evalResponse.data) {
+            setExistingEvaluation(evalResponse.data);
+            setUserRating(evalResponse.data.nota);
+            setComment(evalResponse.data.comentario);
           }
+        } catch (fetchErr) {
+          console.error('Erro ao buscar avaliação existente:', fetchErr);
+        }
       } else {
-          setRatingMessage(err.response?.data?.message || 'Erro ao avaliar. Tente novamente.');
+        setRatingMessage(err.response?.data?.message || 'Erro ao avaliar. Tente novamente.');
       }
     } finally {
-        setTimeout(() => setRatingMessage(''), 3000);
+      setTimeout(() => setRatingMessage(''), 3000);
     }
   };
 
   const handleDeleteEvaluation = async () => {
     if (!existingEvaluation) return;
-    
+
     try {
       setIsDeleting(true);
       setRatingMessage('Removendo sua avaliação...');
-      
+
       const token = localStorage.getItem('token');
       if (!token) {
         navigate('/login');
@@ -337,7 +365,7 @@ const VideoPage = () => {
       setUserRating(0);
       setComment('');
       setRatingMessage('Avaliação removida com sucesso!');
-      
+
       setVideoData(prev => ({
         ...prev,
         numeroAvaliacoes: Math.max((prev.numeroAvaliacoes || 1) - 1, 0),
@@ -427,7 +455,7 @@ const VideoPage = () => {
   return (
     <div className={styles.container}>
       <Layout />
-      <div className={styles.videoPageContainer}>
+      <div className={styles.PlaylistVideoContainer}>
         <div className={styles.mainContent}>
           <div className={styles.videoPlayerContainer}>
             <video
@@ -543,7 +571,7 @@ const VideoPage = () => {
                 <h3 className={styles.evaluationTitle}>
                   {existingEvaluation ? 'Sua Avaliação' : 'Avalie este vídeo'}
                 </h3>
-                
+
                 {existingEvaluation ? (
                   <div className={styles.existingEvaluation}>
                     <div className={styles.stars}>
@@ -609,8 +637,48 @@ const VideoPage = () => {
             </div>
           </div>
         </div>
-
         <div className={styles.sidebar}>
+          {playlistVideos.length > 0 && (
+            <div className={styles.playlistVideosSection}>
+              <h3 className={styles.playlistVideosTitle}>
+                Vídeos da Playlist: {playlistName}
+              </h3>
+              <div className={styles.playlistVideosList}>
+                {playlistVideos
+                  .filter((video) => video.videoId !== (currentVideoId || videoId))
+                  .map((video) => (
+                    <div
+                      key={video.id}
+                      className={styles.recommendedVideoCard}
+                      onClick={() => handleVideoClick(video)}
+                    >
+                      <div className={styles.thumbnailContainer}>
+                        <img
+                          src={getThumbnailSource(video)}
+                          alt={video.titulo}
+                          className={styles.thumbnail}
+                          onError={(e) => {
+                            e.target.src = 'https://placehold.co/300x169?text=Thumbnail+Indispon%C3%ADvel';
+                          }}
+                        />
+                        <span className={styles.videoDuration}>10:30</span>
+                      </div>
+                      <div className={styles.recommendedVideoInfo}>
+                        <h4 className={styles.recommendedVideoTitle}>
+                          {video.titulo || 'Vídeo sem título'}
+                        </h4>
+                        <p className={styles.recommendedVideoCreator}>
+                          {video.criador?.nome || 'Criador desconhecido'}
+                        </p>
+                        <p className={styles.recommendedVideoStats}>
+                          {video.visualizacoes || 0} visualizações • {formatDate(video.dataPublicacao)}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          )}
           <h3 className={styles.recommendationsTitle}>Recomendados</h3>
           <div className={styles.recommendedVideos}>
             {recommendedError ? (
@@ -618,7 +686,7 @@ const VideoPage = () => {
             ) : recommendedVideos.length > 0 ? (
               recommendedVideos.map((video) => (
                 <div
-                  key={video.id_video || video.id}
+                  key={video.id}
                   className={styles.recommendedVideoCard}
                   onClick={() => handleRecommendedVideoClick(video)}
                 >
@@ -656,4 +724,4 @@ const VideoPage = () => {
   );
 };
 
-export default VideoPage;
+export default PlaylistVideo;

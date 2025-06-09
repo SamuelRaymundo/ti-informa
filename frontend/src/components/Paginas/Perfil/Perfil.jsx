@@ -263,6 +263,13 @@ const Perfil = () => {
     }
   };
 
+  useEffect(() => {
+    document.documentElement.classList.add(styles.htmlVideoPage);
+    return () => {
+      document.documentElement.classList.remove(styles.htmlVideoPage);
+    };
+  }, []);
+
   const videosOrdenados = [...videosUsuario].sort((a, b) => {
     return new Date(a.dataPublicacao) - new Date(b.dataPublicacao);
   });
@@ -320,69 +327,80 @@ const Perfil = () => {
             <div className={styles.listaPlaylistsGrid}>
               {playlists.length === 0 && <p>Você não possui playlists.</p>}
               {playlists.slice().reverse().map(playlist => (
-                <div
-                  key={playlist.id_playlist || playlist.id}
-                  className={styles.playlistCard}
+            <div
+              key={playlist.id_playlist || playlist.id}
+              className={styles.playlistCard}
+              onClick={() => navigate(`/playlist/${playlist.id_playlist || playlist.id}`, { state: { playlist } })}
+            >
+              <h4 className={styles.playlistTitle}>
+                {playlist.nome}
+              </h4>
+              
+              {editingPlaylistId === playlist.id ? (
+                <div 
+                  className={styles.visibilityEditor}
+                  onClick={e => e.stopPropagation()} 
                 >
-                  <h4 
-                    onClick={() => navigate(`/playlist/${playlist.id_playlist || playlist.id}`, { state: { playlist } })}
-                    className={styles.playlistTitle}
+                  <select
+                    value={newVisibility}
+                    onChange={e => setNewVisibility(e.target.value)}
+                    className={styles.visibilitySelect}
                   >
-                    {playlist.nome}
-                  </h4>
-                  
-                  {editingPlaylistId === playlist.id ? (
-                    <div className={styles.visibilityEditor}>
-                      <select
-                        value={newVisibility}
-                        onChange={e => setNewVisibility(e.target.value)}
-                        className={styles.visibilitySelect}
-                      >
-                        <option value="" disabled>Visibilidades</option>
-                        {['PUBLICA', 'NAO_LISTADA', 'PRIVADA']
-                          .filter(visibilityOption => visibilityOption !== playlist.visibilidade)
-                          .map(option => (
-                            <option key={option} value={option}>
-                              {getVisibilidadeLabel(option)}
-                            </option>
-                          ))
-                        }
-                      </select>
-                      <div className={styles.buttonContainer}>
-                        <button 
-                          onClick={() => atualizarVisibilidade(playlist.id)}
-                          className={styles.visibilitySaveButton}
-                        >
-                          Salvar
-                        </button>
-                        <button 
-                          onClick={() => setEditingPlaylistId(null)}
-                          className={styles.visibilityCancelButton}
-                        >
-                          Cancelar
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className={styles.visibilityContainer}>
-                      <span className={`${styles.visibilityBadge} ${styles[`visibilityBadge_${playlist.visibilidade}`]}`}>
-                        {getVisibilidadeLabel(playlist.visibilidade)}
-                      </span>
-                      <button 
-                        onClick={() => {
-                          setEditingPlaylistId(playlist.id);
-                          setNewVisibility(''); // Resetar newVisibility para que a primeira opção seja "Selecione a visibilidade"
-                        }}
-                        className={styles.editVisibilityButton}
-                      >
-                        Alterar
-                      </button>
-                    </div>
-                  )}
-                  
-                  <p className={styles.videoCount}>{playlist.videos?.length || 0} vídeo(s)</p>
+                    <option value="" disabled>Escolha</option>
+                    {['PUBLICA', 'NAO_LISTADA', 'PRIVADA']
+                      .filter(visibilityOption => visibilityOption !== playlist.visibilidade)
+                      .map(option => (
+                        <option key={option} value={option}>
+                          {getVisibilidadeLabel(option)}
+                        </option>
+                      ))
+                    }
+                  </select>
+                  <div className={styles.buttonContainer}>
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        atualizarVisibilidade(playlist.id);
+                      }}
+                      className={styles.visibilitySaveButton}
+                    >
+                      Salvar
+                    </button>
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setEditingPlaylistId(null);
+                      }}
+                      className={styles.visibilityCancelButton}
+                    >
+                      Cancelar
+                    </button>
+                  </div>
                 </div>
-              ))}
+              ) : (
+                <div 
+                  className={styles.visibilityContainer}
+                  onClick={e => e.stopPropagation()}
+                >
+                  <span className={`${styles.visibilityBadge} ${styles[`visibilityBadge_${playlist.visibilidade}`]}`}>
+                    {getVisibilidadeLabel(playlist.visibilidade)}
+                  </span>
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEditingPlaylistId(playlist.id);
+                      setNewVisibility(''); 
+                    }}
+                    className={styles.editVisibilityButton}
+                  >
+                    Alterar
+                  </button>
+                </div>
+              )}
+              
+              <p className={styles.videoCount}>{playlist.videos?.length || 0} vídeo(s)</p>
+            </div>
+          ))}
             </div>
           )}
         </div>

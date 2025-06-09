@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import styles from './PlaylistView.module.css';
 import Layout from '../../Layout/Layout';
 import axios from '../../../api/axios-config';
 
 const PlaylistView = () => {
   const { playlistId } = useParams();
+  const navigate = useNavigate();
   const [playlist, setPlaylist] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -17,8 +18,6 @@ const PlaylistView = () => {
         const response = await axios.get(`/playlists/${playlistId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
-        
-        console.log('Dados da playlist:', response.data);
         
         setPlaylist(response.data);
       } catch (err) {
@@ -32,28 +31,25 @@ const PlaylistView = () => {
     fetchPlaylist();
   }, [playlistId]);
 
-  const renderVideoPlayer = (video) => {
-    const videoKey = video.key || video.videoKey || video.id;
-    
-    if (!videoKey) {
-      console.warn('Vídeo sem chave:', video);
-      return (
-        <div className={styles.videoPlaceholder}>
-          Vídeo não disponível
-        </div>
-      );
+  const getThumbnailSource = (video) => {
+    const s3BaseUrl = 'https://tcc-fiec-ti-informa.s3.us-east-2.amazonaws.com/';
+    if (video?.thumbnail) {
+      return `${s3BaseUrl}${video.thumbnail}`;
     }
+    if (video?.key) {
+      return `${s3BaseUrl}${video.key}`;
+    }
+    return 'https://placehold.co/300x169?text=Thumbnail+Indispon%C3%ADvel';
+  };
 
-    const videoUrl = `https://tcc-fiec-ti-informa.s3.us-east-2.amazonaws.com/${videoKey}`;
-    
-    return (
-      <div className={styles.videoPlayerWrapper}>
-        <video controls className={styles.videoPlayer}>
-          <source src={videoUrl} type="video/mp4" />
-          Seu navegador não suporta vídeos HTML5.
-        </video>
-      </div>
-    );
+  const handleVideoClick = (video) => {
+    navigate(`/playlist/${playlistId}/video/${video.videoId}`, {
+      state: { 
+        video,
+        fromPlaylist: true, 
+        playlistId 
+      }
+    });
   };
 
   if (loading) return (
@@ -94,11 +90,19 @@ const PlaylistView = () => {
               <div 
                 key={`${video.id || video.idVideo || index}`} 
                 className={styles.itemVideo}
+                onClick={() => handleVideoClick(video)}
               >
                 <h3 className={styles.tituloVideo}>
                   {video.titulo || video.videoTitulo || `Vídeo ${index + 1}`}
                 </h3>
-                {renderVideoPlayer(video)}
+                <img 
+                  src={getThumbnailSource(video)} 
+                  alt={video.titulo} 
+                  className={styles.thumbnail}
+                  onError={(e) => {
+                    e.target.src = 'https://placehold.co/300x169?text=Thumbnail+Indispon%C3%ADvel';
+                  }}
+                />
               </div>
             ))
           ) : (

@@ -16,6 +16,7 @@ import VideoPage from '../Paginas/VideoPage/VideoPage';
 import RedefinirSenha from '../Paginas/RedefinirSenha/RedefinirSenha';
 import ErrorBoundary from './ErrorBoundary';
 import AdminPage from '../Paginas/Admin/AdminPage';
+import PlaylistVideo from '../Paginas/PlaylistVideo/PlaylistVideo';
 
 function App() {
     return (
@@ -37,6 +38,7 @@ function App() {
                     <Route path="/playlist/:playlistId" element={<PlaylistView />} />
                     <Route path="/video/:videoId" element={<VideoPage />} /> 
                     <Route path="/admin" element={<AdminPage />} />
+                    <Route path="/playlist/:playlistId/video/:videoId" element={<PlaylistVideo />} />
                 </Routes>
             </ErrorBoundary>
         </Router>
