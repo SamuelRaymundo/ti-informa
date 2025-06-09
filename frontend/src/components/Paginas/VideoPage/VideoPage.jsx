@@ -38,6 +38,7 @@ const VideoPage = () => {
   const [loadingPlaylists, setLoadingPlaylists] = useState(false);
   const [showPlaylistSelect, setShowPlaylistSelect] = useState(false);
   const [selectedPlaylist, setSelectedPlaylist] = useState('');
+  const [videoViews, setVideoViews] = useState(0); 
 
   useEffect(() => {
     document.documentElement.classList.add(styles.htmlVideoPage);
@@ -108,6 +109,41 @@ const VideoPage = () => {
   }, []);
 
   useEffect(() => {
+    const incrementAndFetchViews = async () => {
+      if (!videoId) return;
+
+      const hasViewedKey = `viewedVideo_${videoId}`;
+      const hasViewedInSession = sessionStorage.getItem(hasViewedKey);
+      const token = localStorage.getItem('token');
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+      if (!hasViewedInSession) {
+        try {
+          await axios.post(`/file/${videoId}/visualizacao`, {}, { headers });
+          console.log(`Visualização do vídeo ${videoId} registrada com sucesso.`);
+          sessionStorage.setItem(hasViewedKey, 'true');
+        } catch (viewError) {
+          console.error('Erro ao incrementar visualização:', viewError);
+        }
+      } else {
+        console.log(`Visualização do vídeo ${videoId} já contada nesta sessão.`);
+      }
+
+      try {
+        const viewsResponse = await axios.get(`/file/${videoId}/visualizacoes`, { headers }); // <-- USING NEW ENDPOINT
+        if (viewsResponse.data !== null && typeof viewsResponse.data === 'number') {
+          setVideoViews(viewsResponse.data);
+        }
+      } catch (fetchViewsError) {
+        console.error('Erro ao buscar visualizações do vídeo:', fetchViewsError);
+        setVideoViews(0);
+      }
+    };
+
+    incrementAndFetchViews();
+  }, [videoId]); 
+
+  useEffect(() => {
     const fetchVideoData = async () => {
       setLoading(true);
       setError('');
@@ -145,22 +181,22 @@ const VideoPage = () => {
         } else {
           setCreatorProfilePhoto('https://st4.depositphotos.com/29453910/37778/v/450/depositphotos_377785374-stock-illustration-hand-drawn-modern-man-avatar.jpg');
         }
-        
+
         if (token && videoId) {
           try {
             const userId = getSimulatedUserId();
             const evalResponse = await axios.get(`/avaliacoes/usuario/${userId}/video/${videoId}`, {
               headers: { Authorization: `Bearer ${token}` }
             });
-            
+
             if (evalResponse.data) {
               setExistingEvaluation(evalResponse.data);
               setHasRated(true);
               setUserRating(evalResponse.data.nota);
               setComment(evalResponse.data.comentario);
             }
-          } catch {
-            console.log('Usuário ainda não avaliou este vídeo');
+          } catch (err) {
+            console.log('Usuário ainda não avaliou este vídeo', err);
           }
         }
 
@@ -201,7 +237,7 @@ const VideoPage = () => {
     };
 
     fetchVideoData();
-  }, [videoId, location.state, navigate, getVideoSource]);
+  }, [videoId, location.state, navigate, getVideoSource]); 
 
   const handleSubscribe = async () => {
     try {
@@ -273,8 +309,8 @@ const VideoPage = () => {
           comentario: comment
       }, {
           headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json'
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
           }
       });
 
@@ -317,11 +353,11 @@ const VideoPage = () => {
 
   const handleDeleteEvaluation = async () => {
     if (!existingEvaluation) return;
-    
+
     try {
       setIsDeleting(true);
       setRatingMessage('Removendo sua avaliação...');
-      
+
       const token = localStorage.getItem('token');
       if (!token) {
         navigate('/login');
@@ -337,7 +373,7 @@ const VideoPage = () => {
       setUserRating(0);
       setComment('');
       setRatingMessage('Avaliação removida com sucesso!');
-      
+
       setVideoData(prev => ({
         ...prev,
         numeroAvaliacoes: Math.max((prev.numeroAvaliacoes || 1) - 1, 0),
@@ -460,7 +496,7 @@ const VideoPage = () => {
 
               <div className={styles.videoMetadata}>
                 <span className={styles.videoStat}>
-                  <span>{videoData.visualizacoes || 0} visualizações</span>
+                  <span>{videoViews} visualizações</span>
                 </span>
                 <span className={styles.videoStat}>•</span>
                 <span className={styles.videoStat}>
@@ -543,7 +579,7 @@ const VideoPage = () => {
                 <h3 className={styles.evaluationTitle}>
                   {existingEvaluation ? 'Sua Avaliação' : 'Avalie este vídeo'}
                 </h3>
-                
+
                 {existingEvaluation ? (
                   <div className={styles.existingEvaluation}>
                     <div className={styles.stars}>

@@ -254,7 +254,6 @@ const Perfil = () => {
       
       setEditingPlaylistId(null);
       setNewVisibility('');
-      alert('Visibilidade atualizada com sucesso!');
     } catch (error) {
       console.error('Erro ao atualizar visibilidade:', error);
       alert(error.response?.data || 'Erro ao atualizar visibilidade');

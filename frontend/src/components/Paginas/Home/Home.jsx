@@ -21,7 +21,7 @@ const Home = () => {
     const token = localStorage.getItem('token');
     if (!token) {
       navigate('/login');
-      return; 
+      return;
     }
 
     const fetchRecommendedVideos = async () => {
@@ -46,7 +46,12 @@ const Home = () => {
       try {
         setLoadingPopular(true);
         const response = await api.get('/file/videos-populares');
-        setPopularVideos(response.data);
+        const sortedPopularVideos = response.data.sort((a, b) => {
+          const viewsA = a.visualizacoes || 0; // Default to 0 if null/undefined
+          const viewsB = b.visualizacoes || 0;
+          return viewsB - viewsA; // Descending order
+        });
+        setPopularVideos(sortedPopularVideos);
       } catch (error) {
         console.error("Erro ao buscar vídeos populares:", error);
         setErrorPopular('Erro ao buscar vídeos populares.');
@@ -132,7 +137,7 @@ const Home = () => {
           {videosToDisplay.length > 0 ? (
             videosToDisplay.map((video) => (
               <div
-                key={video.id_video || video.id} 
+                key={video.id_video || video.id}
                 className={styles.recommendedVideoCard}
                 onClick={() => handleVideoClick(video)}
               >
@@ -145,7 +150,7 @@ const Home = () => {
                       e.target.src = 'https://placehold.co/300x169?text=Thumbnail+Indispon%C3%ADvel';
                     }}
                   />
-                  <span className={styles.videoDuration}>10:30</span> 
+                  <span className={styles.videoDuration}>10:30</span>
                 </div>
                 <div className={styles.recommendedVideoInfo}>
                   <h4 className={styles.recommendedVideoTitle}>
@@ -170,7 +175,7 @@ const Home = () => {
             className={`${styles.carouselButton} ${styles.nextButton}`}
             onClick={() => handleNextVideos(type)}
           >
-            <HiArrowRight /> 
+            <HiArrowRight />
           </button>
         )}
       </div>

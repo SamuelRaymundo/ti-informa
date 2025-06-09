@@ -80,7 +80,7 @@ const PlaylistView = () => {
         <div className={styles.header}>
           <h1 className={styles.tituloPlaylist}>{playlist.nome}</h1>
           <div className={styles.visibilidade}>
-            {playlist.visibilidade === 'PUBLICA' ? 'PÚBLICA' : 'PRIVADA'}
+          {playlist.visibilidade === 'PUBLICA' ? 'PÚBLICA' : playlist.visibilidade === 'NAO_LISTADA' ? 'NÃO LISTADA' : 'PRIVADA'}
           </div>
         </div>
         
