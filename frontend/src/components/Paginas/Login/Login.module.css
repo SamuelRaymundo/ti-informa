@@ -1,3 +1,91 @@
+.menuButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: black;
+  font-size: 24px;
+  padding: 0;
+}
+
+.perguntas {
+  display: flex; 
+  justify-content: center; 
+  align-items: center;
+  min-height: 100vh; 
+  width: 100vw; 
+}
+
+.errorMessage {
+  color: red;
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
+.interesseBotao {
+  background-color: #2979b3;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: 1px solid #1F577C;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.interesseBotao:hover {
+  background-color: #5a6d80; 
+}
+
+.selecionadoInteresse {
+  background-color: #0056b3; 
+  border-color: #0056b3;
+}
+
+
+.menu {
+  position: relative;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  z-index: 1001;
+}
+
+.dot {
+  display: block;
+  line-height: 0.4;
+  caret-color: transparent;
+  font-size: 24px;
+  margin-bottom: 3px;
+  transform: translateX(20px);
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 80px;
+  background-color: #8CA8C2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 1000;
+}
+
+.headerTitle {
+  font-size: 34px;
+  font-weight: bold;
+  color: black;
+  margin-left: 1560px;
+}
+
+.logo {
+  width: 126.5px;
+  height: auto;
+  z-index: 1001;
+}
+
 .container {
   display: flex;
   align-items: center;
@@ -7,6 +95,40 @@
   margin-top: 80px;
   margin-bottom: 80px;
   overflow: hidden;
+}
+
+.imageSection {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 0px;
+  max-width: 100%;
+}
+
+.formSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card_perguntas {
+  background-color: #f5f5f5;
+  padding: 95px 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 420px;
+  text-align: center;
+  margin-bottom: 30px;
+
+}
+
+.introParagraph {
+  font-size: 1rem; 
+  color: #555;
+  margin-bottom: 20px; 
+  line-height: 1; 
+  text-align: center; 
 }
 
 .card {
@@ -27,33 +149,31 @@
 
 .input {
   width: 100%;
-  padding: 12px;
+  padding: 13.5px;
   margin-bottom: 15px;
   border: 1px solid #ccc;
   border-radius: 4px;
-}
-
-.errorMessage {
-  color: red;
-  margin-bottom: 10px;
-  font-size: 1rem;
+  position: relative;
+  top: 11px;
+  caret-color: auto;
 }
 
 .passwordContainer {
   position: relative;
   width: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .togglePassword {
   position: absolute;
   right: 10px;
-  top: 37%;
-  transform: translateY(-50%);
   background: none;
   border: none;
   cursor: pointer;
   font-size: 14px;
   color: #007BFF;
+  top: 40%;
 }
 
 .togglePassword:hover {
@@ -62,13 +182,15 @@
 
 .button {
   width: 100%;
-  padding: 12px;
+  padding: 13.5px;
   background-color: #1F577C;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   margin-top: 10px;
+  position: relative;
+  top: 25px;
 }
 
 .button:hover {
@@ -79,7 +201,8 @@
   display: flex;
   align-items: center;
   width: 100%;
-  margin: 20px 0;
+  margin: 30px 0;
+  position: relative;
 }
 
 .line {
@@ -91,21 +214,6 @@
 .orText {
   margin: 0 10px;
   color: #666;
-}
-
-.googleButton {
-  width: 100%;
-  padding: 12px;
-  background-color: #DB4437;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-bottom: 15px;
-}
-
-.googleButton:hover {
-  background-color: #C2332B;
 }
 
 .forgotPassword {
@@ -121,6 +229,10 @@
   top: 50px;
 }
 
+.forgotPassword:focus {
+  outline: none;
+}
+
 .forgotPassword:hover {
   text-decoration: underline;
 }
@@ -130,6 +242,7 @@
   padding: 21px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 420px;
   text-align: center;
 }
 
@@ -144,10 +257,40 @@
   cursor: pointer;
   text-decoration: underline;
   font-size: 1rem;
+  outline: none;
+}
+
+.registerLink:focus {
+  outline: none;
 }
 
 .registerLink:hover {
   text-decoration: underline;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+}
+
+.container, .imageSection, .formSection, .card, .register {
+  caret-color: transparent;
+}
+
+.googleButton {
+  width: 100%;
+  padding: 12px;
+  background-color: #DB4437;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+.googleButton:hover {
+  background-color: #C2332B;
 }
 
 .logoutButton {
@@ -173,460 +316,4 @@
   font-weight: bold;
   font-size: 1.35rem;
   margin-bottom: 20px;
-}
-
-.successMessage {
-  color: green;
-  margin-bottom: 10px;
-  font-size: 1rem;
-  background-color: #e6ffe6;
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #b3ffb3;
-}
-
-@media (max-width: 320px) {
-  .card {
-    width: 100%;
-    padding: 60px 20px;
-  }
-
-  .title {
-    font-size: 30px;
-    top: -30px;
-  }
-
-  .input,
-  .button,
-  .googleButton,
-  .logoutButton {
-    padding: 10px;
-    font-size: 0.9rem;
-  }
-
-  .forgotPassword {
-    top: 30px;
-    font-size: 0.9rem;
-  }
-
-  .register {
-    padding: 15px;
-  }
-
-  .registerLink {
-    font-size: 0.9rem;
-  }
-
-  .logadoMessage {
-    font-size: 1.1rem;
-  }
-}
-
-@media (min-width: 321px) and (max-width: 374px) {
-  .card {
-    width: 100%;
-    padding: 70px 25px;
-  }
-
-  .title {
-    font-size: 32px;
-    top: -35px;
-  }
-
-  .input,
-  .button,
-  .googleButton,
-  .logoutButton {
-    padding: 11px;
-    font-size: 0.95rem;
-  }
-
-  .forgotPassword {
-    top: 40px;
-    font-size: 0.95rem;
-  }
-
-  .register {
-    padding: 18px;
-  }
-
-  .registerLink {
-    font-size: 0.95rem;
-  }
-
-  .logadoMessage {
-    font-size: 1.2rem;
-  }
-}
-
-@media (width: 375px) and (height: 667px) {
-  .card {
-    width: 95%;
-    padding: 75px 28px;
-  }
-
-  .title {
-    font-size: 34px;
-    top: -38px;
-  }
-
-  .input,
-  .button,
-  .googleButton,
-  .logoutButton {
-    padding: 11.5px;
-    font-size: 0.98rem;
-  }
-
-  .forgotPassword {
-    top: 42px;
-    font-size: 0.98rem;
-  }
-
-  .register {
-    padding: 19px;
-  }
-
-  .registerLink {
-    font-size: 0.98rem;
-  }
-
-  .logadoMessage {
-    font-size: 1.25rem;
-  }
-}
-
-@media (width: 412px) and (height: 915px) {
-  .card {
-    width: 90%;
-    padding: 80px 30px;
-  }
-
-  .title {
-    font-size: 36px;
-    top: -40px;
-  }
-
-  .input,
-  .button,
-  .googleButton,
-  .logoutButton {
-    padding: 12px;
-    font-size: 1rem;
-  }
-
-  .forgotPassword {
-    top: 45px;
-    font-size: 1rem;
-  }
-
-  .register {
-    padding: 20px;
-  }
-
-  .registerLink {
-    font-size: 1rem;
-  }
-
-  .logadoMessage {
-    font-size: 1.3rem;
-  }
-}
-
-
-@media (min-width: 376px) and (max-width: 480px) {
-  .card {
-    width: 100%;
-    padding: 70px 25px;
-  }
-
-  .title {
-    font-size: 32px;
-    top: -35px;
-  }
-
-  .input,
-  .button,
-  .googleButton,
-  .logoutButton {
-    padding: 11px;
-    font-size: 0.95rem;
-  }
-
-  .forgotPassword {
-    top: 40px;
-    font-size: 0.95rem;
-  }
-
-  .register {
-    padding: 18px;
-  }
-
-  .registerLink {
-    font-size: 0.95rem;
-  }
-
-  .logadoMessage {
-    font-size: 1.2rem;
-  }
-}
-
-
-@media (min-width: 481px) and (max-width: 767px) {
-  .card {
-    width: 400px;
-    padding: 80px 30px;
-  }
-
-  .title {
-    font-size: 35px;
-    top: -40px;
-  }
-
-  .input,
-  .button,
-  .googleButton,
-  .logoutButton {
-    padding: 12px;
-    font-size: 1rem;
-  }
-
-  .forgotPassword {
-    top: 45px;
-    font-size: 1rem;
-  }
-
-  .register {
-    padding: 20px;
-  }
-
-  .registerLink {
-    font-size: 1rem;
-  }
-
-  .logadoMessage {
-    font-size: 1.3rem;
-  }
-}
-
-@media (min-width: 768px) and (max-width: 1023px) {
-  .card {
-    width: 420px;
-    padding: 90px 30px;
-  }
-
-  .title {
-    font-size: 38px;
-    top: -45px;
-  }
-
-  .input,
-  .button,
-  .googleButton,
-  .logoutButton {
-    padding: 12px;
-    font-size: 1rem;
-  }
-
-  .forgotPassword {
-    top: 50px;
-    font-size: 1rem;
-  }
-
-  .register {
-    padding: 21px;
-  }
-
-  .registerLink {
-    font-size: 1rem;
-  }
-
-  .logadoMessage {
-    font-size: 1.35rem;
-  }
-}
-
-@media (min-width: 1024px) and (max-width: 1200px) {
-  .card {
-    width: 450px;
-    padding: 95px 35px;
-  }
-
-  .title {
-    font-size: 40px;
-    top: -45px;
-  }
-
-  .input,
-  .button,
-  .googleButton,
-  .logoutButton {
-    padding: 13px;
-    font-size: 1.05rem;
-  }
-
-  .forgotPassword {
-    top: 55px;
-    font-size: 1.05rem;
-  }
-
-  .register {
-    padding: 22px;
-  }
-
-  .registerLink {
-    font-size: 1.05rem;
-  }
-
-  .logadoMessage {
-    font-size: 1.4rem;
-  }
-}
-
-@media (min-width: 1201px) and (max-width: 1440px) {
-  .card {
-    width: 480px;
-    padding: 100px 40px;
-  }
-
-  .title {
-    font-size: 42px;
-    top: -50px;
-  }
-
-  .input,
-  .button,
-  .googleButton,
-  .logoutButton {
-    padding: 14px;
-    font-size: 1.1rem;
-  }
-
-  .forgotPassword {
-    top: 60px;
-    font-size: 1.1rem;
-  }
-
-  .register {
-    padding: 23px;
-  }
-
-  .registerLink {
-    font-size: 1.1rem;
-  }
-
-  .logadoMessage {
-    font-size: 1.45rem;
-  }
-}
-
-@media (min-width: 1441px) and (max-width: 1919px) {
-  .card {
-    width: 500px;
-    padding: 105px 45px;
-  }
-
-  .title {
-    font-size: 45px;
-    top: -55px;
-  }
-
-  .input,
-  .button,
-  .googleButton,
-  .logoutButton {
-    padding: 15px;
-    font-size: 1.15rem;
-  }
-
-  .forgotPassword {
-    top: 65px;
-    font-size: 1.15rem;
-  }
-
-  .register {
-    padding: 24px;
-  }
-
-  .registerLink {
-    font-size: 1.15rem;
-  }
-
-  .logadoMessage {
-    font-size: 1.5rem;
-  }
-}
-
-@media (min-width: 1920px) and (max-width: 2559px) {
-  .card {
-    width: 500px;
-    padding: 90px 40px;
-  }
-
-  .title {
-    font-size: 48px;
-    top: -60px;
-  }
-
-  .input,
-  .button,
-  .googleButton,
-  .logoutButton {
-    padding: 16px;
-    font-size: 1.2rem;
-  }
-
-  .forgotPassword {
-    top: 50px;
-    font-size: 1.2rem;
-  }
-
-  .register {
-    padding: 25px;
-  }
-
-  .registerLink {
-    font-size: 1.2rem;
-  }
-
-  .logadoMessage {
-    font-size: 1.6rem;
-  }
-}
-
-@media (min-width: 2560px) and (max-width: 3840px) {
-  .card {
-    width: 650px;
-    padding: 120px 60px;
-  }
-
-  .title {
-    font-size: 55px;
-    top: -70px;
-  }
-
-  .input,
-  .button,
-  .googleButton,
-  .logoutButton {
-    padding: 18px;
-    font-size: 1.3rem;
-  }
-
-  .forgotPassword {
-    top: 80px;
-    font-size: 1.3rem;
-  }
-
-  .register {
-    padding: 28px;
-  }
-
-  .registerLink {
-    font-size: 1.3rem;
-  }
-
-  .logadoMessage {
-    font-size: 1.8rem;
-  }
 }
