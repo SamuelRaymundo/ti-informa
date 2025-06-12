@@ -47,9 +47,9 @@ const Home = () => {
         setLoadingPopular(true);
         const response = await api.get('/file/videos-populares');
         const sortedPopularVideos = response.data.sort((a, b) => {
-          const viewsA = a.visualizacoes || 0; // Default to 0 if null/undefined
+          const viewsA = a.visualizacoes || 0; 
           const viewsB = b.visualizacoes || 0;
-          return viewsB - viewsA; // Descending order
+          return viewsB - viewsA; 
         });
         setPopularVideos(sortedPopularVideos);
       } catch (error) {
@@ -129,7 +129,7 @@ const Home = () => {
             className={`${styles.carouselButton} ${styles.prevButton}`}
             onClick={() => handlePrevVideos(type)}
           >
-            <HiArrowRight style={{ transform: 'rotate(180deg)' }} /> {/* Ícone para a esquerda */}
+            <HiArrowRight style={{ transform: 'rotate(180deg)' }} />
           </button>
         )}
 

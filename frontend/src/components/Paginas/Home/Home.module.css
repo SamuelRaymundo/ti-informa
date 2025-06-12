@@ -11,6 +11,12 @@
   z-index: 1000;
 }
 
+.errorMessage {
+  color: red;
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+
 .botaoMenu {
   background: none;
   border: none;

@@ -16,6 +16,47 @@ const getThumbnailSource = (video) => {
   return 'https://placehold.co/300x169?text=Thumbnail+Indispon%C3%ADvel';
 };
 
+// New ConfirmationModal Component
+const ConfirmationModal = ({ show, message, onConfirm, onCancel, showConfirmButton = true, showCancelButton = true }) => {
+  if (!show) return null;
+
+  return (
+    <div className={styles.modalOverlay}>
+      <div className={styles.modalContent}>
+        <p>{message}</p>
+        <div className={styles.modalActions}>
+          {showConfirmButton && <button onClick={onConfirm} className={styles.modalConfirmButton}>Confirmar</button>}
+          {showCancelButton && <button onClick={onCancel} className={styles.modalCancelButton}>Cancelar</button>}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// New SuccessModal Component
+const SuccessModal = ({ show, message, onClose }) => {
+  useEffect(() => {
+    let timer;
+    if (show) {
+      timer = setTimeout(() => {
+        onClose();
+      }, 2000); // Automatically close after 2 seconds
+    }
+    return () => clearTimeout(timer);
+  }, [show, onClose]);
+
+  if (!show) return null;
+
+  return (
+    <div className={styles.modalOverlay}>
+      <div className={`${styles.modalContent} ${styles.successModal}`}>
+        <p>{message}</p>
+      </div>
+    </div>
+  );
+};
+
+
 const AddToPlaylistButton = ({ videoId, playlists }) => {
   const [showSelect, setShowSelect] = useState(false);
   const [selectedPlaylist, setSelectedPlaylist] = useState('');
@@ -73,8 +114,8 @@ const AddToPlaylistButton = ({ videoId, playlists }) => {
               </option>
             ))}
           </select>
-          <button 
-            onClick={handleAdd} 
+          <button
+            onClick={handleAdd}
             disabled={!selectedPlaylist || loading}
             className={styles.playlistAddButton}
           >
@@ -106,6 +147,19 @@ const Perfil = () => {
   const TamanhoNomePlaylist = 30;
 
   const [originalDescricaoUsuario, setOriginalDescricaoUsuario] = useState('');
+
+  // State for the confirmation modal for videos
+  const [showConfirmVideoModal, setShowConfirmVideoModal] = useState(false);
+  const [videoToDelete, setVideoToDelete] = useState(null);
+  const [showVideoSuccessModal, setShowVideoSuccessModal] = useState(false);
+  const [videoSuccessMessage, setVideoSuccessMessage] = useState('');
+
+  // State for the confirmation modal for playlists
+  const [showConfirmPlaylistModal, setShowConfirmPlaylistModal] = useState(false);
+  const [playlistToDelete, setPlaylistToDelete] = useState(null);
+  const [showPlaylistSuccessModal, setShowPlaylistSuccessModal] = useState(false);
+  const [playlistSuccessMessage, setPlaylistSuccessMessage] = useState('');
+
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -246,12 +300,12 @@ const Perfil = () => {
         { visibilidade: newVisibility },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      
-      const res = await axios.get('/playlists/minhas-playlists', { 
-        headers: { Authorization: `Bearer ${token}` } 
+
+      const res = await axios.get('/playlists/minhas-playlists', {
+        headers: { Authorization: `Bearer ${token}` }
       });
       setPlaylists(res.data);
-      
+
       setEditingPlaylistId(null);
       setNewVisibility('');
     } catch (error) {
@@ -260,6 +314,87 @@ const Perfil = () => {
     } finally {
       setLoadingPlaylists(false);
     }
+  };
+
+  // Function to handle opening the confirmation modal for video deletion
+  const handleDeletarVideoClick = (video) => {
+    setVideoToDelete(video);
+    setShowConfirmVideoModal(true);
+  };
+
+  // Function to confirm video deletion
+  const confirmDeletarVideo = async () => {
+    if (!videoToDelete) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      await axios.delete(`/file/delete/${videoToDelete.id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      const videosResponse = await axios.get('/file/meus-videos', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setVideosUsuario(Array.isArray(videosResponse.data) ? videosResponse.data : []);
+
+      setShowConfirmVideoModal(false);
+      setVideoToDelete(null);
+      setVideoSuccessMessage('Vídeo excluído com sucesso!');
+      setShowVideoSuccessModal(true);
+    } catch (error) {
+      console.error('Erro ao excluir vídeo:', error);
+      alert('Erro ao excluir vídeo: ' + (error.response?.data?.message || 'Tente novamente mais tarde'));
+    } finally {
+      setShowConfirmVideoModal(false);
+      setVideoToDelete(null);
+    }
+  };
+
+  // Function to cancel video deletion
+  const cancelDeletarVideo = () => {
+    setShowConfirmVideoModal(false);
+    setVideoToDelete(null);
+  };
+
+  // Function to handle opening the confirmation modal for playlist deletion
+  const handleDeletarPlaylistClick = (playlist) => {
+    setPlaylistToDelete(playlist);
+    setShowConfirmPlaylistModal(true);
+  };
+
+  // Function to confirm playlist deletion
+  const confirmDeletarPlaylist = async () => {
+    if (!playlistToDelete) return;
+
+    try {
+      const token = localStorage.getItem('token');
+      await axios.delete(`/playlists/${playlistToDelete.id_playlist || playlistToDelete.id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      // Atualiza a lista de playlists após a exclusão
+      const res = await axios.get('/playlists/minhas-playlists', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setPlaylists(res.data);
+
+      setShowConfirmPlaylistModal(false);
+      setPlaylistToDelete(null);
+      setPlaylistSuccessMessage('Playlist excluída com sucesso!');
+      setShowPlaylistSuccessModal(true);
+    } catch (error) {
+      console.error('Erro ao excluir playlist:', error);
+      alert('Erro ao excluir playlist: ' + (error.response?.data?.message || 'Tente novamente mais tarde'));
+    } finally {
+      setShowConfirmPlaylistModal(false);
+      setPlaylistToDelete(null);
+    }
+  };
+
+  // Function to cancel playlist deletion
+  const cancelDeletarPlaylist = () => {
+    setShowConfirmPlaylistModal(false);
+    setPlaylistToDelete(null);
   };
 
   useEffect(() => {
@@ -326,80 +461,91 @@ const Perfil = () => {
             <div className={styles.listaPlaylistsGrid}>
               {playlists.length === 0 && <p>Você não possui playlists.</p>}
               {playlists.slice().reverse().map(playlist => (
-            <div
-              key={playlist.id_playlist || playlist.id}
-              className={styles.playlistCard}
-              onClick={() => navigate(`/playlist/${playlist.id_playlist || playlist.id}`, { state: { playlist } })}
-            >
-              <h4 className={styles.playlistTitle}>
-                {playlist.nome}
-              </h4>
-              
-              {editingPlaylistId === playlist.id ? (
-                <div 
-                  className={styles.visibilityEditor}
-                  onClick={e => e.stopPropagation()} 
+                <div
+                  key={playlist.id_playlist || playlist.id}
+                  className={styles.playlistCard}
+                  onClick={() => navigate(`/playlist/${playlist.id_playlist || playlist.id}`, { state: { playlist } })}
                 >
-                  <select
-                    value={newVisibility}
-                    onChange={e => setNewVisibility(e.target.value)}
-                    className={styles.visibilitySelect}
-                  >
-                    <option value="" disabled>Escolha</option>
-                    {['PUBLICA', 'NAO_LISTADA', 'PRIVADA']
-                      .filter(visibilityOption => visibilityOption !== playlist.visibilidade)
-                      .map(option => (
-                        <option key={option} value={option}>
-                          {getVisibilidadeLabel(option)}
-                        </option>
-                      ))
-                    }
-                  </select>
-                  <div className={styles.buttonContainer}>
-                    <button 
+                  <h4 className={styles.playlistTitle}>
+                    {playlist.nome}
+                  </h4>
+
+                  {editingPlaylistId === playlist.id ? (
+                    <div
+                      className={styles.visibilityEditor}
+                      onClick={e => e.stopPropagation()}
+                    >
+                      <select
+                        value={newVisibility}
+                        onChange={e => setNewVisibility(e.target.value)}
+                        className={styles.visibilitySelect}
+                      >
+                        <option value="" disabled>Escolha</option>
+                        {['PUBLICA', 'NAO_LISTADA', 'PRIVADA']
+                          .filter(visibilityOption => visibilityOption !== playlist.visibilidade)
+                          .map(option => (
+                            <option key={option} value={option}>
+                              {getVisibilidadeLabel(option)}
+                            </option>
+                          ))}
+                      </select>
+                      <div className={styles.buttonContainer}>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            atualizarVisibilidade(playlist.id);
+                          }}
+                          className={styles.visibilitySaveButton}
+                        >
+                          Salvar
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setEditingPlaylistId(null);
+                            setNewVisibility('');
+                          }}
+                          className={styles.visibilityCancelButton}
+                        >
+                          Cancelar
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div
+                      className={styles.visibilityContainer}
+                      onClick={e => e.stopPropagation()}
+                    >
+                      <span className={`${styles.visibilityBadge} ${styles[`visibilityBadge_${playlist.visibilidade}`]}`}>
+                        {getVisibilidadeLabel(playlist.visibilidade)}
+                      </span>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditingPlaylistId(playlist.id);
+                          setNewVisibility('');
+                        }}
+                        className={styles.editVisibilityButton}
+                      >
+                        Alterar
+                      </button>
+                    </div>
+                  )}
+
+                  <div className={styles.playlistFooter}>
+                    <p className={styles.videoCount}>{playlist.videos?.length || 0} vídeo(s)</p>
+                    <button
+                      className={styles.botaoExcluirPlaylist}
                       onClick={(e) => {
                         e.stopPropagation();
-                        atualizarVisibilidade(playlist.id);
+                        handleDeletarPlaylistClick(playlist);
                       }}
-                      className={styles.visibilitySaveButton}
                     >
-                      Salvar
-                    </button>
-                    <button 
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setEditingPlaylistId(null);
-                      }}
-                      className={styles.visibilityCancelButton}
-                    >
-                      Cancelar
+                      Excluir Playlist
                     </button>
                   </div>
                 </div>
-              ) : (
-                <div 
-                  className={styles.visibilityContainer}
-                  onClick={e => e.stopPropagation()}
-                >
-                  <span className={`${styles.visibilityBadge} ${styles[`visibilityBadge_${playlist.visibilidade}`]}`}>
-                    {getVisibilidadeLabel(playlist.visibilidade)}
-                  </span>
-                  <button 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setEditingPlaylistId(playlist.id);
-                      setNewVisibility(''); 
-                    }}
-                    className={styles.editVisibilityButton}
-                  >
-                    Alterar
-                  </button>
-                </div>
-              )}
-              
-              <p className={styles.videoCount}>{playlist.videos?.length || 0} vídeo(s)</p>
-            </div>
-          ))}
+              ))}
             </div>
           )}
         </div>
@@ -486,12 +632,12 @@ const Perfil = () => {
         </div>
         <div className={styles.listaVideos}>
           {Array.isArray(videosOrdenados) && [...videosOrdenados].reverse().map((video, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className={styles.itemVideo}
             >
               <h3 className={styles.nomeArquivo}>{video.titulo}</h3>
-              <div 
+              <div
                 className={styles.videoContainer}
                 onClick={() => navigate(`/video/${video.id_video || video.id}`, { state: { video } })}
                 style={{ cursor: 'pointer' }}
@@ -505,10 +651,21 @@ const Perfil = () => {
                   }}
                 />
               </div>
-              <AddToPlaylistButton
-                videoId={video.id_video || video.id}
-                playlists={playlists}
-              />
+              <div className={styles.videoActions}>
+                <AddToPlaylistButton
+                  videoId={video.id_video || video.id}
+                  playlists={playlists}
+                />
+                <button
+                  className={styles.botaoExcluir}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDeletarVideoClick(video); // Use the new handler
+                  }}
+                >
+                  Excluir Vídeo
+                </button>
+              </div>
             </div>
           ))}
         </div>
@@ -603,6 +760,30 @@ const Perfil = () => {
           Sair da conta
         </button>
       </div>
+
+      <ConfirmationModal
+        show={showConfirmVideoModal}
+        message={`Tem certeza que deseja excluir o vídeo "${videoToDelete?.titulo}"?`}
+        onConfirm={confirmDeletarVideo}
+        onCancel={cancelDeletarVideo}
+      />
+      <SuccessModal
+        show={showVideoSuccessModal}
+        message={videoSuccessMessage}
+        onClose={() => setShowVideoSuccessModal(false)}
+      />
+
+      <ConfirmationModal
+        show={showConfirmPlaylistModal}
+        message={`Tem certeza que deseja excluir a playlist "${playlistToDelete?.nome}"?`}
+        onConfirm={confirmDeletarPlaylist}
+        onCancel={cancelDeletarPlaylist}
+      />
+      <SuccessModal
+        show={showPlaylistSuccessModal}
+        message={playlistSuccessMessage}
+        onClose={() => setShowPlaylistSuccessModal(false)}
+      />
     </div>
   );
 };

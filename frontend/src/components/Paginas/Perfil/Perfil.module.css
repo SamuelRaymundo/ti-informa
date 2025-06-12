@@ -1,11 +1,3 @@
-.htmlVideoPage {
-  height: 100%;
-  min-height: 100vh;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  overflow-y: hidden;
-}
 
 .container {
   display: flex;
@@ -21,6 +13,137 @@
   min-height: calc(100vh - 117px - 20px);
   overflow: auto;
   max-height: 90vh;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+  animation: fadeInScale 0.3s ease-out forwards;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modalContent p {
+  margin-bottom: 25px;
+  font-size: 1.1em;
+  color: #333;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.modalConfirmButton,
+.modalCancelButton {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.modalConfirmButton {
+  background-color: #dc3545; /* Red for confirm */
+  color: white;
+}
+
+.modalConfirmButton:hover {
+  background-color: #c82333;
+  transform: translateY(-2px);
+}
+
+.modalCancelButton {
+  background-color: #6c757d; /* Gray for cancel */
+  color: white;
+}
+
+.modalCancelButton:hover {
+  background-color: #5a6268;
+  transform: translateY(-2px);
+}
+
+.videoActions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.playlistFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.botaoExcluir {
+  background-color: #ff4444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 15px;
+  margin-top: 8px;
+  transition: background 0.2s;
+  font-weight: 500;
+}
+
+.botaoExcluir:hover {
+  background-color: #cc0000;
+}
+
+.botaoExcluirPlaylist {
+  background-color: #ff4444;
+  color: white;
+  border: none;
+  padding: px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.3s;
+}
+
+.botaoExcluirPlaylist:hover {
+  background-color: #cc0000;
+}
+
+.videoCount {
+  color: #666;
+  font-size: 14px;
+  margin: 0;
+}
+
+.playlistActions {
+  margin-top: 10px;
 }
 
 .visibilityEditor {
@@ -163,7 +286,7 @@
 .botaoAdicionarPlaylist {
   background-color: #007bff;
   border: none;
-  padding: 8px 16px;
+  padding: 10px 16px;
   border-radius: 20px;
   cursor: pointer;
   font-weight: 500;
@@ -359,7 +482,6 @@
 .secao {
   width: 100%;
   margin-bottom: 10px;
-  caret-color: transparent;
 }
 
 .secao p {
@@ -553,7 +675,6 @@
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 15px;
   margin-top: 10px;
-  cursor: pointer;
 }
 
 .playlistCard {
@@ -599,23 +720,6 @@
 
 .playlistVideos p {
   margin-bottom: 0;
-}
-
-.botaoAdicionarPlaylist {
-  padding: 8px 15px;
-  background-color: #216788;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 15px;
-  margin-top: 8px;
-  transition: background 0.2s;
-  font-weight: 500;
-}
-
-.botaoAdicionarPlaylist:hover {
-  background-color: #216788;
 }
 
 .tabelaContainer {
@@ -1411,7 +1515,6 @@
   .secao {
     width: 100%;
     margin-bottom: 10px;
-    caret-color: transparent;
   }
 
   .secao p {
@@ -1594,7 +1697,6 @@
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 15px;
     margin-top: 10px;
-    cursor: pointer;
   }
 
   .playlistCard {
@@ -1637,7 +1739,6 @@
   }
 
   .botaoAdicionarPlaylist {
-    padding: 8px 15px;
     background-color: #216788;
     color: white;
     border: none;

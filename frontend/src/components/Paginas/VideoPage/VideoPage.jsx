@@ -109,39 +109,32 @@ const VideoPage = () => {
   }, []);
 
   useEffect(() => {
-    const incrementAndFetchViews = async () => {
-      if (!videoId) return;
-
-      const hasViewedKey = `viewedVideo_${videoId}`;
-      const hasViewedInSession = sessionStorage.getItem(hasViewedKey);
-      const token = localStorage.getItem('token');
-      const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
-      if (!hasViewedInSession) {
-        try {
-          await axios.post(`/file/${videoId}/visualizacao`, {}, { headers });
-          console.log(`Visualização do vídeo ${videoId} registrada com sucesso.`);
-          sessionStorage.setItem(hasViewedKey, 'true');
-        } catch (viewError) {
-          console.error('Erro ao incrementar visualização:', viewError);
-        }
-      } else {
-        console.log(`Visualização do vídeo ${videoId} já contada nesta sessão.`);
-      }
-
-      try {
-        const viewsResponse = await axios.get(`/file/${videoId}/visualizacoes`, { headers }); // <-- USING NEW ENDPOINT
-        if (viewsResponse.data !== null && typeof viewsResponse.data === 'number') {
-          setVideoViews(viewsResponse.data);
-        }
-      } catch (fetchViewsError) {
-        console.error('Erro ao buscar visualizações do vídeo:', fetchViewsError);
-        setVideoViews(0);
-      }
-    };
-
-    incrementAndFetchViews();
-  }, [videoId]); 
+        const incrementAndFetchViews = async () => {
+          if (!videoId) return;
+    
+          const token = localStorage.getItem('token');
+          const headers = token ? { Authorization: `Bearer ${token}` } : {};
+    
+          try {
+            await axios.post(`/file/${videoId}/visualizacao`, {}, { headers });
+            console.log(`Visualização do vídeo ${videoId} registrada com sucesso.`);
+          } catch (viewError) {
+            console.error('Erro ao incrementar visualização:', viewError);
+          }
+    
+          try {
+            const viewsResponse = await axios.get(`/file/${videoId}/visualizacoes`, { headers });
+            if (viewsResponse.data !== null && typeof viewsResponse.data === 'number') {
+              setVideoViews(viewsResponse.data);
+            }
+          } catch (fetchViewsError) {
+            console.error('Erro ao buscar visualizações do vídeo:', fetchViewsError);
+            setVideoViews(0);
+          }
+        };
+    
+        incrementAndFetchViews();
+      }, [videoId]);
 
   useEffect(() => {
     const fetchVideoData = async () => {

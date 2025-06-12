@@ -12,6 +12,9 @@ const getThumbnailSource = (video) => {
   if (video?.key) {
     return `${s3BaseUrl}${video.key}`;
   }
+  if (video?.urlDoThumbnail) { 
+    return video.urlDoThumbnail;
+  }
   return 'https://placehold.co/300x169?text=Thumbnail+Indispon%C3%ADvel';
 };
 
@@ -77,7 +80,7 @@ const PlaylistVideo = () => {
 
   const getSimulatedUserId = () => {
     const storedUserId = localStorage.getItem('userId');
-    return storedUserId ? parseInt(storedUserId, 10) : 1;
+    return storedUserId ? parseInt(storedUserId, 10) : 1; 
   };
 
   const handleAddToPlaylist = async () => {
@@ -164,10 +167,30 @@ const PlaylistVideo = () => {
           setPlaylistVideos(playlistRes.data?.videos || []);
         }
         else if (videoId) {
-          const response = await axios.get(`/api/videos/${videoId}`, { headers });
+          const response = await axios.get(`/api/videos/${videoId}`, { headers }); 
           currentVideoData = response.data;
           setVideoData(currentVideoData);
           setCurrentVideoId(currentVideoData.videoId || currentVideoData.id);
+
+          const hasViewedKey = `viewed_${videoId}`;
+          const hasViewedInSession = sessionStorage.getItem(hasViewedKey);
+
+          if (!hasViewedInSession) {
+            try {
+              await axios.post(`/file/${videoId}/visualizacao`, {}, { headers });
+              console.log(`Visualização do vídeo ${videoId} registrada com sucesso.`);
+              sessionStorage.setItem(hasViewedKey, 'true');
+              setVideoData(prevData => ({
+                ...prevData,
+                visualizacoes: (prevData.visualizacoes || 0) + 1
+              }));
+            } catch (viewError) {
+              console.error('Erro ao incrementar visualização:', viewError);
+            }
+          } else {
+            console.log(`Visualização do vídeo ${videoId} já contada nesta sessão.`);
+          }
+
         } else {
           throw new Error('ID do vídeo não encontrado');
         }
@@ -206,7 +229,6 @@ const PlaylistVideo = () => {
       if (currentVideoData) {
         try {
           const recResponse = await axios.get('/file/videos-recomendados', { headers });
-          // Filtra os vídeos recomendados para remover o vídeo principal
           setRecommendedVideos(Array.isArray(recResponse.data) ?
             recResponse.data.filter(recVideo => recVideo.id_video !== currentVideoId && recVideo.id !== currentVideoId) : []);
         } catch (recError) {
@@ -229,7 +251,7 @@ const PlaylistVideo = () => {
     };
 
     fetchVideoData();
-  }, [videoId, location.state, navigate, getVideoSource, currentVideoId]); // Adicionado currentVideoId como dependência
+  }, [videoId, location.state, navigate, getVideoSource, currentVideoId]); 
 
   const handleSubscribe = async () => {
     try {
