@@ -16,7 +16,6 @@ const getThumbnailSource = (video) => {
   return 'https://placehold.co/300x169?text=Thumbnail+Indispon%C3%ADvel';
 };
 
-// New ConfirmationModal Component
 const ConfirmationModal = ({ show, message, onConfirm, onCancel, showConfirmButton = true, showCancelButton = true }) => {
   if (!show) return null;
 
@@ -135,6 +134,7 @@ const Perfil = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isCriador, setIsCriador] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [playlists, setPlaylists] = useState([]);
   const [loadingPlaylists, setLoadingPlaylists] = useState(true);
   const [novaPlaylistNome, setNovaPlaylistNome] = useState('');
@@ -148,13 +148,11 @@ const Perfil = () => {
 
   const [originalDescricaoUsuario, setOriginalDescricaoUsuario] = useState('');
 
-  // State for the confirmation modal for videos
   const [showConfirmVideoModal, setShowConfirmVideoModal] = useState(false);
   const [videoToDelete, setVideoToDelete] = useState(null);
   const [showVideoSuccessModal, setShowVideoSuccessModal] = useState(false);
   const [videoSuccessMessage, setVideoSuccessMessage] = useState('');
 
-  // State for the confirmation modal for playlists
   const [showConfirmPlaylistModal, setShowConfirmPlaylistModal] = useState(false);
   const [playlistToDelete, setPlaylistToDelete] = useState(null);
   const [showPlaylistSuccessModal, setShowPlaylistSuccessModal] = useState(false);
@@ -176,6 +174,7 @@ const Perfil = () => {
         setNomeCompleto(response.data.nome);
         setEmailUsuario(response.data.email);
         setIsCriador(response.data.isCriador || false);
+        setIsAdmin(response.data.isAdmin || false);
         setInteressesUsuario(response.data.interesses);
         setDescricaoUsuario(response.data.descricao || '');
         setOriginalDescricaoUsuario(response.data.descricao || '');
@@ -715,10 +714,11 @@ const Perfil = () => {
             />
             {isCriador ? (
               <p className={styles.tipoUsuario}>Criador de Conteúdo</p>
+            ) : isAdmin ? (
+              <p className={styles.tipoUsuario}>Administrador</p>
             ) : (
               <p className={styles.tipoUsuario}>Usuário</p>
             )}
-            <p className={styles.assinatura}>Assinatura</p>
           </div>
           <div className={styles.botoesContainer}>
             <button className={styles.botaoEditar} onClick={aoClicarEditar}>
@@ -729,12 +729,20 @@ const Perfil = () => {
                 Cancelar
               </button>
             )}
-            {!isCriador && (
+            {!isCriador && !isAdmin && (
               <button
                 className={styles.botaoRegister}
                 onClick={() => navigate('/RegisterCriador')}
               >
                 Registrar para ser criador
+              </button>
+            )}
+            {isAdmin && (
+              <button
+                className={styles.botaoRegister}
+                onClick={() => navigate('/admin')}
+              >
+                Solicitações
               </button>
             )}
           </div>

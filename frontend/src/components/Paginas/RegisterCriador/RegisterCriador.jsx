@@ -2,77 +2,133 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './RegisterCriador.module.css';
 import Layout from '../../Layout/Layout';
+import axios from '../../../api/axios-config';
 
 const RegisterCriador = () => {
   const [formData, setFormData] = useState({
     nome: '',
-    email: '',
     cpf: '',
     senha: '',
-    confirmarSenha: '',
     formacao: '',
   });
 
-  const [validNome, setValidNome] = useState(false);
-  const [validEmail, setValidEmail] = useState(false);
-  const [validSenha, setValidSenha] = useState(false);
-  const [validCpf, setValidCpf] = useState(false);
-  const [validFormacao, setValidFormacao] = useState(false);
+  const [errors, setErrors] = useState({
+    nome: '',
+    cpf: '',
+    senha: '',
+    formacao: '',
+    general: ''
+  });
 
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
-  const navegarPara = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const nomeValido = /^[a-zA-Z\s]+$/.test(formData.nome); // Nome com apenas letras e espaços
-    setValidNome(nomeValido);
-  }, [formData.nome]);
+    const token = localStorage.getItem('token');
+    if (!token) {
+      navigate('/login');
+    }
+  }, [navigate]);
 
-  useEffect(() => {
-    const emailValido = /^[^@]*@[^@]*$/.test(formData.email); // Verifica se o e-mail contém exatamente um "@" e o domínio é válido
-    setValidEmail(emailValido);
-  }, [formData.email]);
-  
+  const validateField = (name, value) => {
+    switch (name) {
+      case 'nome':
+        if (!value) return 'O nome é obrigatório';
+        if (!/^[a-zA-Z\s]+$/.test(value)) return 'Digite um nome válido (apenas letras)';
+        return '';
+      case 'cpf':
+        if (!value) return 'O CPF é obrigatório';
+        if (!/^\d{11}$/.test(value)) return 'O CPF deve conter 11 dígitos numéricos';
+        return '';
+      case 'senha':
+        if (!value) return 'A senha é obrigatória';
+        return '';
+      case 'formacao':
+        if (!value.trim()) return 'A formação é obrigatória';
+        return '';
+      default:
+        return '';
+    }
+  };
 
-  useEffect(() => {
-    const senhaValida = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#$%^&+=!]).{8,}$/.test(formData.senha); // Regex para senha forte
-    setValidSenha(senhaValida);
-  }, [formData.senha]);
-
-
-  useEffect(() => {
-    const cpfValido = /^\d{11}$/.test(formData.cpf); // Regex para CPF
-    setValidCpf(cpfValido);
-  }, [formData.cpf]);
-
-  useEffect(() => {
-    const formacaoValida = formData.formacao.trim().length > 0; // Verifica se a formação não está vazia
-    setValidFormacao(formacaoValida);
-  }, [formData.formacao]);
-
-  const Mudanca = (e) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
+    setFormData(prev => ({
       ...prev,
       [name]: value,
     }));
+    
+    setErrors(prev => ({
+      ...prev,
+      [name]: validateField(name, value),
+      general: ''
+    }));
   };
 
-  const Envio = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    
+    const newErrors = {
+      nome: validateField('nome', formData.nome),
+      cpf: validateField('cpf', formData.cpf),
+      senha: validateField('senha', formData.senha),
+      formacao: validateField('formacao', formData.formacao),
+      general: ''
+    };
 
-    if (
-      validNome &&
-      validEmail &&
-      validSenha &&
-      validConfirmarSenha &&
-      validCpf &&
-      validFormacao
-    ) {
-      alert('Pedido de registro como criador enviado com sucesso!');
-      navegarPara('/perfil');
-    } else {
-      setError('Por favor, preencha todos os campos corretamente.');
+    setErrors(newErrors);
+
+    const hasErrors = Object.values(newErrors).some(error => error !== '');
+    if (hasErrors) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('token');
+      
+      const response = await axios.post('/usuario/solicitar-criador', {
+        nome: formData.nome,
+        cpf: formData.cpf,
+        senha: formData.senha,
+        formacao: formData.formacao
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (response.status === 200) {
+        alert('Solicitação enviada com sucesso! Aguarde a aprovação do administrador.');
+        navigate('/perfil');
+      }
+    } catch (error) {
+      if (error.response) {
+        const backendError = error.response.data;
+        
+        if (typeof backendError === 'string') {
+          setErrors(prev => ({ ...prev, general: backendError }));
+        } else if (error.response.status === 400) {
+          setErrors(prev => ({
+            ...prev,
+            ...(backendError.nome && { nome: backendError.nome }),
+            ...(backendError.cpf && { cpf: backendError.cpf }),
+            ...(backendError.senha && { senha: backendError.senha }),
+            ...(backendError.formacao && { formacao: backendError.formacao }),
+            general: backendError.message || 'Erro ao enviar solicitação'
+          }));
+        } else if (error.response.status === 401) {
+          setErrors(prev => ({ ...prev, general: 'Você não tem permissão para esta ação' }));
+        } else {
+          setErrors(prev => ({ ...prev, general: 'Erro ao processar solicitação' }));
+        }
+      } else if (error.request) {
+        setErrors(prev => ({ ...prev, general: 'Sem resposta do servidor' }));
+      } else {
+        setErrors(prev => ({ ...prev, general: error.message }));
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -82,42 +138,29 @@ const RegisterCriador = () => {
       <div className={styles.container} style={{ justifyContent: 'center' }}>
         <div className={styles.formSection}>
           <div className={styles.card}>
-            <h2 className={styles.title}>Registro de Criador</h2>
-            {error && <p className={styles.error}>{error}</p>}
-            <form onSubmit={Envio}>
+            <h2 className={styles.title}>Solicitação para ser Criador</h2>
+            
+            {errors.general && <p className={styles.error}>{errors.general}</p>}
+
+            <form onSubmit={handleSubmit}>
               <input
                 type="text"
                 name="nome"
                 placeholder="Nome completo"
                 value={formData.nome}
-                onChange={Mudanca}
+                onChange={handleChange}
                 className={styles.input}
                 required
               />
-              {!validNome && formData.nome && (
-                <p className={styles.error}>Digite um nome válido (apenas letras).</p>
-              )}
-
-              <input
-                type="text"
-                name="email"
-                placeholder="E-mail"
-                value={formData.email}
-                onChange={Mudanca}
-                className={styles.input}
-                required
-              />
-              {!validEmail && formData.email && (
-                <p className={styles.error}>Digite um e-mail válido.</p>
-              )}
+              {errors.nome && <p className={styles.error}>{errors.nome}</p>}
 
               <div className={styles.passwordContainer}>
                 <input
                   type={showPassword ? 'text' : 'password'}
                   name="senha"
-                  placeholder="Digite sua senha"
+                  placeholder="Confirme sua senha atual"
                   value={formData.senha}
-                  onChange={Mudanca}
+                  onChange={handleChange}
                   className={styles.input}
                   required
                 />
@@ -129,39 +172,36 @@ const RegisterCriador = () => {
                   {showPassword ? 'Esconder' : 'Mostrar'}
                 </button>
               </div>
-              {!validSenha && formData.senha && (
-                <p className={styles.error}>A senha deve ter: 8+ caracteres, 1 maiúscula, 1 minúscula, 1 número e 1 caractere especial.</p>
-              )}
+              {errors.senha && <p className={styles.error}>{errors.senha}</p>}
 
-              
               <input
                 type="text"
                 name="cpf"
-                placeholder="Digite seu CPF"
+                placeholder="Digite seu CPF (apenas números)"
                 value={formData.cpf}
-                onChange={Mudanca}
+                onChange={handleChange}
                 className={styles.input}
                 required
               />
-              {!validCpf && formData.cpf && (
-                <p className={styles.error}>O CPF deve conter 11 dígitos numéricos.</p>
-              )}
+              {errors.cpf && <p className={styles.error}>{errors.cpf}</p>}
 
               <input
                 type="text"
                 name="formacao"
                 placeholder="Formação acadêmica"
                 value={formData.formacao}
-                onChange={Mudanca}
+                onChange={handleChange}
                 className={styles.input}
                 required
               />
-              {!validFormacao && formData.formacao && (
-                <p className={styles.error}>Preencha a formação acadêmica.</p>
-              )}
+              {errors.formacao && <p className={styles.error}>{errors.formacao}</p>}
 
-              <button type="submit" className={styles.button}>
-                Enviar Pedido
+              <button
+                type="submit"
+                className={styles.button}
+                disabled={loading || Object.values(errors).some(e => e !== '')}
+              >
+                {loading ? 'Enviando...' : 'Enviar Solicitação'}
               </button>
             </form>
           </div>

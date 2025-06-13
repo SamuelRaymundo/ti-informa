@@ -14,6 +14,12 @@
   .bar.bottom {
     bottom: 0;
   }
+
+  .error {
+    color: red;
+    margin-bottom: 10px;
+    font-size: 1rem;
+  }
   
   .menuButton {
     background: none;
@@ -94,7 +100,7 @@
     flex-direction: column;
     align-items: center;
   }
-/* Estrutura principal */
+
 .containerCriador {
     display: flex;
     align-items: center;
@@ -106,7 +112,6 @@
     overflow: hidden;
 }
 
-/* Card principal */
 .cardCriador {
     background-color: #f5f5f5;
     padding: 50px 30px;
@@ -116,7 +121,6 @@
     text-align: center;
 }
 
-/* Título do card */
 .titleCriador {
     font-size: 38px;
     font-weight: bold;
@@ -124,7 +128,6 @@
     margin-bottom: 40px;
 }
 
-/* Input padrão */
 .inputCriador {
     width: 100%;
     padding: 13.5px;
@@ -136,8 +139,6 @@
     caret-color: auto;
 }
 
-
-/* Formulario Register */
 .card {
     background-color: #f5f5f5;
     padding: 105px 30px;
@@ -279,7 +280,6 @@
     caret-color: transparent;
   }
   
-/* Textarea */
 .textareaCriador {
     width: 100%;
     padding: 13.5px;
@@ -294,7 +294,6 @@
     caret-color: auto;
 }
 
-/* Foco dos inputs e textarea */
 .inputCriador:focus,
 .textareaCriador:focus {
     border-color: #1F577C;
@@ -302,7 +301,6 @@
     background-color: #f9f9f9;
 }
 
-/* Botão de envio */
 .buttonCriador {
     width: 100%;
     padding: 13.5px;
@@ -319,21 +317,18 @@
     background-color: #5a6d80;
 }
 
-/* Espaçamento interno geral */
 .formSectionCriador {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-/* Corpo sem overflow e fonte */
 body {
     margin: 0;
     overflow: hidden;
     font-family: Arial, sans-serif;
 }
 
-/* Removendo caret dos containers principais */
 .containerCriador, .cardCriador {
     caret-color: transparent;
 }
