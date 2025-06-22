@@ -19,9 +19,14 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 @RestController
 @RequestMapping("/usuario")
@@ -141,5 +146,25 @@ public class UsuarioController {
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     public ResponseEntity<?> reprovarCriador(@PathVariable Long id) {
         return usuarioService.reprovarCriador(id);
+    }
+
+    @PostMapping("/{id}/foto-perfil")
+    public ResponseEntity<?> uploadFotoPerfil(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body("Arquivo vazio");
+        }
+        try {
+            String uploadDir = "uploads/profile-photos";
+            Files.createDirectories(Paths.get(uploadDir));
+
+            String filename = "user_" + id + "_" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
+            Path filepath = Paths.get(uploadDir, filename);
+
+            Files.copy(file.getInputStream(), filepath, StandardCopyOption.REPLACE_EXISTING);
+
+            return ResponseEntity.ok("Foto de perfil enviada com sucesso: " + filename);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao salvar a foto: " + e.getMessage());
+        }
     }
 }
