@@ -107,4 +107,8 @@ public class VideoImpl implements VideoService {
         return videoRepository.findById(videoId)
                 .orElseThrow(() -> new ResourceNotFoundException("Vídeo não encontrado"));
     }
+    @Override
+    public List<Video> buscarVideosPorTermo(String termo) {
+        return videoRepository.buscarPorTermo(termo);
+    }
 }

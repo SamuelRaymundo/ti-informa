@@ -17,4 +17,6 @@ public interface VideoRepository extends JpaRepository<Video, Long> {
     @Query("SELECT v FROM Video v WHERE v.categoria = :interesse OR v.palavraChave LIKE %:interesse%")
     List<Video> findByCategoriaOrPalavraChaveContaining(@Param("interesse") String interesse);
 
+    @Query("SELECT v FROM Video v WHERE LOWER(v.titulo) LIKE LOWER(CONCAT('%', :termo, '%')) OR LOWER(v.descricao) LIKE LOWER(CONCAT('%', :termo, '%'))")
+    List<Video> buscarPorTermo(@Param("termo") String termo);
 }

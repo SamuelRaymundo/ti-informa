@@ -18,4 +18,6 @@ public interface VideoService {
     void deletarVideo(Long videoId, String username);
 
     Video buscarVideoPorId(Long videoId);
+
+    List<Video> buscarVideosPorTermo(String termo);
 }
